@@ -1,7 +1,17 @@
 .rightButtons {
     position: absolute;
     right: 50px;
-    top: 10px;
+    top: 5px;
+}
+
+.rightButtons2 {
+    position: absolute;
+    right: 50px;
+    top: 45px;
+}
+
+.headerarea {
+    height: 90px;
 }
 
 

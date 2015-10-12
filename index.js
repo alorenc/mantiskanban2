@@ -164,14 +164,15 @@ function Login() {
 	}
 
 	DefaultSettings.connectURL = Mantis.ConnectURL;
-	saveSettingsToStorageMechanism();
 
 	StartLoading();
 	
 	//put the user-entered data into the DefaultSettings array.
 	DefaultSettings.username = document.getElementById("username").value;
+	DefaultSettings.password = document.getElementById("password").value;
 	DefaultSettings.stayLoggedIn = 1;
 	DefaultSettings.lastAccessTime = Math.round(new Date().getTime() / 1000);
+	saveSettingsToStorageMechanism();
 
 	LoadSettingsFromLocalStorage();
 	if(DefaultSettings.kanbanListWidth == undefined) {
@@ -197,6 +198,12 @@ function Login() {
 		SearchForStory();
 		return;
 	}
+
+	$('#scrumMode').bootstrapSwitch();
+	$('#scrumMode').on('switchChange.bootstrapSwitch', function(event, state) {
+		Kanban.ScrumMode = state ? "Review" : "Planif";
+		SelectProject();
+	});
 
 	SelectProject();
 
@@ -405,7 +412,6 @@ function SelectProject(openStoryID) {
 
 	UpdateFilterList();
 
-	$("[name='scrumMode']").bootstrapSwitch();
 	BuildKanbanListFromMantisStatuses();
 	
 	Kanban.BuildListGUI();
@@ -559,7 +565,7 @@ function BuildKanbanListFromMantisStatuses() {
 					var newKanbanList = new KanbanList(possiblevalue);
 					newKanbanList.UsesCustomField = true;
 
-					if ((newKanbanList.ID != "Backlog") && (newKanbanList.ID != "NextSprint")) {
+					if (Kanban.ScrumModes[Kanban.ScrumMode][newKanbanList.ID]) {
 						Kanban.AddListToArray(newKanbanList);
 					}
 				}
@@ -714,9 +720,13 @@ function AutoLogin(){
 	if (Modernizr.localstorage) {
   		log("window.localStorage is available!");
   		LoadSettingsFromLocalStorage();
+
+		if (document.getElementById("password").value != "") {
+			Login();
+		}
 	}
 	else {
-  		log("no native support for HTML5 storage :( maybe try dojox.storage or a third-party solution");
+		log("no native support for HTML5 storage :( maybe try dojox.storage or a third-party solution");
   		LoadSettingsFromCookieStorage();
 	}
 }
@@ -739,19 +749,21 @@ function LoadSettingsFromLocalStorage(){
 		DefaultSettings = JSON.parse(localStorage.mantiskanbanSettings);
 		log("loaded user saved settings into the DefaultSettings");
 		log(JSON.stringify(DefaultSettings));
-		//put the username in the field if the DefaultSettings.lastAccessTime is less than 30 days ago
-		var currentTime = Math.round(new Date().getTime() / 1000);
-		if(((currentTime - DefaultSettings.lastAccessTime) < 2592000) && DefaultSettings.stayLoggedIn == 1){
-			log("user logged in less than 30 days ago put their name in the box");
-			document.getElementById("username").value = DefaultSettings.username;
-			document.getElementById("password").value = "";
-		}
+
 		//if the current project in the settings is not the same as the project default then load it.
 		if(DefaultSettings.currentProject != Mantis.CurrentProjectID){
 			log("setting user-saved filter as default project: " + DefaultSettings.currentProject);
 			Mantis.CurrentProjectID = DefaultSettings.currentProject;
 			document.getElementById("seletedproject").value = Mantis.CurrentProjectID;
 			log("CurrentProjectID set to " + Mantis.CurrentProjectID);
+		}
+
+		//put the username in the field if the DefaultSettings.lastAccessTime is less than 30 days ago
+		var currentTime = Math.round(new Date().getTime() / 1000);
+		if(((currentTime - DefaultSettings.lastAccessTime) < 2592000) && DefaultSettings.stayLoggedIn == 1){
+			log("user logged in less than 30 days ago put their name in the box");
+			document.getElementById("username").value = DefaultSettings.username;
+			document.getElementById("password").value = DefaultSettings.password;
 		}
 	}
 	//otherwise load the DefaultSettings

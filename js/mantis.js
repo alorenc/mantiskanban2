@@ -759,6 +759,7 @@ var Mantis = {
 	},
 	
 	ProjectGetIssues : function(ProjectID, PageNumber, PerPage, callBack) {
+		console.log("ProjectGetIssues : " + ProjectID);
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.ProjectGetIssues.Name, Mantis.Methods.ProjectGetIssues.BuildParams(ProjectID, PageNumber, PerPage), hascallback, callBack);
 	},

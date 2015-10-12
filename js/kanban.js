@@ -134,11 +134,14 @@ var Kanban = {
 
 	AddStoryToArray: function(storyToAdd) {
 		if(!Kanban.HasStory(storyToAdd.ID)) {
-			Kanban.Stories[Kanban.Stories.length] = storyToAdd;
-			storyToAdd.BuildKanbanStoryDiv();
-			storyToAdd.List.Container.appendChild(storyToAdd.Element);
-			storyToAdd.Element.classList.add("fadein");
-			//Story.Element.style.display = 'block';
+			console.log("storyToAdd.ListID", storyToAdd.ListID);
+			if(storyToAdd.ListID != null) {
+				Kanban.Stories[Kanban.Stories.length] = storyToAdd;
+				storyToAdd.BuildKanbanStoryDiv();
+				storyToAdd.List.Container.appendChild(storyToAdd.Element);
+				storyToAdd.Element.classList.add("fadein");
+				//Story.Element.style.display = 'block';
+			}
 		}
 	},
 

@@ -22,6 +22,24 @@ Mantis.CurrentProjectSelection = "0";
 
 Mantis.TaskListField = "TaskList";
 
+// Scrum mode
+Kanban.ScrumMode = "Review";
+
+Kanban.ScrumModes = {
+	"Review" : {
+		"CurrentSprint" : "50", // Assigned
+		"Complete" : "80", // Resolved
+		"Testing" : "80",
+		"Tested" : "80",
+		"Release" : "90" // Closed
+	},
+	"Planif" : {
+		"Backlog" : "10", // New
+		"NextSprint" : "30", //     Acknowledged
+		"CurrentSprint" : "50" // Assigned
+	}
+}
+
 /// When a project has a custom field, you can specify mantis statuses to change to when entering this bucket
 Kanban.AutoStatusOnCustomField = {
 	"ScrumBucket" : {

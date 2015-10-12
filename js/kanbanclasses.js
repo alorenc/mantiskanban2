@@ -153,7 +153,8 @@ var KanbanStory = function(RawObject) {
 	this.StorySource = RawObject;
 	//alert(JSON.stringify(RawObject.notes))
 	this.UsesCustomField = false;
-	this.JoinList();
+	//this.JoinList();
+	console.log("this.ListID", this.ListID);
 	if(!Kanban.HasStory(this.ID)) {
 		Kanban.AddStoryToArray(this);
 	}
@@ -184,9 +185,16 @@ KanbanStory.prototype = {
 				}
 			}				
 		}
-		/// Return the first list if none are available
-		return Kanban.Lists[0]
-		//return null;
+
+		// TODO : Optimisation possible en inversant la boucle d'au dessus, en passant d'abbord en revue les valeur de l'objects et non la liste des champs
+		// Return the first list if none are available
+		for(var li = 0; li < Kanban.Lists.length; li++) {
+			if (Kanban.ScrumDefaultStatus == Kanban.Lists[li].ID) {
+				return Kanban.Lists[li];
+			}
+		}
+
+		return null;
 	},
 	set List(value) {
 		if(Kanban.UsingCustomField) {
@@ -201,7 +209,8 @@ KanbanStory.prototype = {
 	},
 
 	get ListID() {
-		return this.List.ID;
+		var list = this.List;
+		return (list != null) ? list.ID : null;
 	},
 
 	get ProjectID() {
@@ -425,8 +434,8 @@ KanbanStory.prototype = {
 						}
 					}
 				}
-				if(!foundListToDropIn) {
-					/// Hack to drop issues without a value assigned in their custom field into the first bucket.
+				if ((!foundListToDropIn) && (Kanban.ScrumDefaultStatus == thisList.ID)) {
+					// Hack to drop issues without a value assigned in their custom field into the first bucket.
 					this._list = Kanban.Lists[0];
 					Kanban.Lists[0].AddStory(this);
 					this.UsesCustomField = true;
