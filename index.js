@@ -61,12 +61,6 @@ function window_load() {
 	});
 
 
-	if(DefaultSettings.connectURL != undefined && DefaultSettings.connectURL != "") {
-		document.getElementById("mantisURL").value = DefaultSettings.connectURL;
-	} else if (preConfiguredMantisURL != undefined && preConfiguredMantisURL != "") {
-		document.getElementById("mantisURL").value = preConfiguredMantisURL;
-	}
-
 	//make sure that the username and password form doesnt actually submit. 
 	//need this here as a fail safe because jQuery is included.
 	$('#userLoginForm').submit(function() {
@@ -155,7 +149,6 @@ function Login() {
 	log("Login() called.");
 	
 	document.getElementById("username").focus();
-	Mantis.ConnectURL = document.getElementById("mantisURL").value;
 	
 	try {
 		var retObj = Mantis.Login(document.getElementById("username").value, document.getElementById("password").value);
@@ -412,6 +405,7 @@ function SelectProject(openStoryID) {
 
 	UpdateFilterList();
 
+	$("[name='scrumMode']").bootstrapSwitch();
 	BuildKanbanListFromMantisStatuses();
 	
 	Kanban.BuildListGUI();
@@ -564,7 +558,10 @@ function BuildKanbanListFromMantisStatuses() {
 					possiblevalue = possiblevalues[pv];
 					var newKanbanList = new KanbanList(possiblevalue);
 					newKanbanList.UsesCustomField = true;
-					Kanban.AddListToArray(newKanbanList);
+
+					if ((newKanbanList.ID != "Backlog") && (newKanbanList.ID != "NextSprint")) {
+						Kanban.AddListToArray(newKanbanList);
+					}
 				}
 			}
 		}
@@ -593,20 +590,20 @@ function LoadKanbanProjects() {
 		var parentProject = new KanbanProject(Mantis.UserProjects[i]);
 		Kanban.Projects[Kanban.Projects.length] = parentProject;
 		if(parentProject.ProjectSource.subprojects.length > 0) {
-			AddProjectandSubProjectsToList(parentProject.ProjectSource.subprojects, parentProject);
+			AddProjectandSubProjectsToList(parentProject.ProjectSource.subprojects, parentProject, 1);
 		}
 	}
 }
 
-function AddProjectandSubProjectsToList(projectList, parent) {
+function AddProjectandSubProjectsToList(projectList, parent, niv) {
 	for(var q=0; q < projectList.length; q++) {
 		var subProject = new KanbanProject(projectList[q]);
 		Kanban.Projects[Kanban.Projects.length] = subProject;
 		subProject.ParentProject = parent;
-		subProject.IsSubProject = true;
+		subProject.ProjectNiv = niv;
 		parent.SubProjects[parent.SubProjects.length] = subProject;
 		if(subProject.ProjectSource.subprojects.length > 0) {
-			AddProjectandSubProjectsToList(subProject.ProjectSource.subprojects, subProject);
+			AddProjectandSubProjectsToList(subProject.ProjectSource.subprojects, subProject, niv + 1);
 		}
 	}
 }
@@ -619,8 +616,9 @@ function BuildProjectUI(project, parent, preSelectedProjectID) {
 		projectDiv.setAttribute("href", "");
 		projectDiv.setAttribute("onclick", "document.getElementById('seletedproject').value = '" + project.ID + "'; document.getElementById('searchfield').value = ''; SelectProject(); SwapSelectedProject(this.id); return false;");
 		projectDiv.setAttribute("selected", project.ID == preSelectedProjectID ? "true" : "false");
-		if(project.IsSubProject) {
+		if(project.ProjectNiv > 0) {
 			projectLI.classList.add("subproject");
+			projectLI.classList.add("subprojectNiv" + project.ProjectNiv);
 		}
 		projectDiv.innerHTML = project.Name;
 		projectLI.appendChild(projectDiv);
@@ -710,6 +708,7 @@ function CreateKanbanStoriesFromMantisIssues(obj) {
 
 	
 }
+
 function AutoLogin(){
 	//use this function to check to see if the user has local storage for username and password and if they do log in automatically
 	if (Modernizr.localstorage) {

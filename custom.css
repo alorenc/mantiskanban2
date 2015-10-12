@@ -1,0 +1,31 @@
+.rightButtons {
+    position: absolute;
+    right: 50px;
+    top: 10px;
+}
+
+
+.subprojectNiv1 {
+    margin-left: 20px;
+}
+.subprojectNiv2 {
+    margin-left: 40px;
+}
+.subprojectNiv3 {
+    margin-left: 60px;
+}
+.subprojectNiv4 {
+    margin-left: 80px;
+}
+.subprojectNiv5 {
+    margin-left: 100px;
+}
+.subprojectNiv6 {
+    margin-left: 120px;
+}
+.subprojectNiv7 {
+    margin-left: 140px;
+}
+.subprojectNiv8 {
+    margin-left: 160px;
+}

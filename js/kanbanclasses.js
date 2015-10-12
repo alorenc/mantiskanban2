@@ -50,8 +50,7 @@ var KanbanProject = function(RawObject) {
 }
 
 KanbanProject.prototype = {
-
-	IsSubProject : false,
+	ProjectNiv : 0,
 
 	ParentProject : null,
 

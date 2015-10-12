@@ -1362,7 +1362,6 @@ Kanban.ApplyTheme = function(styleID) {
 Kanban.SaveSettings = function() {
 	//modifyStyleRule(selectorText, value)
 	DefaultSettings.kanbanListWidth = document.getElementById("settings-list-width").value;
-	DefaultSettings.connectURL = document.getElementById("settings-connectURL").value;
 	DefaultSettings.autoResizeColumns = document.getElementById("settings-autofit-onresize").checked;
 	DefaultSettings.selectedStyle = document.getElementById("settings-selectedTheme").value;
 	saveSettingsToStorageMechanism();
@@ -1382,7 +1381,6 @@ Kanban.ApplySettingsAtLogin = function() {
 Kanban.ApplySettings = function() {
 	var listWidthValue = document.getElementById("settings-list-width").value;
 	modifyStyleRule(".kanbanlist", "width", listWidthValue);
-	document.getElementById("mantisURL").value = DefaultSettings.connectURL;
 	window.removeEventListener("resize", AutoAdjustListWidth);
 	if(DefaultSettings.autoResizeColumns) {
 		AutoAdjustListWidth();
@@ -1394,8 +1392,6 @@ Kanban.ApplySettings = function() {
 
 Kanban.LoadRuntimeSettings = function() {
 	document.getElementById("settings-list-width").value = getStyleRule(".kanbanlist", "width");	
-	document.getElementById("settings-connectURL").value = DefaultSettings.connectURL;
-	document.getElementById("mantisURL").value = DefaultSettings.connectURL;
 	document.getElementById("settings-autofit-onresize").checked = DefaultSettings.autoResizeColumns;
 }
 
@@ -1405,8 +1401,6 @@ function ShowSettings() {
 	Kanban.LoadRuntimeSettings();
 	document.getElementById("edit-settings-form").setAttribute("editing", "true");
 	document.getElementById("edit-settings-form").style.visibility = "visible";
-	document.getElementById("settings-connectURL").value = DefaultSettings.connectURL;
-	document.getElementById("mantisURL").value = DefaultSettings.connectURL;
 	document.getElementById("kanbancontent").setAttribute("editing", "true");
 	document.getElementById("settings-autofit-onresize").checked = DefaultSettings.autoResizeColumns;
 
