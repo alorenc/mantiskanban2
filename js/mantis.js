@@ -720,7 +720,7 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		//var updateIssue = jQuery.extend(true, {}, Issue);
 		//delete updateIssue.notes;
-		
+
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.IssueUpdate.Name, Mantis.Methods.IssueUpdate.BuildParams(IssueID, Issue), hascallback, callBack);
 	},
 

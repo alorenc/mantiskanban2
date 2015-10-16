@@ -143,7 +143,7 @@ KanbanList.prototype = {
 			if(this._stories[i].ID == id) return true;
 		}
 		return false;
-	},
+	}
 
 }
 
@@ -153,8 +153,7 @@ var KanbanStory = function(RawObject) {
 	this.StorySource = RawObject;
 	//alert(JSON.stringify(RawObject.notes))
 	this.UsesCustomField = false;
-	//this.JoinList();
-	console.log("this.ListID", this.ListID);
+	this.JoinList();
 	if(!Kanban.HasStory(this.ID)) {
 		Kanban.AddStoryToArray(this);
 	}

@@ -399,6 +399,7 @@ function SelectProject(openStoryID) {
 	Kanban.Lists = [];
 	Kanban.Stories = [];
 	Kanban.AssignedUsers = [];
+	Kanban.AssignedUsersSelected = [];
 	var assignedUserContainer = document.getElementById("project-users-gravatars-container");
 	try {
 		while(assignedUserContainer.childNodes.length > 0) {
@@ -649,15 +650,46 @@ function BuildProjectsGUI() {
 	}
 }
 
+function GetUserColor(digits) {
+	if(digits.length > 3) digits = digits.substring(0, 3)
+	if(digits.length < 3) digits = pad(3, digits, "0");
+
+	var colorObject = GetColorCodeFor3Digits(digits);
+	var textContrast = GetColorContrastForRBG(colorObject.first, colorObject.second, colorObject.third);
+	return "color: " + textContrast + "; background: #" + rgbToHex(colorObject.first, colorObject.second, colorObject.third) + ";";
+}
+
 function BuildKanbanAssignedUsersGUI() {
 	var kanbanUserListContainer = document.getElementById("project-users-gravatars-container");
 	kanbanUserListContainer.innerHTML = "Users:";
 
+	var thisUser = Kanban.AssignedUsers[kbu];
+	var userGravatar = document.createElement("div");
+	userGravatar.innerHTML = "X";
+	userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems");
+	userGravatar.setAttribute("style", "color: #fff; background: #e77; text-align:center; padding-top:5px; vertical-align:middle;");
+
+	userGravatar.setAttribute("data-toggle", "tooltip");
+	userGravatar.setAttribute("data-placement", "bottom");
+	userGravatar.setAttribute("data-trigger", "hover");
+	userGravatar.setAttribute("data-html", "true");
+
+	userGravatar.setAttribute("title", "Nobody");
+	userGravatar.setAttribute("data-content", "");
+	userGravatar.setAttribute("id", "ug");
+
+	kanbanUserListContainer.appendChild(userGravatar);
+
 	for(var kbu = 0; kbu < Kanban.AssignedUsers.length; kbu++) {
 		var thisUser = Kanban.AssignedUsers[kbu];
-		var userGravatar = document.createElement("a");
+
+		var userGravatar = document.createElement("div");
+		var shortName = thisUser.UserName.substring(0, 1).toUpperCase() + thisUser.UserName.substring(1, 2);
+		userGravatar.innerHTML = shortName;
+
 		userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems");
-		userGravatar.style.backgroundImage = "url(" + get_gravatar_image_url (thisUser.Email, 30) + ")";
+		userGravatar.setAttribute("style", GetUserColor(thisUser.UserName.substring(0, 3)) + " text-align:center; padding-top:5px; vertical-align:middle;");
+
 		//userGravatar.setAttribute("data-container", "body");
 		userGravatar.setAttribute("data-toggle", "tooltip");
 		userGravatar.setAttribute("data-placement", "bottom");
@@ -667,16 +699,44 @@ function BuildKanbanAssignedUsersGUI() {
 		//userGravatar.setAttribute("data-content", thisUser.Email);
 		//userGravatar.setAttribute("data-trigger", "hover");
 		userGravatar.setAttribute("title", thisUser.Name);
-		userGravatar.setAttribute("data-content", "<b>" + thisUser.Email + "</b><div style=\"color:#000 !important; border: solid 1px #bbb; padding-left: 5px;" + GetStyleCodeFor3DigitsHalfShaded(thisUser.UserName.substring(0, 3)) + "\">" + thisUser.UserName.substring(0, 1).toUpperCase() + thisUser.UserName.substring(1, 2) + "</div>");
+		userGravatar.setAttribute("data-content", "<b>" + thisUser.Email + "</b><div style=\"color:#000 !important; border: solid 1px #bbb; padding-left: 5px;" + GetStyleCodeFor3DigitsHalfShaded(thisUser.UserName.substring(0, 3)) + "\">" + shortName + "</div>");
 		userGravatar.setAttribute("id", "ug" + thisUser.ID);
 
 		kanbanUserListContainer.appendChild(userGravatar);
 
 	}
 
+	$(".userlistgravataritems").click(function() {
+		var id = $(this).attr("id").substr(2);
+
+		if (!$(this).hasClass("selected")) {
+			$(this).addClass("selected");
+			$(this).css( "outline", "medium solid #dd2222" );
+			Kanban.AssignedUsersSelected.push(id);
+		} else {
+			$(this).removeClass("selected");
+			$(this).css( "outline", "" );
+
+			var index = Kanban.AssignedUsersSelected.indexOf(id);
+			if (index > -1) {
+				Kanban.AssignedUsersSelected.splice(index, 1);
+			}
+		}
+
+		RefreshStoriesDisplay();
+	});
+
 	$(function () { 
     	$("[data-toggle='tooltip']").popover({html:true}); 
 	});
+}
+
+function RefreshStoriesDisplay() {
+	for(var si = 0; si < Kanban.Stories.length; si++) {
+		var story = Kanban.Stories[si];
+
+		story.Element.style.display = ((Kanban.AssignedUsersSelected.indexOf(story.HandlerID) > -1) || (Kanban.AssignedUsersSelected.length == 0)) ? 'block' : 'none';
+	}
 }
 
 function SelectFirstMantisProjectUserAccessAccessTo(obj, doc) {
@@ -711,8 +771,6 @@ function CreateKanbanStoriesFromMantisIssues(obj) {
 		var newStory = new KanbanStory(obj[is])
 		Kanban.AddStoryToArray(newStory);
 	}
-
-	
 }
 
 function AutoLogin(){
