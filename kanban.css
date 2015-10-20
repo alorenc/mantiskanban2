@@ -35,7 +35,7 @@ body {
 }
 
 #project-users-gravatars-container {
-	display: inline;
+	display: block;
 	background: #eeeeee; /* Old browsers */
 	background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
@@ -44,7 +44,7 @@ body {
 	background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
-	margin-left: 40px;
+	margin-top: 6px;
 	padding-right: 10px;
 	padding-left: 30px;
 	vertical-align: middle;
@@ -209,7 +209,7 @@ div.notecontainer {
 .otherbuttoncontainer {
 	vertical-align: middle;
 	display: inline;
-	height: 85px;
+	/*height: 85px;*/
 }
 .projectlist{
 	display: inline;
@@ -382,7 +382,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	top: 0px;
 	display:none;
 	width: 100%;
-	height: calc(100% - 85px); 
+	height: calc(100% - 125px);
 	border-bottom: 1px solid #000000;
 	background-color: #cacacf;
 	white-space: nowrap;
@@ -395,7 +395,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 
 .headerarea{
 	/*background: #666c70;*/
-	height: 85px;
+	height: 125px;
 	width:100%;
 	background: #565656;
 }
@@ -927,11 +927,7 @@ div[priority="immediate"] {
 .rightButtons2 {
     position: absolute;
     right: 50px;
-    top: 45px;
-}
-
-.headerarea {
-    height: 90px;
+    top: 65px;
 }
 
 
