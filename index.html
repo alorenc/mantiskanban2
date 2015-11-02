@@ -102,11 +102,9 @@
 								</div>
 								<div class="btn-group">
 									<a class="btn dropdown-toggle btn-warning btn-small" data-toggle="dropdown" href="#">
-										<i class="glyphicon glyphicon-filter"></i>
-										Select Filter
-										<span class="caret"></span>
+										<i class="glyphicon glyphicon-filter"></i> <span id="selectedFilterText">Select Filter</span> <span class="caret"></span>
 									</a>
-									<ul id="filterlist" class="dropdown-menu">
+									<ul id="filterlist" class="dropdown-menu scrollable-menu">
 									<!-- dropdown menu links -->
 									</ul>
 								</div>
@@ -124,12 +122,8 @@
 						<div id="editing-header" class="editing-header gravatarcontainer">
 							<h4 id="edit-story-title">Edit Story</h4>
 						</div>
-						<div class="btn-group editing-buttons" style="">
-							<div onclick="DeleteIssue();CloseEditStory();" class="btn btn-danger pull-left">Delete</div>
-							<div onclick="CloseEditStory();" class="btn btn-warning">Hide</div>
-							<div onclick="UpdateStoryFromFormData(); CloseEditStory();" class="btn btn-primary">Save changes</div>
-						</div>			
 						<div class="editing-content">
+							<div>
 								<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
 									<li class="active" ><a href="#tabs-1" data-toggle="tab">General</a></li>
 									<li><a href="#tabs-2" data-toggle="tab">Description</a></li>
@@ -142,18 +136,17 @@
 									<div class="tab-pane active" id="tabs-1">
 										<form class="form-horizontal">
 											<input type="hidden" id="edit-story-id" name="edit-story-id" />
-											<div class="control-group col-xs-12">
-												<label class="control-label" for="edit-summary">Summary:</label>
-												<div class="controls">
-													<input type="text" name="edit-summary" id="edit-summary" class="form-control input-small" />
-												</div>
-											</div>
-											<div class="control-group col-xs-12">
-												<label class="control-label" for="edit-summary">Tags (click to delete):</label>
-												<div class="tagsborderarea">
-													<div class="tagscontainer" id="edit-story-tags-container">
+												<div class="control-group col-xs-12">
+													<label class="control-label" for="edit-summary">Summary:</label>
+													<div class="controls">
+														<input type="text" name="edit-summary" id="edit-summary" class="form-control input-small" />
 													</div>
-													
+												</div>
+												<div class="control-group col-xs-12">
+													<label class="control-label" for="edit-summary">Tags (click to delete):</label>
+													<div class="tagsborderarea">
+														<div class="tagscontainer" id="edit-story-tags-container"></div>
+
 														<div class="input-group">
 															<div class="input-group-btn">
 																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Add Existing <span class="caret"></span></button>
@@ -164,66 +157,65 @@
 															</div>
 															<input type="text" id="edit-story-new-tag" class="form-control">
 															<div class="input-group-btn">
-														  		<div class="btn btn-danger" onclick="AddNewTagFromEditForm();"><span class="glyphicon glyphicon-plus"> Add</span></div>
+																<div class="btn btn-danger" onclick="AddNewTagFromEditForm();"><span class="glyphicon glyphicon-plus"> Add</span></div>
 															</div>
 														</div>
-													</div>										
+													</div>
 												</div>
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-project">Project:</label>
-												<div class="controls">
-													<select name="edit-project" id="edit-project" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-project">Project:</label>
+													<div class="controls">
+														<select name="edit-project" id="edit-project" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-status">Status:</label>
-												<div class="controls">
-													<select name="edit-status" id="edit-status" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-status">Status:</label>
+													<div class="controls">
+														<select name="edit-status" id="edit-status" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-severity">Severity:</label>
-												<div class="controls">
-													<select name="edit-severity" id="edit-severity" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-severity">Severity:</label>
+													<div class="controls">
+														<select name="edit-severity" id="edit-severity" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-resolution">Resolution</label>
-												<div class="controls">
-													<select name="edit-resolution" id="edit-resolution" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-resolution">Resolution</label>
+													<div class="controls">
+														<select name="edit-resolution" id="edit-resolution" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>	
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-priority">Priority:</label>
-												<div class="controls">
-													<select name="edit-priority" id="edit-priority" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-priority">Priority:</label>
+													<div class="controls">
+														<select name="edit-priority" id="edit-priority" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-category">Category</label>
-												<div class="controls">
-													<select name="edit-category" id="edit-category" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-category">Category</label>
+													<div class="controls">
+														<select name="edit-category" id="edit-category" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>											
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-reporter">Reporter:</label>
-												<div class="controls">
-													<select name="edit-reporter" id="edit-reporter" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-reporter">Reporter:</label>
+													<div class="controls">
+														<select name="edit-reporter" id="edit-reporter" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>
-											<div class="control-group col-xs-6">
-												<label class="control-label" for="edit-assignedto">Assigned To:</label>
-												<div class="controls">
-													<select name="edit-assignedto" id="edit-assignedto" class="form-control input-small"></select>
+												<div class="control-group col-xs-6">
+													<label class="control-label" for="edit-assignedto">Assigned To:</label>
+													<div class="controls">
+														<select name="edit-assignedto" id="edit-assignedto" class="form-control input-small"></select>
+													</div>
 												</div>
-											</div>
-											<div class="control-group col-xs-10">
-												<label class="control-label" for="edit-datesubmitted">Date Submitted:</label>
-												<div class="controls">
-													<div style="display:inline-block;" id="edit-datesubmitted"></div>
+												<div class="control-group col-xs-10">
+													<label class="control-label" for="edit-datesubmitted">Date Submitted:</label>
+													<div class="controls">
+														<div style="display:inline-block;" id="edit-datesubmitted"></div>
+													</div>
 												</div>
-											</div>
-
 										</form>
 									</div>
 									<div class="tab-pane form-controls" id="tabs-2">
@@ -275,6 +267,11 @@
 										</div>
 									</div>									
 								</div>
+							</div>
+						</div>
+						<div>
+							<div onclick="UpdateStoryFromFormData(); CloseEditStory();" class="btn btn-warning btn_mid_large">Hide</div>
+							<div onclick="UpdateStoryFromFormData(); CloseEditStory();" class="btn btn-primary btn_mid_large">Save changes</div>
 						</div>
 					</div>
 					<div id="add-story-form" class="editform">

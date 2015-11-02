@@ -186,10 +186,20 @@ KanbanStory.prototype = {
 		}
 
 		// TODO : Optimisation possible en inversant la boucle d'au dessus, en passant d'abbord en revue les valeur de l'objects et non la liste des champs
-		// Return the first list if none are available
+		// Return the first list if none are available and value is not set to an other value
+
 		for(var li = 0; li < Kanban.Lists.length; li++) {
 			if (Kanban.ScrumDefaultStatus == Kanban.Lists[li].ID) {
-				return Kanban.Lists[li];
+
+				if(Kanban.UsingCustomField) {
+					for(var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
+						if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
+							if (!Kanban.ScrumSteps[this.StorySource.custom_fields[ci].value]) {
+								return Kanban.Lists[li];
+							}
+						}
+					}
+				}
 			}
 		}
 

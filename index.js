@@ -475,7 +475,18 @@ function VerifyDefaultFitlers() {
 }
 
 function UpdateFilter(filterID) {
-	Mantis.DefaultFilterID = filterID;
+	for(var i = 0; i < Mantis.ProjectFilterList.length; i++) {
+		console.log(Mantis.ProjectFilterList[i].id, filterID);
+		if (Mantis.ProjectFilterList[i].id == filterID) {
+			$('#selectedFilterText').text(Mantis.ProjectFilterList[i].name);
+			Mantis.DefaultFilterID = filterID;
+			SelectProject();
+			return;
+		}
+	}
+
+	$('#selectedFilterText').text("Select Filter");
+	Mantis.DefaultFilterID = null;
 	SelectProject();
 }
 
@@ -484,12 +495,14 @@ function UpdateFilterList() {
 	log("UpdateFilterList() called.");
 
 	var filterList = document.getElementById("filterlist");
+
 	var filterListArray = Mantis.FilterGet(Mantis.CurrentProjectID)
 	Mantis.ProjectFilterList = filterListArray;
 
 	while(filterList.children.length > 0) { 
 	 	filterList.removeChild(filterList.children[0]);
-	} 
+	}
+	filterList.innerHTML = "<li><a href=\"#\" onclick=\"UpdateFilter(0);\">Clear filter</a></li><li role=\"separator\" class=\"divider\"></li>";
 
 	for(var i = 0; i < filterListArray.length; i++) {
 	

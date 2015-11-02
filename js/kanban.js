@@ -405,12 +405,15 @@ function UpdateStoryFromFormData() {
 			}
 
 			if (thisStory.HandlerID != document.getElementById("edit-assignedto").value) {
-				storyToUpdate.handler.id = (document.getElementById("edit-assignedto").value == "") ? null : document.getElementById("edit-assignedto").value;
+				storyToUpdate.handler = {
+					"name": "",
+					"id": (document.getElementById("edit-assignedto").value == "") ? null : document.getElementById("edit-assignedto").value
+				};
 			}
-			if (thisStory.HandlerID != document.getElementById("edit-severity").value) {
+			if (thisStory.SeverityID != document.getElementById("edit-severity").value) {
 				storyToUpdate.severity.id = (document.getElementById("edit-severity").value == "") ? null : document.getElementById("edit-severity").value;
 			}
-			if (thisStory.HandlerID != document.getElementById("edit-resolution").value) {
+			if (thisStory.ResolutionID != document.getElementById("edit-resolution").value) {
 				storyToUpdate.resolution.id = (document.getElementById("edit-resolution").value == "") ? null : document.getElementById("edit-resolution").value;
 			}
 
