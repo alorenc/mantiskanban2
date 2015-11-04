@@ -187,7 +187,6 @@ var Kanban = {
 
 	BuildListGUI: function() {
 		for(var li = 0; li < Kanban.Lists.length; li++) {
-
 			var kanbanListItem = Kanban.Lists[li];
 
 			var existingElement = document.getElementById("listid" + kanbanListItem.ID);

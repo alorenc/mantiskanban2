@@ -205,6 +205,20 @@ function Login() {
 		SelectProject();
 	});
 
+
+	if (Kanban.Priorities != null) {
+		var priorityList = document.getElementById('prioritylegend');
+		try { while(priorityList.childNodes.length > 0) { priorityList.removeChild(priorityList.firstChild); } } catch(e) {}
+
+		for (var priority in Kanban.Priorities) {
+			var projectDiv = document.createElement("div");
+			projectDiv.innerHTML = priority;
+			projectDiv.setAttribute("priority", Kanban.Priorities[priority].value);
+
+			priorityList.appendChild(projectDiv);
+		}
+	}
+
 	SelectProject();
 
 	Mantis.Preload();
@@ -423,6 +437,8 @@ function SelectProject(openStoryID) {
 
 	if(Kanban.CurrentProject.ParentProject) {
 		document.getElementById("selected-project-name").innerHTML = Kanban.CurrentProject.ParentProject.Name + "&nbsp;&nbsp;/&nbsp;&nbsp;" + Kanban.CurrentProject.Name;	
+	} else if (Mantis.CurrentProjectID == 0) {
+		document.getElementById("selected-project-name").innerHTML = "All projects";
 	} else {
 		document.getElementById("selected-project-name").innerHTML = Kanban.CurrentProject.Name;	
 	}
@@ -567,7 +583,7 @@ function StopLoading() {
 function BuildKanbanListFromMantisStatuses() {
 	var hasCutomFieldForStatus = false;
 	Kanban.UsingCustomField = false;
-	if(Mantis.ProjectCustomFields.length > 0) {
+	if (Mantis.ProjectCustomFields.length > 0) {
 		for(var cf = 0; cf < Mantis.ProjectCustomFields.length; cf++) {
 			var customfield = Mantis.ProjectCustomFields[cf]
 			if(customfield.field.name == Kanban._listIDField) {
@@ -651,11 +667,12 @@ function BuildProjectsGUI() {
 	var projectDivContainer = document.getElementById("projectlist");
 	var preSelectedProjectID = document.getElementById("seletedproject").value == "" ? Kanban.Projects[0].ID : document.getElementById("seletedproject").value;
 	try { while(projectDivContainer.childNodes.length > 0) { projectDivContainer.removeChild(projectDivContainer.firstChild); } } catch(e) { }
+
+	projectDivContainer.innerHTML = "<li><a href=\"#\" onclick=\"document.getElementById('seletedproject').value = '0'; document.getElementById('searchfield').value = ''; SelectProject(); SwapSelectedProject(0); return false;\">All projects</a></li><li role=\"separator\" class=\"divider\"></li>";
+
 	for(var i = 0; i < Kanban.Projects.length; i++) {
-		
 		var thisProject = Kanban.Projects[i];
 		BuildProjectUI(thisProject, projectDivContainer, preSelectedProjectID);
-
 	}
 
 	if(document.getElementById("seletedproject").value == "" || !Kanban.HasProject(document.getElementById("seletedproject").value)) {

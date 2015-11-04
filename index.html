@@ -68,8 +68,6 @@
 					<div id="projectarea" class="projectarea">
 						<img src="images/mantis_logo.png" class="mantislogo loggedin" />
 						<div style="display:inline-block">
-							<div id="selected-project-name">Project</div>
-
 							<div class="rightButtons">
 								<input type="checkbox" id="scrumMode" data-on-text="ScrumDaily" data-off-text="ScrumPlanif" data-off-color="warning" data-label-width="10" checked>
 
@@ -93,8 +91,7 @@
 							<div class="otherbuttoncontainer" style="margin-bottom: 20px; display:block;">
 								<div class="btn-group">
 									<button class="btn btn-primary btn-small dropdown-toggle" type="button" data-toggle="dropdown">
-										<i class="glyphicon glyphicon-dashboard"></i>
-										Select Project <span class="caret"></span>
+										<i class="glyphicon glyphicon-dashboard"></i> <span id="selected-project-name">Select Project</span> <span class="caret"></span>
 									</button>						
 									<ul id="projectlist" class="dropdown-menu">
 									<!-- dropdown menu links -->
@@ -270,7 +267,7 @@
 							</div>
 						</div>
 						<div>
-							<div onclick="UpdateStoryFromFormData(); CloseEditStory();" class="btn btn-warning btn_mid_large">Hide</div>
+							<div onclick="CloseEditStory();" class="btn btn-warning btn_mid_large">Hide</div>
 							<div onclick="UpdateStoryFromFormData(); CloseEditStory();" class="btn btn-primary btn_mid_large">Save changes</div>
 						</div>
 					</div>

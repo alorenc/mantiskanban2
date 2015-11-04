@@ -145,7 +145,7 @@ var Mantis = {
 	
 	get ProjectCategories() {
 		if(Mantis._projectcategories.length == 0) {
-			Mantis._projectcategories = Mantis.ProjectGetCategories();
+			Mantis._projectcategories = Mantis.ProjectGetCategories((Mantis.CurrentProjectID == 0 ) ? Mantis.DefaultProjectID : Mantis.CurrentProjectID);
 		}
 	  return Mantis._projectcategories;  
 	},
@@ -159,7 +159,7 @@ var Mantis = {
 
 	get ProjectCustomFields() {
 		if(Mantis._projectcustomfields.length == 0) {
-			Mantis._projectcustomfields = Mantis.ProjectGetCustomFields(Mantis.CurrentProjectID);
+			Mantis._projectcustomfields = Mantis.ProjectGetCustomFields((Mantis.CurrentProjectID == 0 ) ? Mantis.DefaultProjectID : Mantis.CurrentProjectID);
 		}
 		return Mantis._projectcustomfields;
 	},
@@ -753,9 +753,9 @@ var Mantis = {
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.Login.Name, Mantis.Methods.Login.BuildParams(UserName, Password), false, null);
 	},
 	
-	ProjectGetCategories :  function(callBack){
+	ProjectGetCategories :  function(ProjectID, callBack){
 		hascallback = callBack == null ? false : true;
-		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.ProjectGetCategories.Name, Mantis.Methods.ProjectGetCategories.BuildParams(Mantis.CurrentProjectID), hascallback, callBack);
+		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.ProjectGetCategories.Name, Mantis.Methods.ProjectGetCategories.BuildParams(ProjectID), hascallback, callBack);
 	},
 	
 	ProjectGetIssues : function(ProjectID, PageNumber, PerPage, callBack) {

@@ -559,7 +559,7 @@ KanbanStory.prototype = {
 		var storyDivSeverity = document.createElement("section");
 		storyDivSeverity.setAttribute("class", "kanbanstoryissuenumber");
 		storyDivSeverity.setAttribute("id", "storyseverity" + this.ID);
-		storyDivSeverity.setAttribute("priority", this.PriorityName);
+		storyDivSeverity.setAttribute("priority", this.SeverityID);
 		storyDivSeverity.setAttribute("listid", "listid" + this.ListID);
 		storyDivSeverity.setAttribute("storyid", "storydiv" + this.ID);
 		storyDivSeverity.setAttribute("dropdivid", "dropdiv" + this.ID);
@@ -644,7 +644,7 @@ KanbanStory.prototype = {
 		storyDivSeverityContainer.setAttribute("listid", "listid" + this.ListID);
 		storyDivSeverityContainer.setAttribute("storyid", "storydiv" + this.ID);
 		storyDivSeverityContainer.setAttribute("dropdivid", "dropdiv" + this.ID);
-		storyDivSeverityContainer.setAttribute("priority", this.PriorityName);
+		storyDivSeverityContainer.setAttribute("priority", this.SeverityID);
 		storyDivTitle.appendChild(storyDivSeverityContainer);
 
 		if(this.Element != null) {

@@ -209,7 +209,8 @@ div.notecontainer {
 .otherbuttoncontainer {
 	vertical-align: middle;
 	display: inline;
-	/*height: 85px;*/
+	top : 5px;
+    position: absolute;
 }
 .projectlist{
 	display: inline;
@@ -227,13 +228,6 @@ div.notecontainer {
 }
 
 #selected-project-name {
-	color: #FFFFFF;
-	display: inline-block;
-	margin-top: 5px !important;
-	margin-bottom: 3px;
-
-	font-size: 1.75em;
-	font-weight: bold;
 }
 
 .mantislogo{
@@ -382,7 +376,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	top: 0px;
 	display:none;
 	width: 100%;
-	height: calc(100% - 125px);
+	height: calc(100% - 85px);
 	border-bottom: 1px solid #000000;
 	background-color: #cacacf;
 	white-space: nowrap;
@@ -395,7 +389,6 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 
 .headerarea{
 	/*background: #666c70;*/
-	height: 125px;
 	width:100%;
 	background: #565656;
 }
@@ -922,12 +915,14 @@ div[priority="immediate"] {
     position: absolute;
     right: 50px;
     top: 5px;
+    z-index: 100;
 }
 
 .rightButtons2 {
     position: absolute;
     right: 50px;
-    top: 65px;
+    top: 45px;
+    z-index: 100;
 }
 
 .btn_large {
