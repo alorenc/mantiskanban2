@@ -275,7 +275,6 @@ div.notecontainer {
 
 .mantislogo.loggedin {
 	width: 210px;
-	margin-left: 30px;
 	display:inline;
 	vertical-align: top;
 	padding-top:2px;
@@ -915,7 +914,7 @@ div[priority="immediate"] {
     position: absolute;
     right: 50px;
     top: 5px;
-    z-index: 100;
+    z-index: 150;
 }
 
 .rightButtons2 {

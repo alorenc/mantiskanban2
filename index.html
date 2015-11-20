@@ -71,7 +71,21 @@
 							<div class="rightButtons">
 								<input type="checkbox" id="scrumMode" data-on-text="ScrumDaily" data-off-text="ScrumPlanif" data-off-color="warning" data-label-width="10" checked>
 
-								<div class="btn btn-success btn-small" onclick="SelectProject();"><i class="glyphicon glyphicon-refresh"></i> </div>
+								<div class="btn-group">
+									<button class="btn btn-success btn-small dropdown-toggle" type="button" data-toggle="dropdown">
+										<i class="glyphicon glyphicon-refresh"></i> <span id="selected-refresh">No</span> <span class="caret"></span>
+									</button>
+									<ul id="refreshlist" class="dropdown-menu">
+										<li><a href="#" onclick="Refresh(0);">No</a></li>
+										<li role="separator" class="divider"></li>
+										<li><a href="#" onclick="Refresh(60);">1 minute</a></li>
+										<li><a href="#" onclick="Refresh(300);">5 minutes</a></li>
+										<li><a href="#" onclick="Refresh(600);">10 minutes</a></li>
+										<li><a href="#" onclick="Refresh(900);">15 minutes</a></li>
+										<li><a href="#" onclick="Refresh(1800);">30 minutes</a></li>
+									</ul>
+								</div>
+
 								<div class="btn btn-info btn-small" onclick="ShowSettings();"><i class="glyphicon glyphicon-info-sign"></i> Settings</div>
 
 								<div id="gravatarcurrentuser" class="btn gravatarcurrentuser" style=""></div>
@@ -224,8 +238,8 @@
 									<div class="tab-pane" id="tabs-3">
 										<div class="fill">
 											<div id="edit-story-notes-container" name="edit-story-notes-container" class="notesarea"></div>
+											<textarea class="edit-newnotetext input-large form-control" id="edit-newnotetext" name="edit-newnotetext" title="Enter new notes here."></textarea><br />
 											<div class="btn btn-success addNoteButton" id="edit-story-new-note-save-button" name=""><span class="glyphicon glyphicon-arrow-up"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Note&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-up"></span></div><br>
-											<textarea class="edit-newnotetext input-large form-control" id="edit-newnotetext" name="edit-newnotetext" title="Enter new notes here."></textarea>
 										</div>
 									</div>
 									<div class="tab-pane" id="tabs-4">

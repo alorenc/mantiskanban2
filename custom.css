@@ -1,4 +1,4 @@
-div[priority="11"] {
+/*div[priority="11"] {
     background-color: #74BBFB;
     color:#343434;
     border-top-right-radius: 10px;
@@ -17,6 +17,33 @@ div[priority="60"] {
     color:#FFFFFF;
 }
 div[priority="80"] {
+    background-color: #fe0000;
+    color:#FFFFFF;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    height: 5px;
+}*/
+
+
+div[priority="30"] {
+    background-color: #74BBFB;
+    color:#343434;
+}
+div[priority="20"] {
+    background-color: #cdcdcd;
+    color:#000000;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+div[priority="40"] {
+    background-color: #CCEB05;
+    color:#343434;
+}
+div[priority="50"] {
+    background-color: #FF6600;
+    color:#FFFFFF;
+}
+div[priority="60"] {
     background-color: #fe0000;
     color:#FFFFFF;
     border-top-left-radius: 10px;

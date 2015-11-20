@@ -644,7 +644,7 @@ KanbanStory.prototype = {
 		storyDivSeverityContainer.setAttribute("listid", "listid" + this.ListID);
 		storyDivSeverityContainer.setAttribute("storyid", "storydiv" + this.ID);
 		storyDivSeverityContainer.setAttribute("dropdivid", "dropdiv" + this.ID);
-		storyDivSeverityContainer.setAttribute("priority", this.SeverityID);
+		storyDivSeverityContainer.setAttribute("priority", (Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
 		storyDivTitle.appendChild(storyDivSeverityContainer);
 
 		if(this.Element != null) {
@@ -674,7 +674,9 @@ Kanban.AddStoryAsyncCallback = function(result) {
 		try {
 			var newStory = new KanbanStory(Mantis.IssueGet(result));
 			newStory.BuildKanbanStoryDiv();
-			newStory.List.AddNewStoryUI(newStory);
+			if (newStory.List != null) {
+				newStory.List.AddNewStoryUI(newStory);
+			}
 			Kanban.CloseAddStoryDialog();
 		} catch(e) {
 			console.log(e);

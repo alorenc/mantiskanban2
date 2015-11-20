@@ -445,7 +445,7 @@ function SelectProject(openStoryID) {
 
 	if(Mantis.DefaultFilterID !== null && Mantis.DefaultFilterID != 0) {
 		window.setTimeout(function(filterID, retObj) {
-			LoadFilterAsync(Mantis.DefaultFilterID, 0, 0, function(filterID, retObj) {
+			LoadFilterAsync(Mantis.DefaultFilterID, 0, Mantis.NumberOfIssueToLoad, function(filterID, retObj) {
 				DoneLoadingIssuesCallback(filterID, retObj);
 				if(document.getElementById("searchfield").value != "") {
 					SearchForStory(false);
@@ -459,7 +459,7 @@ function SelectProject(openStoryID) {
 			window.setTimeout("LoadFilterAsync(Mantis.ClosedIssuesFilterID, 1, Kanban.NumberOfClosedMessagesToLoad, DoneLoadingIssuesCallback)", 10);
 		}
 	} else {
-		var retObj = Mantis.ProjectGetIssues(Mantis.CurrentProjectID, 0, 0);
+		var retObj = Mantis.ProjectGetIssues(Mantis.CurrentProjectID, 0, Mantis.NumberOfIssueToLoad);
 		CreateKanbanStoriesFromMantisIssues(retObj);
 		CreateListOfAssignedStories();
 		BuildKanbanAssignedUsersGUI();		
@@ -506,6 +506,37 @@ function UpdateFilter(filterID) {
 	SelectProject();
 }
 
+function Refresh(refreshTime) {
+	DefaultSettings.refresh = refreshTime;
+	saveSettingsToStorageMechanism();
+
+	UpdateRefreshDisplay();
+
+	SelectProject();
+}
+
+function RefreshDisplay() {
+	var editing = document.getElementById("kanbancontent").getAttribute("editing");
+	console.log("editing", editing);
+
+	if (editing != "true") {
+		SelectProject();
+	}
+}
+
+function UpdateRefreshDisplay() {
+	if (DefaultSettings.refresh > 0) {
+		$('#selected-refresh').text((DefaultSettings.refresh / 60) + " minute" + (((DefaultSettings.refresh / 60) > 1) ? "s" : ""));
+
+		if (Kanban.refreshInterval != null) {
+			clearInterval(Kanban.refreshInterval);
+		}
+		Kanban.refreshInterval = setInterval("RefreshDisplay();", DefaultSettings.refresh * 1000);
+	} else {
+		$('#selected-refresh').text("No");
+	}
+}
+
 function UpdateFilterList() {
 
 	log("UpdateFilterList() called.");
@@ -521,7 +552,6 @@ function UpdateFilterList() {
 	filterList.innerHTML = "<li><a href=\"#\" onclick=\"UpdateFilter(0);\">Clear filter</a></li><li role=\"separator\" class=\"divider\"></li>";
 
 	for(var i = 0; i < filterListArray.length; i++) {
-	
 		var filter = filterListArray[i];
 
 		var filterItem = document.createElement("li");
@@ -536,6 +566,10 @@ function UpdateFilterList() {
 
 		filterList.appendChild(filterItem);
 
+		// Update selected filter
+		if (filter.id == Mantis.DefaultFilterID) {
+			$('#selectedFilterText').text(filter.name);
+		}
 	}
 }
 
@@ -550,7 +584,7 @@ function LoadFilterAsync(FilterID, Page, Limit, Callback) {
 		} catch (e) {
 			if(Mantis.DefaultFilterID == FilterID) Mantis.DefaultFilterID = null;
 			if(Mantis.ClosedIssuesFilterID == FilterID) Mantis.ClosedIssuesFilterID =  null;
-			saveCurrentSettings();
+			saveSettingsToStorageMechanism();
 			StopLoading();
 			alert("Error Loading Stories For Filter: " + e.message);
 		}
@@ -767,6 +801,8 @@ function RefreshStoriesDisplay() {
 
 		story.Element.style.display = ((Kanban.AssignedUsersSelected.indexOf(story.HandlerID) > -1) || (Kanban.AssignedUsersSelected.length == 0)) ? 'block' : 'none';
 	}
+
+	UpdateKanbanListTitle();
 }
 
 function SelectFirstMantisProjectUserAccessAccessTo(obj, doc) {
@@ -801,6 +837,8 @@ function CreateKanbanStoriesFromMantisIssues(obj) {
 		var newStory = new KanbanStory(obj[is])
 		Kanban.AddStoryToArray(newStory);
 	}
+
+	UpdateKanbanListTitle();
 }
 
 function AutoLogin(){
@@ -846,6 +884,10 @@ function LoadSettingsFromLocalStorage(){
 			log("CurrentProjectID set to " + Mantis.CurrentProjectID);
 		}
 
+		if(DefaultSettings.refresh != null){
+			UpdateRefreshDisplay();
+		}
+
 		//put the username in the field if the DefaultSettings.lastAccessTime is less than 30 days ago
 		var currentTime = Math.round(new Date().getTime() / 1000);
 		if(((currentTime - DefaultSettings.lastAccessTime) < 2592000) && DefaultSettings.stayLoggedIn == 1){
@@ -872,7 +914,7 @@ function saveSettingsToStorageMechanism(){
 	log("saveCurrentSettings() called.");
 	if (Modernizr.localstorage) {
   		localStorage.setItem("mantiskanbanSettings", JSON.stringify(DefaultSettings));
-  		log("local stored settings: " + localStorage.getItem("mantiskanbanSettings"));
+		log("local stored settings: " + localStorage.getItem("mantiskanbanSettings"));
   		log("defaultSettings: " + JSON.stringify(DefaultSettings));
 	}
 	else {

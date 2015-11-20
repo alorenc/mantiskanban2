@@ -332,7 +332,7 @@ function Drop(event) {
 
 	} catch(e) {
 		console.log(e);
-		alert("Error:" + e.message);
+		//alert("Error:" + e.message);
 		Kanban.BlockUpdates = false;
 		StopLoading();
 	} finally {
@@ -379,6 +379,8 @@ function UpdateKanbanStoryComplete(result) {
 
 				/// Make sure the list is still valid
 			}
+
+			UpdateKanbanListTitle();
 		} catch(e) {
 			console.log(e);
 		}
@@ -388,6 +390,32 @@ function UpdateKanbanStoryComplete(result) {
 	}
 }
 
+function UpdateKanbanListTitle() {
+	for(var li = 0; li < Kanban.Lists.length; li++) {
+		var kanbanListItem = Kanban.Lists[li];
+
+		var existingElement = document.getElementById("kanbanlisttitle" + li);
+
+		var nbItem = 0;
+		var workload = 0;
+		for(var si = 0; si < kanbanListItem.Stories.length; si++) {
+			if ((kanbanListItem.Stories[si].Element != null) && (kanbanListItem.Stories[si].Element.style != null) && (kanbanListItem.Stories[si].Element.style.display != 'none')) {
+				nbItem++;
+
+				var cf = kanbanListItem.Stories[si].StorySource.custom_fields;
+				if (cf != null) {
+					for (var t = 0; t < cf.length; t++) {
+						if ((cf[t].field != null) && (cf[t].field.name == 'ChargeRestante') && (cf[t].value != null)) {
+							workload += parseFloat(cf[t].value);
+						}
+					}
+				}
+			}
+		}
+
+		existingElement.innerHTML = kanbanListItem.Name.capitalize() + " (" + nbItem + ((workload > 0) ? " => " + workload + "j" :"") + ")";
+	}
+}
 
 function UpdateStoryFromFormData() {
 	Kanban.BlockUpdates = true;
@@ -577,7 +605,7 @@ function SaveNewAttachments() {
 		myStory = Kanban.UpdateUnderlyingStorySource(myStory);
 		myStory.BuildKanbanStoryDiv();
 		myStory.Element.classList.add("nofadein");
-		AddAttachmentToStoryEditForm(myStory);
+		AddAttachmentToStory(myStory);
 	} finally {
 		Kanban.BlockUpdates = false;
 		StopLoading();
