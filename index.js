@@ -258,7 +258,7 @@ function ShowLoginArea() {
 }
 
 function ShowProjectArea() {
-	document.getElementById("projectarea").style.display = "inline-block";
+	document.getElementById("projectarea").style.display = "block";
 	document.getElementById("contentarea").style.display = "block";
 	document.getElementById("priorities-displayer").style.display = "block";
 	

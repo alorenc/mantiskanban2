@@ -968,7 +968,6 @@ div[priority="immediate"] {
 }
 
 #projectareabuttons {
-    width: calc(100% - 735px);
     display: inline-block;
 }
 

@@ -121,15 +121,49 @@ var Kanban = {
 	AddStoryFromFormData: function() {
 		var summary = $("#add-summary").val();
 		var description = $("#add-description").val();
+		if ((description == null) || (description == "")) description = "-";
 		var handlerid = document.getElementById("add-assignedto").value;
 		var reporterid = document.getElementById("add-reporter").value;
 		var statusid = document.getElementById("add-status").value;
 		var priorityid = document.getElementById("add-priority").value;
 		var category = document.getElementById("add-category").value
 		var customfieldvalue = null;
-		if(Kanban.UsingCustomField) customfieldvalue = document.getElementById("add-custom-field").value;
 
-		Kanban.AddStory(summary, description, handlerid, reporterid, statusid, priorityid, category, customfieldvalue);
+		var newIssueStruct = Mantis.UpdateStructureMethods.Issue.NewIssue(summary, description, Mantis.CurrentProjectID, handlerid, reporterid, statusid, priorityid, category);
+		if(Kanban.UsingCustomField) {
+			for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+				var custom_field = Mantis.ProjectCustomFields[i];
+				if (custom_field.field.name != Kanban._listIDField) {
+					Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, custom_field.field.name, document.getElementById("add-" + custom_field.field.name).value);
+				}
+			}
+
+			console.log(Kanban._listIDField, document.getElementById("add-custom-field").value);
+			Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, Kanban._listIDField, document.getElementById("add-custom-field").value);
+		}
+
+		console.log(newIssueStruct.custom_fields);
+
+		Mantis.IssueAdd(newIssueStruct, function (result) {
+			Kanban.BlockUpdates = false;
+			StopLoading();
+			if(isNaN(result)) {
+				alert("Error Adding: " + result);
+			} else {
+				try {
+					var newStory = new KanbanStory(Mantis.IssueGet(result));
+					newStory.BuildKanbanStoryDiv();
+					if (newStory.List != null) {
+						newStory.List.AddNewStoryUI(newStory);
+					}
+					Kanban.CloseAddStoryDialog();
+				} catch(e) {
+					console.log(e);
+				}
+			}
+
+			UpdateKanbanListTitle();
+		});
 	},
 
 	AddStoryToArray: function(storyToAdd) {
@@ -463,6 +497,15 @@ function UpdateStoryFromFormData() {
 				storyToUpdate.category = document.getElementById("edit-category").value;
 			}
 
+			if(Kanban.UsingCustomField) {
+				for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+					var custom_field = Mantis.ProjectCustomFields[i];
+					if (custom_field.field.name != Kanban._listIDField) {
+						Mantis.UpdateStructureMethods.Issue.UpdateCustomField(storyToUpdate, custom_field.field.name, document.getElementById("edit-" + custom_field.field.name).value);
+					}
+				}
+			}
+
 			Mantis.IssueUpdate(thisStory.ID, storyToUpdate, UpdateKanbanStoryComplete);
 			CloseEditStory();
 		} catch(e) {
@@ -490,6 +533,18 @@ function UpdateListForCanbanStory(KanbanStoryToUpdate, KanbanListToMoveTo, Updat
 		} else {
 			updateIssue = Mantis.UpdateStructureMethods.Issue.UpdateStatus(updateIssue, KanbanListToMoveTo.ID, KanbanListToMoveTo.Name);
 		}
+
+		for(var li = 0; li < Kanban.Lists.length; li++) {
+			var kanbanList = Kanban.Lists[li];
+
+			if (kanbanList.ID == KanbanListToMoveTo.ID) {
+				kanbanList.AddStory(KanbanStoryToUpdate);
+			} else {
+				kanbanList.RemoveStory(KanbanStoryToUpdate);
+			}
+		}
+
+
 
 		var updateSucceeded = false;
 		try {
@@ -1203,6 +1258,26 @@ function OpenAddStory() {
 	}
 	if(!foundDefaultCategory) selectAddCategories.selectedIndex = 0;
 
+	if(Kanban.UsingCustomField) {
+		var toInsert = "";
+		for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+			var custom_field = Mantis.ProjectCustomFields[i];
+			if (custom_field.field.name != Kanban._listIDField) {
+				var inputField = '<input type="text" name="add-' + custom_field.field.name + '" id="add-' + custom_field.field.name + '" class="form-control input-small" />';
+				toInsert += '<div class="control-group"><label class="control-label" for="add-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
+
+				/*
+				 var possiblevalues = custom_field.possible_values.split("|");
+				 for (var pv = 0; pv < possiblevalues.length; pv++) {
+				 selectAddCustomField.options[selectAddCustomField.options.length] = new Option(possiblevalues[pv], possiblevalues[pv]);
+				 }
+				 var inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small"></select>';
+				 */
+			}
+		}
+		document.getElementById("customAdd").innerHTML = toInsert;
+	}
+
 	ShowAddStory();
 }
 
@@ -1263,7 +1338,6 @@ function UpdateStoryHandlerComplete(result) {
  * @param {[type]} storyID ID of the story to edit
  */
 function EditStory(storyID) {
-
 	document.getElementById("edit-story-notes-container").scrollTop = document.getElementById("edit-story-notes-container").clientHeight;
 
 	$('a[href=#tabs-1]').tab('show');
@@ -1303,7 +1377,7 @@ function EditStory(storyID) {
 
 	for(var i = 0; i < Kanban.Projects.length; i++) {
 		var project = Kanban.Projects[i];
-		selectStoryProject.options[selectStoryProject.options.length] = new Option(project.Name, project.ID);
+		selectStoryProject.options[selectStoryProject.options.length] = new Option(Array(project.ProjectNiv).join("--") + project.Name, project.ID);
 		if(thisStory.ProjectID !== undefined && project.ID == thisStory.ProjectID) {
 			selectStoryProject.selectedIndex = i;
 		}
@@ -1334,7 +1408,7 @@ function EditStory(storyID) {
 			selectAddStatus.selectedIndex = i;
 		}
 	}
-	
+
 	for(var i = 0; i < Mantis.Priorities.length; i++) {
 		var priority = Mantis.Priorities[i];
 		selectAddPriority.options[selectAddPriority.options.length] = new Option(priority.name.capitalize(), priority.id);
@@ -1369,6 +1443,7 @@ function EditStory(storyID) {
 			selectEditCategory.selectedIndex = i;
 		}
 	}
+
 	/// Requires mantis 1.3.0 at minimum
 	if(Mantis.Version() > "1.3.0") AddTasksToStoryEditForm(thisStory);
 
@@ -1380,6 +1455,34 @@ function EditStory(storyID) {
 	AddAttachmentToStoryEditForm(thisStory);
 
 	AddTagsToStoryEditForm(thisStory);
+
+	if(Kanban.UsingCustomField) {
+		var toInsert = "";
+		for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+			var custom_field = Mantis.ProjectCustomFields[i];
+			if (custom_field.field.name != Kanban._listIDField) {
+				var currentValue = "";
+				for(var iq = 0; iq < thisStory.StorySource.custom_fields.length; iq++) {
+					var customField = thisStory.StorySource.custom_fields[iq];
+					if(customField.field.name == custom_field.field.name) {
+						currentValue = thisStory.StorySource.custom_fields[iq].value;
+					}
+				}
+
+				var inputField = '<input type="text" name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small" value="' + currentValue + '" />';
+				toInsert += '<div class="control-group col-xs-6"><label class="control-label" for="edit-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
+
+				/*
+				 var possiblevalues = custom_field.possible_values.split("|");
+				 for (var pv = 0; pv < possiblevalues.length; pv++) {
+				 selectAddCustomField.options[selectAddCustomField.options.length] = new Option(possiblevalues[pv], possiblevalues[pv]);
+				 }
+				 var inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small"></select>';
+				 */
+			}
+		}
+		document.getElementById("customEdit").innerHTML = toInsert;
+	}
 
 	ShowEditStory();
 

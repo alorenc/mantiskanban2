@@ -132,6 +132,19 @@ KanbanList.prototype = {
 			this._stories[this._stories.length] = Story;
 		}
 	},
+	RemoveStory: function(Story) {
+		var index = -1
+		for(var i = 0; i < this._stories.length; i++) {
+			if(this._stories[i].ID == Story.ID) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index > -1) {
+			this._stories.splice(index, 1);
+		}
+	},
 
 	/*
 	 * @name HasStory
@@ -428,32 +441,17 @@ KanbanStory.prototype = {
 	 * @description Adds the story to a KanbanList.Stories array
 	 */
 	JoinList: function() {
-		for(var li = 0; li < Kanban.Lists.length; li++) {
-			var thisList = Kanban.Lists[li];
-			var foundListToDropIn = false;
-			if(thisList.UsesCustomField) {
-				for(var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
-					if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
-						if(this.StorySource.custom_fields[ci].value == thisList.ID) {
-							this._list = thisList;
-							this._list.AddStory(this);
-							this.UsesCustomField = true;
-							foundListToDropIn = true;
-							return;
-						}
+		for (var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
+			if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
+				for(var li = 0; li < Kanban.Lists.length; li++) {
+					var thisList = Kanban.Lists[li];
+
+					if ((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
+						this._list = thisList;
+						this._list.AddStory(this);
+						this.UsesCustomField = true;
+						return;
 					}
-				}
-				if ((!foundListToDropIn) && (Kanban.ScrumDefaultStatus == thisList.ID)) {
-					// Hack to drop issues without a value assigned in their custom field into the first bucket.
-					this._list = Kanban.Lists[0];
-					Kanban.Lists[0].AddStory(this);
-					this.UsesCustomField = true;
-				}
-			} else {
-				if(Kanban.Lists[li].ID == this.StorySource.status.id) {
-					this._list = Kanban.Lists[li];
-					this._list.AddStory(this);
-					return;
 				}
 			}
 		}
@@ -656,33 +654,6 @@ KanbanStory.prototype = {
 		return storyDiv;
 	}
 }
-
-Kanban.AddStory = function(summary, description, handlerid, reporterid, statusid, priorityid, category, customfield) {
-	var newIssueStruct = Mantis.UpdateStructureMethods.Issue.NewIssue(summary, description, Mantis.CurrentProjectID, handlerid, reporterid, statusid, priorityid, category);
-	if(customfield !== null) {
-		Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, Kanban._listIDField, customfield);
-	}
-	Mantis.IssueAdd(newIssueStruct, Kanban.AddStoryAsyncCallback);
-};
-
-Kanban.AddStoryAsyncCallback = function(result) {
-	Kanban.BlockUpdates = false;
-	StopLoading();
-	if(isNaN(result)) {
-		alert("Error Adding: " + result);
-	} else {
-		try {
-			var newStory = new KanbanStory(Mantis.IssueGet(result));
-			newStory.BuildKanbanStoryDiv();
-			if (newStory.List != null) {
-				newStory.List.AddNewStoryUI(newStory);
-			}
-			Kanban.CloseAddStoryDialog();
-		} catch(e) {
-			console.log(e);
-		}
-	}
-};
 
 Kanban.UpdateUnderlyingStorySource = function(originalStory) {
 	var mantisIssue = Mantis.IssueGet(originalStory.ID, null);

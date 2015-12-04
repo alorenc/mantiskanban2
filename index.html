@@ -67,7 +67,7 @@
 					</div>
 					<div id="projectarea" class="projectarea">
 						<img src="images/mantis_logo.png" class="mantislogo loggedin" />
-						<div style="display:inline-block">
+						<div id="projectareabuttons">
 							<div class="rightButtons">
 								<input type="checkbox" id="scrumMode" data-on-text="ScrumDaily" data-off-text="ScrumPlanif" data-off-color="warning" data-label-width="10" checked>
 
@@ -107,7 +107,7 @@
 									<button class="btn btn-primary btn-small dropdown-toggle" type="button" data-toggle="dropdown">
 										<i class="glyphicon glyphicon-dashboard"></i> <span id="selected-project-name">Select Project</span> <span class="caret"></span>
 									</button>						
-									<ul id="projectlist" class="dropdown-menu">
+									<ul id="projectlist" class="dropdown-menu scrollable-menu">
 									<!-- dropdown menu links -->
 									</ul>
 								</div>
@@ -120,7 +120,7 @@
 									</ul>
 								</div>
 
-								<div id="project-users-gravatars-container"></div>
+								<div><div id="project-users-gravatars-container"></div></div>
 							</div>
 						</div>
 					</div>
@@ -221,6 +221,7 @@
 														<select name="edit-assignedto" id="edit-assignedto" class="form-control input-small"></select>
 													</div>
 												</div>
+												<div id="customEdit"></div>
 												<div class="control-group col-xs-10">
 													<label class="control-label" for="edit-datesubmitted">Date Submitted:</label>
 													<div class="controls">
@@ -337,6 +338,7 @@
 										<select class="form-control" name="add-assignedto" id="add-assignedto" class=""></select>
 									</div>
 								</div>
+								<div id="customAdd"></div>
 								<div class="control-group">
 									<label class="control-label" for="add-description">Description</label>
 									<div class="controls">
@@ -413,7 +415,7 @@
 		</div>
 
 		<div id="priorities-displayer" onmouseover="ShowPriorityLegend();" onmouseout="HidePriorityLegend();">
-			Piorities &gt;
+			Priorities &gt;
 		</div>
 		<input type="hidden" style="display:none;" id="seletedproject" name="selectedproject" />
 		<div id="attachmentdisplay" class="" style="" onclick="CloseLightBox();">
