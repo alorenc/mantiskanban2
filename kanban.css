@@ -962,3 +962,40 @@ div[priority="immediate"] {
 .subprojectNiv8 {
     margin-left: 160px;
 }
+
+#projectarea {
+    display: block;
+}
+
+#projectareabuttons {
+    width: calc(100% - 735px);
+    display: inline-block;
+}
+
+.otherbuttoncontainer {
+    position: relative;
+}
+
+#project-users-gravatars-container {
+    display: inline-block;
+    padding-right: 15px;
+}
+
+#gravatarlabel {
+    display: inline-block;
+    width: 55px;
+    vertical-align: top;
+    margin-top: 4px;
+}
+
+#gravatarusers {
+    display: inline-block;
+    max-width: calc(100% - 55px);
+}
+
+
+.scrollable-menu {
+    height: auto;
+    max-height: 340px;
+    overflow-x: hidden;
+}

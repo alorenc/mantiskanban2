@@ -725,7 +725,16 @@ function GetUserColor(digits) {
 
 function BuildKanbanAssignedUsersGUI() {
 	var kanbanUserListContainer = document.getElementById("project-users-gravatars-container");
-	kanbanUserListContainer.innerHTML = "Users:";
+	kanbanUserListContainer.innerHTML = "";
+
+	var labelDiv = document.createElement("div");
+	labelDiv.innerHTML = "Users:";
+	labelDiv.setAttribute("id", "gravatarlabel");
+	kanbanUserListContainer.appendChild(labelDiv);
+
+	var userListDiv = document.createElement("div");
+	userListDiv.setAttribute("id", "gravatarusers");
+	kanbanUserListContainer.appendChild(userListDiv);
 
 	var thisUser = Kanban.AssignedUsers[kbu];
 	var userGravatar = document.createElement("div");
@@ -742,13 +751,13 @@ function BuildKanbanAssignedUsersGUI() {
 	userGravatar.setAttribute("data-content", "");
 	userGravatar.setAttribute("id", "ug");
 
-	kanbanUserListContainer.appendChild(userGravatar);
+	userListDiv.appendChild(userGravatar);
 
 	for(var kbu = 0; kbu < Kanban.AssignedUsers.length; kbu++) {
 		var thisUser = Kanban.AssignedUsers[kbu];
 
 		var userGravatar = document.createElement("div");
-		var shortName = thisUser.UserName.substring(0, 1).toUpperCase() + thisUser.UserName.substring(1, 2);
+		var shortName = thisUser.Name.substring(0, 1).toUpperCase() + thisUser.Name.substring(1, 2);
 		userGravatar.innerHTML = shortName;
 
 		userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems");
@@ -830,6 +839,17 @@ function CreateListOfAssignedStories() {
 
 		}
 	}
+	Kanban.AssignedUsers.sort(compareUsers);
+}
+
+function compareUsers(a, b) {
+	if (a.Name < b.Name) {
+		return -1;
+	}
+	if (a.Name > b.Name) {
+		return 1;
+	}
+	return 0;
 }
 
 function CreateKanbanStoriesFromMantisIssues(obj) {

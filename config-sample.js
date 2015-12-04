@@ -10,7 +10,7 @@ Mantis.ServerHostname = "mantis.server.com";
 /// If you leave this null, mantis will load whatever the last filter you used when you logged into the php site.
 Mantis.DefaultFilterID = "0";
 
-/// Use this value if you want to load additional closed issues, in addition to all the other statuses.   A good use for this is to load open issues 
+/// Use this value if you want to load additional closed issues, in addition to all the other statuses.   A good use for this is to load open issues
 /// with DefaultFilterID, and load certain number of recently closed issues with these parameters.
 Mantis.ClosedIssuesFilterID = "0";
 
@@ -24,19 +24,49 @@ Mantis.TaskListField = "TaskList";
 
 // Scrum mode
 Kanban.ScrumMode = "Review";
+Kanban.ScrumDefaultStatus = "Backlog";
+
+Kanban.ScrumSteps = {
+	"Backlog" : true,
+	"NextSprint" : true,
+	"CurrentSprint" : true,
+	"Design" : true,
+	"CodeComplete" : true,
+	"Testing" : true,
+	"Release" : true
+}
 
 Kanban.ScrumModes = {
 	"Review" : {
-		"CurrentSprint" : "50", // Assigned
-		"Complete" : "80", // Resolved
-		"Testing" : "80",
-		"Tested" : "80",
-		"Release" : "90" // Closed
+		"CurrentSprint" : true,
+		"Design" : true,
+		"CodeComplete" : true,
+		"Testing" : true,
+		"Release" : true
 	},
 	"Planif" : {
-		"Backlog" : "10", // New
-		"NextSprint" : "30", //     Acknowledged
-		"CurrentSprint" : "50" // Assigned
+		"Backlog" : true,
+		"NextSprint" : true,
+		"CurrentSprint" : true
+	}
+}
+
+Kanban.PriorityField = "Priority";
+Kanban.Priorities = {
+	"Immediate" : {
+		"value" : 60
+	},
+	"Urgente" : {
+		"value" : 50
+	},
+	"Elevée" : {
+		"value" : 40
+	},
+	"Normale" : {
+		"value" : 30
+	},
+	"Basse" : {
+		"value" : 20
 	}
 }
 
@@ -72,7 +102,7 @@ var DefaultSettings = {
 
 
 /// List of Installed Themes should be here
-Kanban.Themes = 
+Kanban.Themes =
 [
 	{name: "Default", stylesheet : "themes/default.css" },
 	{name: "Green", stylesheet : "themes/green.css"},
