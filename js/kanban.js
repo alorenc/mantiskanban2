@@ -1465,7 +1465,7 @@ function EditStory(storyID) {
 				for(var iq = 0; iq < thisStory.StorySource.custom_fields.length; iq++) {
 					var customField = thisStory.StorySource.custom_fields[iq];
 					if(customField.field.name == custom_field.field.name) {
-						currentValue = thisStory.StorySource.custom_fields[iq].value;
+						currentValue = (thisStory.StorySource.custom_fields[iq].value != null) ? thisStory.StorySource.custom_fields[iq].value : "";
 					}
 				}
 
