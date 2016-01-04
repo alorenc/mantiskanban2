@@ -447,7 +447,30 @@ function UpdateKanbanListTitle() {
 			}
 		}
 
-		existingElement.innerHTML = kanbanListItem.Name.capitalize() + " (" + nbItem + ((workload > 0) ? " => " + workload + "j" :"") + ")";
+		var content = kanbanListItem.Name.capitalize() + " (" + nbItem + ((workload > 0) ? " => " + workload + "j" :"") + ")";
+
+		if (Kanban.CurrentProject.ProjectSource.description != '') {
+			if (kanbanListItem.Name.capitalize() == 'CurrentSprint') {
+				content += '<br />' + Kanban.CurrentProject.ProjectSource.description;
+			} else if (kanbanListItem.Name.capitalize() == 'NextSprint') {
+				var cf = Mantis.ProjectCustomFields;
+				if (cf != null) {
+					for (var t = 0; t < cf.length; t++) {
+						if ((cf[t].field != null) && (cf[t].field.name == 'Sprint')) {
+							var possibleValues = cf[t].possible_values.split('|');
+							var pos = possibleValues.indexOf(Kanban.CurrentProject.ProjectSource.description);
+							if (pos > -1) {
+								content += '<br />' + possibleValues[pos + 1];
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+
+		existingElement.innerHTML = content;
 	}
 }
 
@@ -532,6 +555,25 @@ function UpdateListForCanbanStory(KanbanStoryToUpdate, KanbanListToMoveTo, Updat
 			updateIssue = Mantis.UpdateStructureMethods.Issue.UpdateCustomField(updateIssue, Kanban._listIDField, KanbanListToMoveTo.ID);
 		} else {
 			updateIssue = Mantis.UpdateStructureMethods.Issue.UpdateStatus(updateIssue, KanbanListToMoveTo.ID, KanbanListToMoveTo.Name);
+		}
+
+		if (KanbanListToMoveTo.Name == 'NextSprint') {
+			var cf = Mantis.ProjectCustomFields;
+			if (cf != null) {
+				for (var t = 0; t < cf.length; t++) {
+					if ((cf[t].field != null) && (cf[t].field.name == 'Sprint')) {
+						var possibleValues = cf[t].possible_values.split('|');
+						var pos = possibleValues.indexOf(Kanban.CurrentProject.ProjectSource.description);
+						if (pos > -1) {
+							updateIssue = Mantis.UpdateStructureMethods.Issue.UpdateCustomField(updateIssue, "Sprint", possibleValues[pos + 1]);
+						}
+					}
+				}
+			}
+		} else if (KanbanListToMoveTo.Name == 'CurrentSprint') {
+			updateIssue = Mantis.UpdateStructureMethods.Issue.UpdateCustomField(updateIssue, "Sprint", Kanban.CurrentProject.ProjectSource.description);
+		} else if (KanbanListToMoveTo.Name == 'Backlog') {
+			updateIssue = Mantis.UpdateStructureMethods.Issue.UpdateCustomField(updateIssue, "Sprint", '');
 		}
 
 		for(var li = 0; li < Kanban.Lists.length; li++) {
@@ -1264,15 +1306,18 @@ function OpenAddStory() {
 			var custom_field = Mantis.ProjectCustomFields[i];
 			if (custom_field.field.name != Kanban._listIDField) {
 				var inputField = '<input type="text" name="add-' + custom_field.field.name + '" id="add-' + custom_field.field.name + '" class="form-control input-small" />';
-				toInsert += '<div class="control-group"><label class="control-label" for="add-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
 
-				/*
-				 var possiblevalues = custom_field.possible_values.split("|");
-				 for (var pv = 0; pv < possiblevalues.length; pv++) {
-				 selectAddCustomField.options[selectAddCustomField.options.length] = new Option(possiblevalues[pv], possiblevalues[pv]);
-				 }
-				 var inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small"></select>';
-				 */
+				if (custom_field.possible_values != null) {
+					var possiblevalues = custom_field.possible_values.split("|");
+
+					inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small">';
+					for (var pv = 0; pv < possiblevalues.length; pv++) {
+						inputField += '<option value="' + possiblevalues[pv] + '">' + possiblevalues[pv] + '</option>';
+					}
+					inputField += '</select>';
+				}
+
+				toInsert += '<div class="control-group"><label class="control-label" for="add-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
 			}
 		}
 		document.getElementById("customAdd").innerHTML = toInsert;
@@ -1470,15 +1515,18 @@ function EditStory(storyID) {
 				}
 
 				var inputField = '<input type="text" name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small" value="' + currentValue + '" />';
-				toInsert += '<div class="control-group col-xs-6"><label class="control-label" for="edit-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
 
-				/*
-				 var possiblevalues = custom_field.possible_values.split("|");
-				 for (var pv = 0; pv < possiblevalues.length; pv++) {
-				 selectAddCustomField.options[selectAddCustomField.options.length] = new Option(possiblevalues[pv], possiblevalues[pv]);
-				 }
-				 var inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small"></select>';
-				 */
+				if (custom_field.possible_values != null) {
+					var possiblevalues = custom_field.possible_values.split("|");
+
+					inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small">';
+					for (var pv = 0; pv < possiblevalues.length; pv++) {
+						inputField += '<option value="' + possiblevalues[pv] + '"' + ((possiblevalues[pv] == currentValue) ? ' selected' : '') + '>' + possiblevalues[pv] + '</option>';
+					}
+					inputField += '</select>';
+				}
+
+				toInsert += '<div class="control-group col-xs-6"><label class="control-label" for="edit-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
 			}
 		}
 		document.getElementById("customEdit").innerHTML = toInsert;
