@@ -998,3 +998,7 @@ div[priority="immediate"] {
     max-height: 340px;
     overflow-x: hidden;
 }
+
+.chargeRestanteTicket {
+	font-weight: bold;
+}

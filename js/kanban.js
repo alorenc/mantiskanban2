@@ -1310,7 +1310,7 @@ function OpenAddStory() {
 				if (custom_field.possible_values != null) {
 					var possiblevalues = custom_field.possible_values.split("|");
 
-					inputField = '<select name="edit-' + custom_field.field.name + '" id="edit-' + custom_field.field.name + '" class="form-control input-small">';
+					inputField = '<select name="add-' + custom_field.field.name + '" id="add-' + custom_field.field.name + '" class="form-control input-small">';
 					for (var pv = 0; pv < possiblevalues.length; pv++) {
 						inputField += '<option value="' + possiblevalues[pv] + '">' + possiblevalues[pv] + '</option>';
 					}
@@ -1428,12 +1428,18 @@ function EditStory(storyID) {
 		}
 	}
 
+	var hasBeenSelected = false;
 	for(var i = 0; i < Kanban.CurrentProject.Users.length; i++) {
 		var user = Kanban.CurrentProject.Users[i];
 		selectReportingUser.options[selectReportingUser.options.length] = new Option(user.Name, user.ID);
 		if(thisStory.ReporterID !== undefined && user.ID == thisStory.ReporterID) {
 			selectReportingUser.selectedIndex = i;
+			hasBeenSelected = true;
 		}
+	}
+	if (!hasBeenSelected) {
+		selectReportingUser.options[selectReportingUser.options.length] = new Option(thisStory.ReporterName, thisStory.ReporterID);
+		selectReportingUser.selectedIndex = selectReportingUser.options.length - 1;
 	}
 
 	///Add a blank option
