@@ -514,6 +514,7 @@ KanbanStory.prototype = {
 		storyDiv.setAttribute("draggable", "true");
 		storyDiv.setAttribute("onclick", "EditStory('" + this.ID + "');");
 		storyDiv.setAttribute("category", this.CategoryID);
+		storyDiv.classList.add("sev_" + ((Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
 
 		storyDiv.addEventListener('dragstart', DragStart, false);
 		storyDiv.addEventListener("dragend", DragEnd, false);
