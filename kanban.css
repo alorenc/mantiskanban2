@@ -70,7 +70,7 @@ body {
 .gravatarcurrentuser {
 	background-repeat:no-repeat;
 	/*background-attachment:fixed;*/
-	background-position:-1px -1px; 
+	background-position:-1px -1px;
 	margin-left: 10px;
 	display:inline-block;
 	width: 35px;
@@ -79,12 +79,12 @@ body {
 
 .gravatarcontainer {
 	background-repeat:no-repeat;
-	background-position:0px 0px; 
+	background-position:0px 0px;
 }
 
 .noteheader {
 	padding-left: 55px;
-    
+
 }
 
 #edit-story-form {
@@ -170,7 +170,7 @@ div.notecontainer {
 }
 
 .realcontentcontainer {
-	
+
 	z-index:50;
 	position: absolute;
 	top: 0px;
@@ -194,7 +194,7 @@ div.notecontainer {
 }
 
 .loadingdiv{
- 	 
+
 	position:absolute;
 	top:10px;
 	right:0px;
@@ -231,9 +231,9 @@ div.notecontainer {
 }
 
 .mantislogo{
-	
 
-	
+
+
 }
 
 .editing-content {
@@ -349,7 +349,7 @@ div.notecontainer {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 	padding: 4px 8px 4px 8px;
-background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);	
+background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	color: #FFFFFF;
 	cursor: pointer;
 }
@@ -379,11 +379,11 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	border-bottom: 1px solid #000000;
 	background-color: #cacacf;
 	white-space: nowrap;
-	transition: height .5s;	
+	transition: height .5s;
 }
 
 .contentarea[showingpriority="true"] {
-	height: calc(100% - 125px); 
+	height: calc(100% - 125px);
 }
 
 .headerarea{
@@ -399,16 +399,16 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	padding-top: 5px;
 	overflow: auto;
 	display: inline-block;
-	/*background-color: #cacacf;*/	
+	/*background-color: #cacacf;*/
 	padding: 10px 10px 10px 10px;
 	white-space: nowrap;
 	transition: width .5s;
 }
 
 #kanbancontent[editing="true"] {
-	width: calc(100% - 575px);
+	width: calc(100% - 599px);
 }
- 	
+
 .kanbanlist{
 
 	/*border: 1px solid #808080;*/
@@ -493,7 +493,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	width: 10px;
 }
 
-.kanbanstorycontainer { 
+.kanbanstorycontainer {
 	opacity: 0;
 	/*display:none;*/
 	overflow:hidden;
@@ -596,7 +596,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	padding: 15px 15px 15px 15px;
 	margin-top: 10px;
 	margin-bottom: 10px;
-	border-radius: 5px 5px 5px 5px;	
+	border-radius: 5px 5px 5px 5px;
 	height: calc(100% - 50px);
 	background-color: #dedede;
 
@@ -622,7 +622,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	font-style: italic;
 }
 
-.kanbanstory.glow { 
+.kanbanstory.glow {
 	background: #ffff88; /* Old browsers */
 }
 
@@ -645,7 +645,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 
 
 .kabanhandlercontainer {
-	
+
 
 }
 
@@ -665,7 +665,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	padding-left: 30px;
 	padding-top: 20px;
 	border-right: 1px solid #ababab;
-	
+
 }
 
 .kanbanstoryprioritycontainer {
@@ -707,7 +707,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 
 #prioritylegend>div[priority="none"] {
 	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;	
+	border-bottom-right-radius: 10px;
 }
 
 div[priority="none"] {
@@ -752,7 +752,7 @@ div[priority="immediate"] {
 	position: relative;
 	left: 60px;
 	width: calc(100% - 65px);
-	
+
 	overflow: hidden;
 	white-space: nowrap;
 	cursor: pointer !important;
@@ -774,7 +774,7 @@ div[priority="immediate"] {
 
 .storyinfobutton img {
 	width: 20px;
-	height: 20px;	
+	height: 20px;
 	vertical-align: middle;
 	float: right;
 	padding-right: 5px;
@@ -810,7 +810,7 @@ div[priority="immediate"] {
 #user-context-title {
 	font-weight: bolder;
 	border-bottom: solid 2px #000000;
-	color: #FFFFFF;	
+	color: #FFFFFF;
 }
 
 [draggable]{
@@ -900,7 +900,7 @@ div[priority="immediate"] {
     animation-name: slide;
 }
 
-.dot4 {    
+.dot4 {
     -webkit-animation-name: reveal;
     -webkit-animation-direction: reverse;
     animation-name: reveal;
