@@ -1,16 +1,18 @@
 #MantisKanban - expanded by alorenc
----
 
 Mantis Kanban that uses ajax and mantisconnect
+---
+
+![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/images/mantis_logo.png "Logo")
 
 ###Version by Corey Gaspard
 * stable : https://github.com/cgaspard/mantiskanban (master)
 
-------------
+---
 ###Version by e-doceo
 * operating	: https://github.com/e-doceo/mantiskanban (master)
 
-------------
+---
 ###Version by Artur Lorenc: 
 This is the original version of Corey Gaspard, extended by a change of.
 * The corrected errors
@@ -20,7 +22,8 @@ This is the original version of Corey Gaspard, extended by a change of.
 
 ///LIVE DEMO!!! http://mantiskanban.com/mantisbt/mantiskanban/
 
-![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/images/mantis_logo.png "Logo")
+---
+## Configuration
 
 JS Configuration: config.js
 
@@ -97,7 +100,8 @@ Mantis Configuration:
     You need to setup a filter for project issues.   If you don't, then Mantis will deliver all issues.   When you
     have closed many issues, you will notice the speed greatly decreases.
 
-  Screenshots:
+---
+##Screenshots:
 
 Full Screen:
 ![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/screenshots/screen1.png "Optional title")
