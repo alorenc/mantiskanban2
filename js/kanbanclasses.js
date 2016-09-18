@@ -2,7 +2,7 @@
 
 var KanbanUser = function(RawObject) {
 	var self = this;
-	if(typeof(RawObject) == "string") {
+	if(typeof (RawObject) == "string") {
 		self.UserSource = JSON.parse(RawObject);
 	} else {
 		self.UserSource = RawObject;
@@ -12,38 +12,39 @@ var KanbanUser = function(RawObject) {
 KanbanUser.prototype = {
 	get UserName() {
 		return this.UserSource.name;
-	}, set UserName(value) {
+	},
+	set UserName(value) {
 		this.UserSource.name = value;
 	},
-
 	get Password() {
 		return this.UserSource.password;
-	}, set Password(value) {
+	},
+	set Password(value) {
 		this.UserSource.password = value;
 	},
-
 	get Name() {
 
-		return this.UserSource.real_name == undefined ? this.UserSource.name : this.UserSource.real_name; }, set Name(value) {
+		return this.UserSource.real_name == undefined ? this.UserSource.name : this.UserSource.real_name;
+	},
+	set Name(value) {
 		this.UserSource.real_name = value;
 	},
-
-	get ID () {
+	get ID() {
 		return this.UserSource.id;
 	},
-
 	get Email() {
-		if(this.UserSource === undefined) return "";
+		if(this.UserSource === undefined)
+			return "";
 		return this.UserSource.email;
 	}
 };
 
 var KanbanProject = function(RawObject) {
 	var self = this;
-	if(typeof(RawObject) == "string") {
+	if(typeof (RawObject) == "string") {
 		self.ProjectSource = {
-			"name": RawObject,
-			"id": RawObject
+			"name" : RawObject,
+			"id" : RawObject
 		};
 	} else {
 		self.ProjectSource = RawObject;
@@ -53,27 +54,20 @@ var KanbanProject = function(RawObject) {
 
 KanbanProject.prototype = {
 	ProjectNiv : 0,
-
 	ParentProject : null,
-
 	SubProjects : [],
-
 	get Lists() {
 		return this._lists;
 	},
-
 	get Name() {
 		return this.ProjectSource.name;
 	},
-
 	get ID() {
 		return this.ProjectSource.id;
 	},
-
 	HasFilterID : function() {
 
 	},
-
 	get Users() {
 		var mantisUsers = Mantis.ProjectUsers;
 		var userList = new Array();
@@ -85,56 +79,54 @@ KanbanProject.prototype = {
 };
 
 var KanbanList = function(RawObject) {
-		if(typeof(RawObject) == "string") {
-			this.ListSource = {
-				"name": RawObject,
-				"id": RawObject
-			};
-		} else {
-			this.ListSource = RawObject;
-		}
-		this._stories = [];
-		this.Element = null;
-		this.UsesCustomField = false;
+	if(typeof (RawObject) == "string") {
+		this.ListSource = {
+			"name" : RawObject,
+			"id" : RawObject
+		};
+	} else {
+		this.ListSource = RawObject;
+	}
+	this._stories = [];
+	this.Element = null;
+	this.UsesCustomField = false;
 };
 
 KanbanList.prototype = {
-
 	get Stories() {
 		return this._stories;
-	}, set Stories(value) {
+	},
+	set Stories(value) {
 		this._stories = value;
 	},
-
 	get Name() {
 		return this.ListSource.name;
-	}, set Name(value) {
+	},
+	set Name(value) {
 		this.ListSource.name = value;
 	},
-
 	get ID() {
 		return this.ListSource.id;
-	}, set ID(value) {
+	},
+	set ID(value) {
 		this.ListSource.id = value;
 	},
-
-	AddNewStoryUI: function(Story) {
+	AddNewStoryUI : function(Story) {
 		this.Container.appendChild(Story.Element);
 		Story.Element.classList.add("fadein");
 		//Story.Element.style.display = 'block';
 	},
-
 	/*
 	 * @name AddStory
 	 * @param {KanbanStory} Story The story you want to add.
 	 * @returns {null} Doesn't return anything
 	 */
-	AddStory: function(Story) {
+	AddStory : function(Story) {
 		if(!this.HasStory(Story.ID)) {
 			this._stories[this._stories.length] = Story;
 		}
 	},
-	RemoveStory: function(Story) {
+	RemoveStory : function(Story) {
 		var index = -1;
 		for(var i = 0; i < this._stories.length; i++) {
 			if(this._stories[i].ID == Story.ID) {
@@ -143,19 +135,19 @@ KanbanList.prototype = {
 			}
 		}
 
-		if (index > -1) {
+		if(index > -1) {
 			this._stories.splice(index, 1);
 		}
 	},
-
 	/*
 	 * @name HasStory
 	 * @param {int} id The ID of the story to look for
 	 * @returns {boolean} Returns true if the story is already loaded into the "Mantis.Stories" array.
 	 */
-	HasStory: function(id) {
+	HasStory : function(id) {
 		for(var i = 0; i < this._stories.length; i++) {
-			if(this._stories[i].ID == id) return true;
+			if(this._stories[i].ID == id)
+				return true;
 		}
 		return false;
 	}
@@ -175,13 +167,12 @@ var KanbanStory = function(RawObject) {
 };
 
 KanbanStory.prototype = {
-
 	get ID() {
 		return this.StorySource.id;
-	}, set ID(value) {
+	},
+	set ID(value) {
 		this.StorySource.id = value;
 	},
-
 	get List() {
 		for(var li = 0; li < Kanban.Lists.length; li++) {
 			var kanbanList = Kanban.Lists[li];
@@ -203,12 +194,12 @@ KanbanStory.prototype = {
 		// TODO : Optimisation possible en inversant la boucle d'au dessus, en passant d'abbord en revue les valeur de l'objects et non la liste des champs
 		// Return the first list if none are available and value is not set to an other value
 		for(var li = 0; li < Kanban.Lists.length; li++) {
-			if (Kanban.ScrumDefaultStatus == Kanban.Lists[li].ID) {
+			if(Kanban.ScrumDefaultStatus == Kanban.Lists[li].ID) {
 
 				if(Kanban.UsingCustomField) {
 					for(var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
 						if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
-							if (!Kanban.ScrumSteps[this.StorySource.custom_fields[ci].value]) {
+							if(!Kanban.ScrumSteps[this.StorySource.custom_fields[ci].value]) {
 								return Kanban.Lists[li];
 							}
 						}
@@ -230,102 +221,86 @@ KanbanStory.prototype = {
 			this.StatusID = value.ID;
 		}
 	},
-
 	get ListID() {
 		var list = this.List;
 		return (list != null) ? list.ID : null;
 	},
-
 	get ProjectID() {
 		return this.StorySource.project.id;
 	},
-
 	set ProjectID(value) {
 		this.StorySource.project.id = value;
 	},
-
 	get CategoryID() {
 		return this.StorySource.category;
 	},
-
 	set CategoryID(value) {
 		this.StorySource.category = value;
 	},
-
 	get ProjectName() {
 		return this.StorySource.project.name;
 	},
-
 	set ProjectName(value) {
 		this.StorySource.project.name = value;
 	},
-
 	get StatusID() {
 		return this.StorySource.status.id;
 	},
-
 	set StatusID(value) {
 		this.StorySource.status.id = value;
 	},
-
 	get RelatedStories() {
 		var rels = new Array();
-		if(this.StorySource.relationships === undefined) return rels;
+		if(this.StorySource.relationships === undefined)
+			return rels;
 		for(var ra = 0; ra < this.StorySource.relationships.length; ra++) {
 			var thisRel = this.StorySource.relationships[ra];
 			rels[rels.length] = thisRel.target_id;
 		}
 		return rels;
 	},
-
 	get StatusName() {
 		return this.StorySource.status.name;
-	}, set StatusName(value) {
+	},
+	set StatusName(value) {
 		this.StorySource.status.name = value;
 	},
-
 	get SeverityID() {
 		return this.StorySource.severity.id;
 	},
-
 	set SeverityID(value) {
 		this.StorySource.severity.id = value;
 	},
-
 	get ResolutionID() {
 		return this.StorySource.resolution.id;
 	},
-
 	set ResolutionID(value) {
 		//if(value == null || value == "") {
 		//	this.StorySource.resolution = null;
 		//} else {
-			this.StorySource.resolution.id = value;
+		this.StorySource.resolution.id = value;
 		//}
 	},
-
 	get Notes() {
-		if(this.StorySource.notes == undefined) return [];
+		if(this.StorySource.notes == undefined)
+			return [];
 		return this.StorySource.notes;
 	},
-
 	get Histories() {
 		if(this._histories == null) {
 			this._histories = Mantis.IssueGetHistory(this.ID);
 		}
 		return this._histories;
 	},
-
 	GetHistoriesAsync : function(callback) {
 		Mantis.IssueGetHistory(this.ID, callback);
 	},
-
 	get Tasks() {
 		for(var iq = 0; iq < this.StorySource.custom_fields.length; iq++) {
 			var customField = this.StorySource.custom_fields[iq];
 			if(customField.field.name == Mantis.TaskListField) {
 				if(this.StorySource.custom_fields[iq].value == null) {
-				 return [];
+					return [];
 				} else {
 					return JSON.parse(this.StorySource.custom_fields[iq].value);
 				}
@@ -333,7 +308,6 @@ KanbanStory.prototype = {
 		}
 		return [];
 	},
-
 	set Tasks(value) {
 		for(var iq = 0; iq < this.StorySource.custom_fields.length; iq++) {
 			var customField = this.StorySource.custom_fields[iq];
@@ -342,42 +316,35 @@ KanbanStory.prototype = {
 			}
 		}
 	},
-
 	get Tags() {
-		if(this.StorySource.tags == undefined) return [];
+		if(this.StorySource.tags == undefined)
+			return [];
 		return this.StorySource.tags;
 	},
-
 	get Attachments() {
 		return this.StorySource.attachments;
 	},
-
 	get Description() {
 		return this.StorySource.description;
 	},
-
 	set Description(value) {
 		this.StorySource.description = value;
 	},
-
 	get Reproduce() {
 		return this.StorySource.steps_to_reproduce;
-	}, set Reproduce(value) {
+	},
+	set Reproduce(value) {
 		this.StorySource.steps_to_reproduce = value;
 	},
-
 	get DateSubmitted() {
 		return new Date(Date.parse(this.StorySource.date_submitted));
 	},
-
 	get AssignedToUser() {
 		return new KanbanUser(this.StorySource.handler);
 	},
-
 	get HandlerID() {
 		return this.StorySource.handler !== undefined ? this.StorySource.handler.id : "";
 	},
-
 	set HandlerID(value) {
 		if(value === null && this.StorySource.handler === undefined) {
 			return;
@@ -387,13 +354,12 @@ KanbanStory.prototype = {
 
 		if(this.StorySource.handler === undefined) {
 			this.StorySource.handler = {
-				"name": "",
-				"id": ""
+				"name" : "",
+				"id" : ""
 			};
 		}
 		this.StorySource.handler.id = value;
 	},
-
 	get HandlerName() {
 		if(this.StorySource.handler !== undefined) {
 			if(this.StorySource.handler.name != null && this.StorySource.handler.name != "") {
@@ -406,64 +372,56 @@ KanbanStory.prototype = {
 			return "";
 		}
 	},
-
 	set HandlerName(value) {
 		if(this.StorySource.handler === undefined) {
 			this.StorySource.handler = {
-				"name": "",
-				"id": ""
+				"name" : "",
+				"id" : ""
 			};
 		}
 		this.StorySource.handler.name = value;
 	},
-
 	get ReporterName() {
 		return this.StorySource.reporter.name;
-	}, set ReporterName(value) {
+	},
+	set ReporterName(value) {
 		this.StorySource.reporter.name = value;
 	},
-
 	get ReporterID() {
 		return this.StorySource.reporter.id;
-	}, set ReporterID(value) {
+	},
+	set ReporterID(value) {
 		this.StorySource.reporter.id = value;
 	},
-
 	get PriorityName() {
 		return this.StorySource.priority.name;
 	},
-
 	set PriorityName(value) {
 		this.StorySource.priority.name = value;
 	},
-
 	get PriorityID() {
 		return this.StorySource.priority.id;
 	},
-
 	set PriorityID(value) {
 		this.StorySource.priority.id = value;
 	},
-
 	get Summary() {
 		return this.StorySource.summary;
 	},
-
 	set Summary(value) {
 		this.StorySource.summary = value;
 	},
-
 	/*
 	 * @name JoinList
 	 * @description Adds the story to a KanbanList.Stories array
 	 */
-	JoinList: function() {
-		for (var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
+	JoinList : function() {
+		for(var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
 			if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
 				for(var li = 0; li < Kanban.Lists.length; li++) {
 					var thisList = Kanban.Lists[li];
 
-					if ((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
+					if((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
 						this._list = thisList;
 						this._list.AddStory(this);
 						this.UsesCustomField = true;
@@ -473,11 +431,9 @@ KanbanStory.prototype = {
 			}
 		}
 	},
-
 	AddTag : function(tag) {
 		this.StorySource.tags.push(tag);
 	},
-
 	RemoveTag : function(id) {
 		if(this.StorySource.tags != undefined) {
 			for(var qi = 0; qi < this.StorySource.tags.length; qi++) {
@@ -490,27 +446,25 @@ KanbanStory.prototype = {
 
 
 	},
-
 	HasTag : function(tagID) {
 		if(this.StorySource.tags != undefined) {
 			for(var qi = 0; qi < this.StorySource.tags.length; qi++) {
-				if(this.StorySource.tags[qi].id == tagID) return true;
+				if(this.StorySource.tags[qi].id == tagID)
+					return true;
 			}
 		}
 
 		return false;
 
 	},
-	Save: function() {
+	Save : function() {
 		this.StorySource.summary = this.Summary;
 		this.StorySource.status.id = this.List.ID;
 	},
-
-	Delete: function() {
+	Delete : function() {
 		this.Element.parentNode.removeChild(this.Element);
 	},
-
-	BuildKanbanStoryDiv: function() {
+	BuildKanbanStoryDiv : function() {
 
 		var storyDiv = document.createElement("div");
 		storyDiv.Story = this;
@@ -571,7 +525,8 @@ KanbanStory.prototype = {
 		kanbanStoryHeaderAreaDiv.setAttribute("class", "kanbanstoryheaderarea");
 		kanbanStoryHeaderAreaDiv.setAttribute("listid", "listid" + this.ListID);
 		kanbanStoryHeaderAreaDiv.setAttribute("storyid", "storydiv" + this.ID);
-		kanbanStoryHeaderAreaDiv.setAttribute("dropdivid", "dropdiv" + this.ID);;
+		kanbanStoryHeaderAreaDiv.setAttribute("dropdivid", "dropdiv" + this.ID);
+		;
 		storyContainerDiv.appendChild(kanbanStoryHeaderAreaDiv);
 
 		var storyDivSeverity = document.createElement("section");
@@ -711,4 +666,3 @@ Kanban.UpdateUnderlyingStorySource = function(originalStory) {
 	originalStory.StorySource = mantisIssue;
 	return originalStory;
 };
-

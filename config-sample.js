@@ -1,3 +1,5 @@
+/* global Mantis, Kanban */
+
 /// Point to the location of your server
 Mantis.ConnectURL = "http://mantis.server.com/api/soap/mantisconnect.php";
 
@@ -42,7 +44,8 @@ Kanban.ScrumSteps = {
 	"Testing" : true,
 	"Implementation" : true,
 	"Relase" : true
-}
+};
+
 // Backlog|AnalysisPlaning|SprintBacklog| InProgress| Testing | Implementation | Relase
 Kanban.ScrumModes = {
 	"Review" : {
@@ -57,7 +60,7 @@ Kanban.ScrumModes = {
 		"AnalysisPlaning" : true,
 		"SprintBacklog" : true
 	}
-}
+};
 
 // Disabled because switching system "priority"/"severity" does not include the translation of language
 // kanbanclasses.js >> BuildKanbanStoryDiv >> Line 512 and Line 655
@@ -93,31 +96,28 @@ Kanban.AutoStatusOnCustomField = {
 		"Implementation" : "80",
 		"Relase" : "90"
 	}
-}
+};
 
 /// Use this to set default icons for categories
-Kanban.CategoryIconMap =  {
+Kanban.CategoryIconMap = {
 	"Bug" : "inf-sign",
 	"Translation" : ""
-}
-
+};
 
 /// This is used to just define the Default Settings object, this info gets saved to local storage for next login
 var DefaultSettings = {
-	username:"",
-	stayLoggedIn:1,
-	lastAccessTime:0,
+	username : "",
+	stayLoggedIn : 1,
+	lastAccessTime : 0,
 	autoResizeColumns : true,
-	currentProject:Mantis.CurrentProjectSelection
+	currentProject : Mantis.CurrentProjectSelection
 };
 
 
 /// List of Installed Themes should be here
-Kanban.Themes =
-[
-	{name: "Default", stylesheet : "themes/default.css" },
-	{name: "Green", stylesheet : "themes/green.css"},
-	{name: "Trello", stylesheet : "themes/trello.css"},
-
+Kanban.Themes = [
+	{name : "Default", stylesheet : "themes/default.css"},
+	{name : "Green", stylesheet : "themes/green.css"},
+	{name : "Trello", stylesheet : "themes/trello.css"}
 ];
 
