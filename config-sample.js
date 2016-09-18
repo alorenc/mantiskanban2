@@ -31,7 +31,7 @@ Kanban.ScrumSteps = {
 	"NextSprint" : true,
 	"CurrentSprint" : true,
 	"Design" : true,
-	"CodeComplete" : true,
+	"CodeInProgress" : true,
 	"Testing" : true,
 	"Release" : true
 }
@@ -40,7 +40,7 @@ Kanban.ScrumModes = {
 	"Review" : {
 		"CurrentSprint" : true,
 		"Design" : true,
-		"CodeComplete" : true,
+		"CodeInProgress" : true,
 		"Testing" : true,
 		"Release" : true
 	},
@@ -73,13 +73,6 @@ Kanban.Priorities = {
 /// When a project has a custom field, you can specify mantis statuses to change to when entering this bucket
 Kanban.AutoStatusOnCustomField = {
 	"ScrumBucket" : {
-		"Backlog" : "10", // New
-		"Sprint" : "30", //	Acknowledged
-		"Current" : "50", // Assigned
-		"Complete" : "80", // Resolved
-		"Testing" : "80",
-		"Tested" : "80",
-		"Release" : "90" // Closed
 	}
 }
 

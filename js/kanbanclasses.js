@@ -441,16 +441,20 @@ KanbanStory.prototype = {
 	 * @description Adds the story to a KanbanList.Stories array
 	 */
 	JoinList: function() {
-		for (var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
-			if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
-				for(var li = 0; li < Kanban.Lists.length; li++) {
-					var thisList = Kanban.Lists[li];
+		if ((this.StorySource == null) || (this.StorySource.custom_fields == null)) {
+			console.log(this.StorySource);
+		} else {
+			for (var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
+				if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
+					for(var li = 0; li < Kanban.Lists.length; li++) {
+						var thisList = Kanban.Lists[li];
 
-					if ((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
-						this._list = thisList;
-						this._list.AddStory(this);
-						this.UsesCustomField = true;
-						return;
+						if ((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
+							this._list = thisList;
+							this._list.AddStory(this);
+							this.UsesCustomField = true;
+							return;
+						}
 					}
 				}
 			}
@@ -510,6 +514,7 @@ KanbanStory.prototype = {
 		storyDiv.setAttribute("draggable", "true");
 		storyDiv.setAttribute("onclick", "EditStory('" + this.ID + "');");
 		storyDiv.setAttribute("category", this.CategoryID);
+		storyDiv.classList.add("sev_" + ((Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
 
 		storyDiv.addEventListener('dragstart', DragStart, false);
 		storyDiv.addEventListener("dragend", DragEnd, false);
@@ -597,6 +602,20 @@ KanbanStory.prototype = {
 		var storyDivTitleSecondRow = document.createElement("div");
 		storyDivTitleSecondRow.setAttribute("class", "kanbanstorytitlesecondrow");
 
+		var chargeRestante = 0;
+		for(var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
+			if(this.StorySource.custom_fields[ci].field.name == "ChargeRestante") {
+				chargeRestante = this.StorySource.custom_fields[ci].value;
+			}
+		}
+
+		if(chargeRestante > 0) {
+			var storyDivTitleSecondIcon = document.createElement("span");
+			storyDivTitleSecondIcon.setAttribute("class", "chargeRestanteTicket");
+			storyDivTitleSecondIcon.innerHTML = chargeRestante+ "j";
+			storyDivTitleSecondRow.appendChild(storyDivTitleSecondIcon);
+		}
+
 		if(this.CategoryID != null) {
 			var storyDivTitleSecondIcon = document.createElement("span");
 			storyDivTitleSecondIcon.setAttribute("class", "glyphicon glyphicon-" + Kanban.GetCategoryIcon(this.CategoryID));
@@ -622,6 +641,7 @@ KanbanStory.prototype = {
 			storyDivTitleSecondIcon.setAttribute("class", "glyphicon glyphicon-retweet");
 			storyDivTitleSecondRow.appendChild(storyDivTitleSecondIcon);
 		}
+
 		if(this.Tags.length > 0) {
 			for(var tcnt = 0; tcnt < this.Tags.length; tcnt++) {
 				var thisTag = this.Tags[tcnt];
