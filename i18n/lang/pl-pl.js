@@ -58,7 +58,7 @@ var langObj = {
 "textDeleteAttachemets":"Usuń załączniki",
 "textDescription":"Opis",
 "textExistTags":"Istniejące",
-"textFilter":"Filtruj",
+"textSelectFilter":"Filtruj",
 "textGeneral":"Ogólny",
 "textHandler":"Przypisz do",
 "textHide":"Ukryj",
@@ -99,48 +99,8 @@ var langObj = {
 "textTodo": "Zadania",
 "textSetDefault": "--- domyślnie ---",
 "textAssignToNoOne": "--- nieprzypisane ---",
-"textGo": "Idź do"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+"textGo": "Idź do",
+"textOneMinute": " minuta",
+"textManyMinutes": " minut"
 
 };

@@ -58,7 +58,7 @@ var langObj = {
 "textDeleteAttachemets":"刪除全部附件",
 "textDescription":"說明",
 "textExistTags":"已建立的標籤",
-"textFilter":"篩選",
+"textSelectFilter":"篩選",
 "textGeneral":"概要",
 "textHandler":"負責人",
 "textHide":"離開",
@@ -100,6 +100,8 @@ var langObj = {
 "textTodo":"TODO List",
 "textSetDefault": "--- Set To Default ---",
 "textAssignToNoOne": "--- Assign To No One ---",
-"textGo": "Go"
+"textGo": "Go",
+"textOneMinute": " minute",
+"textManyMinutes": " minutes"
 
 };

@@ -50,10 +50,14 @@ $(function(){
 
 function loadScript(src, callback){
 	var my_awesome_script = document.createElement('script');
+	my_awesome_script.setAttribute('language','javascript');
+	my_awesome_script.setAttribute('type','text/javascript');
 	my_awesome_script.setAttribute('src',src);
+
 	if(callback){
 		my_awesome_script.onload = callback;
 	}
+
 	document.head.appendChild(my_awesome_script);
 }
 

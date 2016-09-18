@@ -58,7 +58,7 @@ var langObj = {
 "textDeleteAttachemets":"Clear Upload List",
 "textDescription":"Description",
 "textExistTags":"Add Existing",
-"textFilter":"Select Filter",
+"textSelectFilter":"Select Filter",
 "textGeneral":"General",
 "textHandler":"Handler",
 "textHide":"Hide",
@@ -99,48 +99,8 @@ var langObj = {
 "textTodo":"TODO List",
 "textSetDefault": "--- Set To Default ---",
 "textAssignToNoOne": "--- Assign To No One ---",
-"textGo": "Go"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+"textGo": "Go",
+"textOneMinute": " minute",
+"textManyMinutes": " minutes"
 
 };
