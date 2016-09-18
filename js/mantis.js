@@ -9,7 +9,6 @@ var Mantis = {
 	_projectcustomfields : [],
 	_accesslevels : [],
 	_userprojects : [],
-	_users : [],
 	_priorities : null,
 	_tags : [],
 	_defaultaccesslevelforuserenum : 10,
@@ -31,7 +30,6 @@ var Mantis = {
 		Mantis._projectcustomfields = [];
 		Mantis._accesslevels = [];
 		Mantis._userprojects = [];
-		Mantis._users = [];
 		Mantis._defaultaccesslevelforuserenum = 10;
 		Mantis._tags = [];
 	},
@@ -200,11 +198,6 @@ var Mantis = {
 
 	get CurrentProjectName() {
 		return Mantis._currentprojectname;
-	},
-
-	get Users() {
-		Mantis._users = Mantis.ProjectGetUsers(Mantis._accesslevels);
-		return Mantis._users;
 	},
 
 	Params : {
