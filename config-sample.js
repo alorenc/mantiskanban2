@@ -22,65 +22,79 @@ Mantis.CurrentProjectSelection = "0";
 
 Mantis.TaskListField = "TaskList";
 
-// Scrum mode
+// The default name for the custom field containg split column  of Mantis (ScrumBucket)
+Kanban._listIDField = "ScrumBucket";
+
+// Default name category
+Kanban.DefaultCategory = "General";
+
+// Scrum Mode - default switch
 Kanban.ScrumMode = "Review";
+// Scrum default Status
 Kanban.ScrumDefaultStatus = "Backlog";
 
+// Scrum Steps
 Kanban.ScrumSteps = {
 	"Backlog" : true,
-	"NextSprint" : true,
-	"CurrentSprint" : true,
-	"Design" : true,
-	"CodeInProgress" : true,
+	"AnalysisPlaning" : true,
+	"SprintBacklog" : true,
+	"InProgress" : true,
 	"Testing" : true,
-	"Release" : true
+	"Implementation" : true,
+	"Relase" : true
 }
-
+// Backlog|AnalysisPlaning|SprintBacklog| InProgress| Testing | Implementation | Relase
 Kanban.ScrumModes = {
 	"Review" : {
-		"CurrentSprint" : true,
-		"Design" : true,
-		"CodeInProgress" : true,
+		"SprintBacklog" : true,
+		"InProgress" : true,
 		"Testing" : true,
-		"Release" : true
+		"Implementation" : true,
+		"Relase" : true
 	},
 	"Planif" : {
 		"Backlog" : true,
-		"NextSprint" : true,
-		"CurrentSprint" : true
+		"AnalysisPlaning" : true,
+		"SprintBacklog" : true
 	}
 }
 
-Kanban.PriorityField = "Priority";
-Kanban.Priorities = {
-	"Immediate" : {
-		"value" : 60
-	},
-	"Urgente" : {
-		"value" : 50
-	},
-	"Elevée" : {
-		"value" : 40
-	},
-	"Normale" : {
-		"value" : 30
-	},
-	"Basse" : {
-		"value" : 20
-	}
-}
+//Kanban.PriorityField = "Priority";
+//Kanban.Priorities = {
+//	"Immediate" : {
+//		"value" : 60
+//	},
+//	"Urgente" : {
+//		"value" : 50
+//	},
+//	"Elevée" : {
+//		"value" : 40
+//	},
+//	"Normale" : {
+//		"value" : 30
+//	},
+//	"Basse" : {
+//		"value" : 20
+//	}
+//}
 
 /// When a project has a custom field, you can specify mantis statuses to change to when entering this bucket
 Kanban.AutoStatusOnCustomField = {
 	"ScrumBucket" : {
+		"Backlog" : "10",
+		"AnalysisPlaning" : "20",
+		"SprintBacklog" : "30",
+		"InProgress" : "70",
+		"Testing" : "80",
+		"Implementation" : "80",
+		"Relase" : "90"
 	}
 }
 
 /// Use this to set default icons for categories
 Kanban.CategoryIconMap =  {
-	"Bug" : "info-sign",
-	"Task" : "calendar",
-	"Feature" : "star"
+	"Bug" : "inf-sign",
+	"Translation" : ""
 }
 
 
