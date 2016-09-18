@@ -1,3 +1,5 @@
+/* global Kanban, Mantis, this, DragStart, DragEnd, HandleDragOver, HandleDragLeave, HandleDragEnter, Drop */
+
 var KanbanUser = function(RawObject) {
 	var self = this;
 	if(typeof(RawObject) == "string") {
@@ -5,7 +7,7 @@ var KanbanUser = function(RawObject) {
 	} else {
 		self.UserSource = RawObject;
 	}
-}
+};
 
 KanbanUser.prototype = {
 	get UserName() {
@@ -34,7 +36,7 @@ KanbanUser.prototype = {
 		if(this.UserSource === undefined) return "";
 		return this.UserSource.email;
 	}
-}
+};
 
 var KanbanProject = function(RawObject) {
 	var self = this;
@@ -47,7 +49,7 @@ var KanbanProject = function(RawObject) {
 		self.ProjectSource = RawObject;
 	}
 	self._lists = [];
-}
+};
 
 KanbanProject.prototype = {
 	ProjectNiv : 0,
@@ -69,18 +71,18 @@ KanbanProject.prototype = {
 	},
 
 	HasFilterID : function() {
-		
+
 	},
 
 	get Users() {
-		var mantisUsers = Mantis.ProjectUsers
+		var mantisUsers = Mantis.ProjectUsers;
 		var userList = new Array();
 		for(var ul = 0; ul < mantisUsers.length; ul++) {
 			userList.push(new KanbanUser(mantisUsers[ul]));
 		}
 		return userList;
 	}
-}
+};
 
 var KanbanList = function(RawObject) {
 		if(typeof(RawObject) == "string") {
@@ -94,7 +96,7 @@ var KanbanList = function(RawObject) {
 		this._stories = [];
 		this.Element = null;
 		this.UsesCustomField = false;
-}	
+};
 
 KanbanList.prototype = {
 
@@ -133,7 +135,7 @@ KanbanList.prototype = {
 		}
 	},
 	RemoveStory: function(Story) {
-		var index = -1
+		var index = -1;
 		for(var i = 0; i < this._stories.length; i++) {
 			if(this._stories[i].ID == Story.ID) {
 				index = i;
@@ -158,7 +160,7 @@ KanbanList.prototype = {
 		return false;
 	}
 
-}
+};
 
 var KanbanStory = function(RawObject) {
 	this._list = null;
@@ -170,7 +172,7 @@ var KanbanStory = function(RawObject) {
 	if(!Kanban.HasStory(this.ID)) {
 		Kanban.AddStoryToArray(this);
 	}
-}
+};
 
 KanbanStory.prototype = {
 
@@ -195,12 +197,11 @@ KanbanStory.prototype = {
 				if(kanbanList.ID == this.StatusID) {
 					return kanbanList;
 				}
-			}				
+			}
 		}
 
 		// TODO : Optimisation possible en inversant la boucle d'au dessus, en passant d'abbord en revue les valeur de l'objects et non la liste des champs
 		// Return the first list if none are available and value is not set to an other value
-
 		for(var li = 0; li < Kanban.Lists.length; li++) {
 			if (Kanban.ScrumDefaultStatus == Kanban.Lists[li].ID) {
 
@@ -227,7 +228,7 @@ KanbanStory.prototype = {
 			}
 		} else {
 			this.StatusID = value.ID;
-		}				
+		}
 	},
 
 	get ListID() {
@@ -238,29 +239,33 @@ KanbanStory.prototype = {
 	get ProjectID() {
 		return this.StorySource.project.id;
 	},
+
 	set ProjectID(value) {
-		this.StorySource.project.id = value
+		this.StorySource.project.id = value;
 	},
 
 	get CategoryID() {
 		return this.StorySource.category;
 	},
+
 	set CategoryID(value) {
 		this.StorySource.category = value;
 	},
 
 	get ProjectName() {
 		return this.StorySource.project.name;
-	}, 
+	},
+
 	set ProjectName(value) {
-		this.StorySource.project.name = value
+		this.StorySource.project.name = value;
 	},
 
 	get StatusID() {
 		return this.StorySource.status.id;
 	},
+
 	set StatusID(value) {
-		this.StorySource.status.id = value
+		this.StorySource.status.id = value;
 	},
 
 	get RelatedStories() {
@@ -276,19 +281,21 @@ KanbanStory.prototype = {
 	get StatusName() {
 		return this.StorySource.status.name;
 	}, set StatusName(value) {
-		this.StorySource.status.name = value
+		this.StorySource.status.name = value;
 	},
 
 	get SeverityID() {
 		return this.StorySource.severity.id;
 	},
+
 	set SeverityID(value) {
-		this.StorySource.severity.id = value
+		this.StorySource.severity.id = value;
 	},
 
 	get ResolutionID() {
 		return this.StorySource.resolution.id;
 	},
+
 	set ResolutionID(value) {
 		//if(value == null || value == "") {
 		//	this.StorySource.resolution = null;
@@ -326,6 +333,7 @@ KanbanStory.prototype = {
 		}
 		return [];
 	},
+
 	set Tasks(value) {
 		for(var iq = 0; iq < this.StorySource.custom_fields.length; iq++) {
 			var customField = this.StorySource.custom_fields[iq];
@@ -343,11 +351,12 @@ KanbanStory.prototype = {
 	get Attachments() {
 		return this.StorySource.attachments;
 	},
-	
 
 	get Description() {
 		return this.StorySource.description;
-	}, set Description(value) {
+	},
+
+	set Description(value) {
 		this.StorySource.description = value;
 	},
 
@@ -367,7 +376,7 @@ KanbanStory.prototype = {
 
 	get HandlerID() {
 		return this.StorySource.handler !== undefined ? this.StorySource.handler.id : "";
-	}, 
+	},
 
 	set HandlerID(value) {
 		if(value === null && this.StorySource.handler === undefined) {
@@ -396,7 +405,9 @@ KanbanStory.prototype = {
 		} else {
 			return "";
 		}
-	}, set HandlerName(value) {
+	},
+
+	set HandlerName(value) {
 		if(this.StorySource.handler === undefined) {
 			this.StorySource.handler = {
 				"name": "",
@@ -420,19 +431,25 @@ KanbanStory.prototype = {
 
 	get PriorityName() {
 		return this.StorySource.priority.name;
-	}, set PriorityName(value) {
+	},
+
+	set PriorityName(value) {
 		this.StorySource.priority.name = value;
 	},
 
 	get PriorityID() {
 		return this.StorySource.priority.id;
-	}, set PriorityID(value) {
+	},
+
+	set PriorityID(value) {
 		this.StorySource.priority.id = value;
 	},
 
 	get Summary() {
-		return this.StorySource.summary
-	}, set Summary(value) {
+		return this.StorySource.summary;
+	},
+
+	set Summary(value) {
 		this.StorySource.summary = value;
 	},
 
@@ -441,20 +458,16 @@ KanbanStory.prototype = {
 	 * @description Adds the story to a KanbanList.Stories array
 	 */
 	JoinList: function() {
-		if ((this.StorySource == null) || (this.StorySource.custom_fields == null)) {
-			console.log(this.StorySource);
-		} else {
-			for (var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
-				if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
-					for(var li = 0; li < Kanban.Lists.length; li++) {
-						var thisList = Kanban.Lists[li];
+		for (var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
+			if(this.StorySource.custom_fields[ci].field.name == Kanban._listIDField) {
+				for(var li = 0; li < Kanban.Lists.length; li++) {
+					var thisList = Kanban.Lists[li];
 
-						if ((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
-							this._list = thisList;
-							this._list.AddStory(this);
-							this.UsesCustomField = true;
-							return;
-						}
+					if ((this.StorySource.custom_fields[ci].value == thisList.ID) || ((this.StorySource.custom_fields[ci].value == null) && (Kanban.ScrumDefaultStatus == thisList.ID))) {
+						this._list = thisList;
+						this._list.AddStory(this);
+						this.UsesCustomField = true;
+						return;
 					}
 				}
 			}
@@ -474,8 +487,8 @@ KanbanStory.prototype = {
 				}
 			}
 		}
-		
-		
+
+
 	},
 
 	HasTag : function(tagID) {
@@ -484,9 +497,9 @@ KanbanStory.prototype = {
 				if(this.StorySource.tags[qi].id == tagID) return true;
 			}
 		}
-		
+
 		return false;
-		
+
 	},
 	Save: function() {
 		this.StorySource.summary = this.Summary;
@@ -514,7 +527,9 @@ KanbanStory.prototype = {
 		storyDiv.setAttribute("draggable", "true");
 		storyDiv.setAttribute("onclick", "EditStory('" + this.ID + "');");
 		storyDiv.setAttribute("category", this.CategoryID);
-		storyDiv.classList.add("sev_" + ((Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
+
+		// TODO: Enables the prioritization "Severity", currently excluded because they do not support the translations
+		//storyDiv.classList.add("sev_" + ((Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID));
 
 		storyDiv.addEventListener('dragstart', DragStart, false);
 		storyDiv.addEventListener("dragend", DragEnd, false);
@@ -551,7 +566,7 @@ KanbanStory.prototype = {
 			storyContainerDiv.classList.add("mystory");
 		}
 		storyDiv.appendChild(storyContainerDiv);
-	
+
 		var kanbanStoryHeaderAreaDiv = document.createElement("div");
 		kanbanStoryHeaderAreaDiv.setAttribute("class", "kanbanstoryheaderarea");
 		kanbanStoryHeaderAreaDiv.setAttribute("listid", "listid" + this.ListID);
@@ -590,7 +605,7 @@ KanbanStory.prototype = {
 		storyDivButtonContainer.appendChild(storyDivButton);
 
 		var storyDivTitle = document.createElement("span");
-		
+
 		storyDivTitle.setAttribute("class", "kanbanstorytitle");
 		storyDivTitle.setAttribute("id", "storytitle" + this.ID);
 		//storyDivTitle.setAttribute("onclick", "EditStory('" + this.ID + "');");
@@ -601,20 +616,6 @@ KanbanStory.prototype = {
 
 		var storyDivTitleSecondRow = document.createElement("div");
 		storyDivTitleSecondRow.setAttribute("class", "kanbanstorytitlesecondrow");
-
-		var chargeRestante = 0;
-		for(var ci = 0; ci < this.StorySource.custom_fields.length; ci++) {
-			if(this.StorySource.custom_fields[ci].field.name == "ChargeRestante") {
-				chargeRestante = this.StorySource.custom_fields[ci].value;
-			}
-		}
-
-		if(chargeRestante > 0) {
-			var storyDivTitleSecondIcon = document.createElement("span");
-			storyDivTitleSecondIcon.setAttribute("class", "chargeRestanteTicket");
-			storyDivTitleSecondIcon.innerHTML = chargeRestante+ "j";
-			storyDivTitleSecondRow.appendChild(storyDivTitleSecondIcon);
-		}
 
 		if(this.CategoryID != null) {
 			var storyDivTitleSecondIcon = document.createElement("span");
@@ -630,7 +631,7 @@ KanbanStory.prototype = {
 			var storyDivTitleSecondIcon = document.createElement("span");
 			storyDivTitleSecondIcon.setAttribute("class", "glyphicon glyphicon-th-list");
 			storyDivTitleSecondRow.appendChild(storyDivTitleSecondIcon);
-		}		
+		}
 		if(this.Attachments.length > 0) {
 			var storyDivTitleSecondIcon = document.createElement("span");
 			storyDivTitleSecondIcon.setAttribute("class", "glyphicon glyphicon-file");
@@ -641,7 +642,6 @@ KanbanStory.prototype = {
 			storyDivTitleSecondIcon.setAttribute("class", "glyphicon glyphicon-retweet");
 			storyDivTitleSecondRow.appendChild(storyDivTitleSecondIcon);
 		}
-
 		if(this.Tags.length > 0) {
 			for(var tcnt = 0; tcnt < this.Tags.length; tcnt++) {
 				var thisTag = this.Tags[tcnt];
@@ -662,7 +662,9 @@ KanbanStory.prototype = {
 		storyDivSeverityContainer.setAttribute("listid", "listid" + this.ListID);
 		storyDivSeverityContainer.setAttribute("storyid", "storydiv" + this.ID);
 		storyDivSeverityContainer.setAttribute("dropdivid", "dropdiv" + this.ID);
-		storyDivSeverityContainer.setAttribute("priority", (Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
+		// TODO: Enables the prioritization "Severity", currently excluded because they do not support the translations
+		//storyDivSeverityContainer.setAttribute("priority", (Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
+		storyDivSeverityContainer.setAttribute("priority", this.PriorityName);
 		storyDivTitle.appendChild(storyDivSeverityContainer);
 
 		if(this.Element != null) {
@@ -673,7 +675,36 @@ KanbanStory.prototype = {
 		this.Element = storyDiv;
 		return storyDiv;
 	}
-}
+};
+
+Kanban.AddStory = function(summary, description, handlerid, reporterid, statusid, priorityid, category, customfield) {
+	var newIssueStruct = Mantis.UpdateStructureMethods.Issue.NewIssue(summary, description, Mantis.CurrentProjectID, handlerid, reporterid, statusid, priorityid, category);
+	if(customfield !== null) {
+		Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, Kanban._listIDField, customfield);
+	}
+	Mantis.IssueAdd(newIssueStruct, Kanban.AddStoryAsyncCallback);
+};
+
+Kanban.AddStoryAsyncCallback = function(result) {
+	Kanban.BlockUpdates = false;
+	StopLoading();
+	if(isNaN(result)) {
+		alert("Error Adding: " + result);
+	} else {
+		try {
+			var newStory = new KanbanStory(Mantis.IssueGet(result));
+			newStory.BuildKanbanStoryDiv();
+			if(newStory.List != null) {
+				newStory.List.AddNewStoryUI(newStory);
+			}
+			Kanban.CloseAddStoryDialog();
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
+	UpdateKanbanListTitle();
+};
 
 Kanban.UpdateUnderlyingStorySource = function(originalStory) {
 	var mantisIssue = Mantis.IssueGet(originalStory.ID, null);

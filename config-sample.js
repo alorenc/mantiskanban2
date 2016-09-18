@@ -59,6 +59,10 @@ Kanban.ScrumModes = {
 	}
 }
 
+// Disabled because switching system "priority"/"severity" does not include the translation of language
+// kanbanclasses.js >> BuildKanbanStoryDiv >> Line 512 and Line 655
+// index.js >> Line 211 >> if (Kanban.Priorities != null)
+//
 //Kanban.PriorityField = "Priority";
 //Kanban.Priorities = {
 //	"Immediate" : {

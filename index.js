@@ -1,6 +1,7 @@
 var LoadingIssuesList = new Array();
 var DebugOn = false;
 var $ = jQuery;
+
 /*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js*/
 ;if("document" in self&&!("classList" in document.createElement("_"))){(function(j){"use strict";if(!("Element" in j)){return}var a="classList",f="prototype",m=j.Element[f],b=Object,k=String[f].trim||function(){return this.replace(/^\s+|\s+$/g,"")},c=Array[f].indexOf||function(q){var p=0,o=this.length;for(;p<o;p++){if(p in this&&this[p]===q){return p}}return -1},n=function(o,p){this.name=o;this.code=DOMException[o];this.message=p},g=function(p,o){if(o===""){throw new n("SYNTAX_ERR","An invalid or illegal string was specified")}if(/\s/.test(o)){throw new n("INVALID_CHARACTER_ERR","String contains an invalid character")}return c.call(p,o)},d=function(s){var r=k.call(s.getAttribute("class")||""),q=r?r.split(/\s+/):[],p=0,o=q.length;for(;p<o;p++){this.push(q[p])}this._updateClassName=function(){s.setAttribute("class",this.toString())}},e=d[f]=[],i=function(){return new d(this)};n[f]=Error[f];e.item=function(o){return this[o]||null};e.contains=function(o){o+="";return g(this,o)!==-1};e.add=function(){var s=arguments,r=0,p=s.length,q,o=false;do{q=s[r]+"";if(g(this,q)===-1){this.push(q);o=true}}while(++r<p);if(o){this._updateClassName()}};e.remove=function(){var t=arguments,s=0,p=t.length,r,o=false;do{r=t[s]+"";var q=g(this,r);if(q!==-1){this.splice(q,1);o=true}}while(++s<p);if(o){this._updateClassName()}};e.toggle=function(p,q){p+="";var o=this.contains(p),r=o?q!==true&&"remove":q!==false&&"add";if(r){this[r](p)}return !o};e.toString=function(){return this.join(" ")};if(b.defineProperty){var l={get:i,enumerable:true,configurable:true};try{b.defineProperty(m,a,l)}catch(h){if(h.number===-2146823252){l.enumerable=false;b.defineProperty(m,a,l)}}}else{if(b[f].__defineGetter__){m.__defineGetter__(a,i)}}}(self))};
 
@@ -43,7 +44,7 @@ window.addEventListener("DOMContentLoaded", function(){
 
 	LoadSettingsFromLocalStorage();
 	if(DefaultSettings.selectedStyle) Kanban.ApplyTheme(DefaultSettings.selectedStyle);
-	
+
 	// 2ms to apply the style before we turn the display on
 	window.setTimeout(function() {
 		document.getElementById("realcontentcontainer").style.visibility = 'visible';
@@ -56,12 +57,12 @@ function window_load() {
 
 	document.getElementById('newAttachmentFile').addEventListener('change', HandleFileSelect, false);
 
-	$(function () { 
-	    $("[data-toggle='tooltip']").tooltip(); 
+	$(function () {
+	    $("[data-toggle='tooltip']").tooltip();
 	});
 
 
-	//make sure that the username and password form doesnt actually submit. 
+	//make sure that the username and password form doesnt actually submit.
 	//need this here as a fail safe because jQuery is included.
 	$('#userLoginForm').submit(function() {
   		Login();
@@ -75,7 +76,7 @@ function window_load() {
     jQuery(document).ready(function ($) {
         $('#tabs').tab();
     });
-    
+
 	AutoLogin();
 
 	/*
@@ -105,12 +106,12 @@ function window_load() {
           newAttachmentDiv.setAttribute("filename", theFile.name);
           var mimeType = "";
           if(theFile.type == undefined || theFile.type == "") {
-          	mimeType = "application/octet-stream";	
+          	mimeType = "application/octet-stream";
           } else {
           	mimeType = theFile.type;
-          	
+
           }
-          newAttachmentDiv.setAttribute("filetype", mimeType);	
+          newAttachmentDiv.setAttribute("filetype", mimeType);
           newAttachmentDiv.innerHTML = theFile.name + " (" + mimeType + ") " + Math.round(data.length / 1024, 2) + "Kb";
           document.getElementById('newAttachmentList').appendChild(newAttachmentDiv);
           document.getElementById('newAttachmentFile').value = "";
@@ -133,23 +134,23 @@ function ShallowCopy(o) {
 }
 
 function get_gravatar(email, size) {
- 
+
     // MD5 (Message-Digest Algorithm) by WebToolkit
-    // 
- 
+    //
+
     var MD5=function(s){function L(k,d){return(k<<d)|(k>>>(32-d))}function K(G,k){var I,d,F,H,x;F=(G&2147483648);H=(k&2147483648);I=(G&1073741824);d=(k&1073741824);x=(G&1073741823)+(k&1073741823);if(I&d){return(x^2147483648^F^H)}if(I|d){if(x&1073741824){return(x^3221225472^F^H)}else{return(x^1073741824^F^H)}}else{return(x^F^H)}}function r(d,F,k){return(d&F)|((~d)&k)}function q(d,F,k){return(d&k)|(F&(~k))}function p(d,F,k){return(d^F^k)}function n(d,F,k){return(F^(d|(~k)))}function u(G,F,aa,Z,k,H,I){G=K(G,K(K(r(F,aa,Z),k),I));return K(L(G,H),F)}function f(G,F,aa,Z,k,H,I){G=K(G,K(K(q(F,aa,Z),k),I));return K(L(G,H),F)}function D(G,F,aa,Z,k,H,I){G=K(G,K(K(p(F,aa,Z),k),I));return K(L(G,H),F)}function t(G,F,aa,Z,k,H,I){G=K(G,K(K(n(F,aa,Z),k),I));return K(L(G,H),F)}function e(G){var Z;var F=G.length;var x=F+8;var k=(x-(x%64))/64;var I=(k+1)*16;var aa=Array(I-1);var d=0;var H=0;while(H<F){Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=(aa[Z]|(G.charCodeAt(H)<<d));H++}Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=aa[Z]|(128<<d);aa[I-2]=F<<3;aa[I-1]=F>>>29;return aa}function B(x){var k="",F="",G,d;for(d=0;d<=3;d++){G=(x>>>(d*8))&255;F="0"+G.toString(16);k=k+F.substr(F.length-2,2)}return k}function J(k){k=k.replace(/rn/g,"n");var d="";for(var F=0;F<k.length;F++){var x=k.charCodeAt(F);if(x<128){d+=String.fromCharCode(x)}else{if((x>127)&&(x<2048)){d+=String.fromCharCode((x>>6)|192);d+=String.fromCharCode((x&63)|128)}else{d+=String.fromCharCode((x>>12)|224);d+=String.fromCharCode(((x>>6)&63)|128);d+=String.fromCharCode((x&63)|128)}}}return d}var C=Array();var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;s=J(s);C=e(s);Y=1732584193;X=4023233417;W=2562383102;V=271733878;for(P=0;P<C.length;P+=16){h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g)}var i=B(Y)+B(X)+B(W)+B(V);return i.toLowerCase()};
- 
+
     var size = size || 80;
- 
+
     return 'http://www.gravatar.com/avatar/' + MD5(email) + '.jpg?s=' + size;
 }
 
- 
+
 function Login() {
 	log("Login() called.");
-	
+
 	document.getElementById("username").focus();
-	
+
 	try {
 		var retObj = Mantis.Login(document.getElementById("username").value, document.getElementById("password").value);
 		Kanban.CurrentUser = new KanbanUser(retObj.account_data);
@@ -166,7 +167,7 @@ function Login() {
 	DefaultSettings.connectURL = Mantis.ConnectURL;
 
 	StartLoading();
-	
+
 	//put the user-entered data into the DefaultSettings array.
 	DefaultSettings.username = document.getElementById("username").value;
 	DefaultSettings.password = document.getElementById("password").value;
@@ -202,24 +203,27 @@ function Login() {
 	$('#scrumMode').bootstrapSwitch();
 	$('#scrumMode').on('switchChange.bootstrapSwitch', function(event, state) {
 		Kanban.ScrumMode = state ? "Review" : "Planif";
+		console.log('SelectProject index.js line 206');
 		SelectProject();
 	});
 
 
-	if (Kanban.Priorities != null) {
-		var priorityList = document.getElementById('prioritylegend');
-		try { while(priorityList.childNodes.length > 0) { priorityList.removeChild(priorityList.firstChild); } } catch(e) {}
-
-		for (var priority in Kanban.Priorities) {
-			var projectDiv = document.createElement("div");
-			projectDiv.innerHTML = priority;
-			projectDiv.setAttribute("priority", Kanban.Priorities[priority].value);
-
-			priorityList.appendChild(projectDiv);
-		}
-	}
-
-	SelectProject();
+//	console.log(Kanban.Priorities);
+//	if (Kanban.Priorities != null) {
+//		var priorityList = document.getElementById('prioritylegend');
+//		try { while(priorityList.childNodes.length > 0) { priorityList.removeChild(priorityList.firstChild); } } catch(e) {}
+//
+//		for (var priority in Kanban.Priorities) {
+//			var projectDiv = document.createElement("div");
+//			projectDiv.innerHTML = priority;
+//			projectDiv.setAttribute("priority", Kanban.Priorities[priority].value);
+//
+//			priorityList.appendChild(projectDiv);
+//		}
+//	}
+//
+//	SelectProject();
+//	console.log('SelectProject index.js line 225');
 
 	Mantis.Preload();
 
@@ -261,7 +265,7 @@ function ShowProjectArea() {
 	document.getElementById("projectarea").style.display = "block";
 	document.getElementById("contentarea").style.display = "block";
 	document.getElementById("priorities-displayer").style.display = "block";
-	
+
 }
 
 function HideProjectArea() {
@@ -306,12 +310,12 @@ function modifyStyleRule(selectorText, style, value) {
 			        }
 				}
 			}
-		} catch (e) { }	
+		} catch (e) { }
 	}
 }
 
 function getStyleRule(selectorText, style, value) {
-	try { 
+	try {
 		var sheets = document.styleSheets;
 		var sheet, rules, rule;
 		var i, j, k, l;
@@ -347,7 +351,7 @@ function getStyleRule(selectorText, style, value) {
 						// rule.style.cssText = value;
 			        }
 				}
-			}		
+			}
 		}
 		/// We didn't find the value so return nothing
 		return "";
@@ -391,7 +395,7 @@ function Logout() {
 	Kanban.ClearListGUI();
 
 	Mantis.ClearForLogout();
-	
+
 	HideProjectArea();
 	ShowLoginArea();
 }
@@ -428,7 +432,7 @@ function SelectProject(openStoryID) {
 	UpdateFilterList();
 
 	BuildKanbanListFromMantisStatuses();
-	
+
 	Kanban.BuildListGUI();
 
 	AutoAdjustListWidth();
@@ -436,11 +440,11 @@ function SelectProject(openStoryID) {
 	VerifyDefaultFitlers();
 
 	if(Kanban.CurrentProject.ParentProject) {
-		document.getElementById("selected-project-name").innerHTML = Kanban.CurrentProject.ParentProject.Name + "&nbsp;&nbsp;/&nbsp;&nbsp;" + Kanban.CurrentProject.Name;	
+		document.getElementById("selected-project-name").innerHTML = Kanban.CurrentProject.ParentProject.Name + "&nbsp;&nbsp;/&nbsp;&nbsp;" + Kanban.CurrentProject.Name;
 	} else if (Mantis.CurrentProjectID == 0) {
 		document.getElementById("selected-project-name").innerHTML = "All projects";
 	} else {
-		document.getElementById("selected-project-name").innerHTML = Kanban.CurrentProject.Name;	
+		document.getElementById("selected-project-name").innerHTML = Kanban.CurrentProject.Name;
 	}
 
 	if(Mantis.DefaultFilterID !== null && Mantis.DefaultFilterID != 0) {
@@ -462,7 +466,7 @@ function SelectProject(openStoryID) {
 		var retObj = Mantis.ProjectGetIssues(Mantis.CurrentProjectID, 0, Mantis.NumberOfIssueToLoad);
 		CreateKanbanStoriesFromMantisIssues(retObj);
 		CreateListOfAssignedStories();
-		BuildKanbanAssignedUsersGUI();		
+		BuildKanbanAssignedUsersGUI();
 		$(".tempLoadingDiv").hide();//hide the loading gifs
 		if(document.getElementById("searchfield").value != "") {
 			SearchForStory(false);
@@ -501,7 +505,7 @@ function UpdateFilter(filterID) {
 		}
 	}
 
-	$('#selectedFilterText').text("Select Filter");
+	$('#selectedFilterText').text(langObj.textSelectFilter);
 	Mantis.DefaultFilterID = null;
 	SelectProject();
 }
@@ -526,14 +530,15 @@ function RefreshDisplay() {
 
 function UpdateRefreshDisplay() {
 	if (DefaultSettings.refresh > 0) {
-		$('#selected-refresh').text((DefaultSettings.refresh / 60) + " minute" + (((DefaultSettings.refresh / 60) > 1) ? "s" : ""));
+		var langMinutes = (DefaultSettings.refresh / 60) > 1 ? langObj.textManyMinutes : langObj.textOneMinute;
+		$('#selected-refresh').text((DefaultSettings.refresh / 60) + ' ' + langMinutes);
 
 		if (Kanban.refreshInterval != null) {
 			clearInterval(Kanban.refreshInterval);
 		}
 		Kanban.refreshInterval = setInterval("RefreshDisplay();", DefaultSettings.refresh * 1000);
 	} else {
-		$('#selected-refresh').text("No");
+		$('#selected-refresh').text(langObj.textReload);
 	}
 }
 
@@ -546,7 +551,7 @@ function UpdateFilterList() {
 	var filterListArray = Mantis.FilterGet(Mantis.CurrentProjectID)
 	Mantis.ProjectFilterList = filterListArray;
 
-	while(filterList.children.length > 0) { 
+	while(filterList.children.length > 0) {
 	 	filterList.removeChild(filterList.children[0]);
 	}
 	filterList.innerHTML = "<li><a href=\"#\" onclick=\"UpdateFilter(0);\">Clear filter</a></li><li role=\"separator\" class=\"divider\"></li>";
@@ -757,7 +762,8 @@ function BuildKanbanAssignedUsersGUI() {
 		var thisUser = Kanban.AssignedUsers[kbu];
 
 		var userGravatar = document.createElement("div");
-		var shortName = thisUser.Name.substring(0, 1).toUpperCase() + thisUser.Name.substring(1, 2);
+		var shortName = thisUser.UserName.substring(0, 1).toUpperCase() + thisUser.UserName.substring(1, 2);
+		var userEmail = (thisUser.Email === undefined) ? '' : thisUser.Email;
 		userGravatar.innerHTML = shortName;
 
 		userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems");
@@ -772,7 +778,7 @@ function BuildKanbanAssignedUsersGUI() {
 		//userGravatar.setAttribute("data-content", thisUser.Email);
 		//userGravatar.setAttribute("data-trigger", "hover");
 		userGravatar.setAttribute("title", thisUser.Name);
-		userGravatar.setAttribute("data-content", "<b>" + thisUser.Email + "</b><div style=\"color:#000 !important; border: solid 1px #bbb; padding-left: 5px;" + GetStyleCodeFor3DigitsHalfShaded(thisUser.UserName.substring(0, 3)) + "\">" + shortName + "</div>");
+		userGravatar.setAttribute("data-content", "<b>" + userEmail + "</b><div style=\"color:#000 !important; border: solid 1px #bbb; padding-left: 5px;" + GetStyleCodeFor3DigitsHalfShaded(thisUser.UserName.substring(0, 3)) + "\">" + shortName + "</div>");
 		userGravatar.setAttribute("id", "ug" + thisUser.ID);
 
 		kanbanUserListContainer.appendChild(userGravatar);
@@ -799,8 +805,8 @@ function BuildKanbanAssignedUsersGUI() {
 		RefreshStoriesDisplay();
 	});
 
-	$(function () { 
-    	$("[data-toggle='tooltip']").popover({html:true}); 
+	$(function () {
+    	$("[data-toggle='tooltip']").popover({html:true});
 	});
 }
 
@@ -948,7 +954,7 @@ function AutoAdjustListWidth() {
 	var contentArea = document.getElementById("kanbancontent")
 	var newWidth = FitColsToScreen();
 	document.getElementById("settings-list-width").value = newWidth;
-	modifyStyleRule(".kanbanlist", "width", newWidth);		
+	modifyStyleRule(".kanbanlist", "width", newWidth);
 }
 
 function FitColsToScreen(){
