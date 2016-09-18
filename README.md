@@ -1,13 +1,28 @@
-mantiskanban
+#MantisKanban - expanded by alorenc
 ============
 
 Mantis Kanban that uses ajax and mantisconnect
 
-LIVE DEMO!!! http://mantiskanban.com/mantisbt/mantiskanban/
+##History:
+============
+###Version by Corey Gaspard
+* stable : https://github.com/cgaspard/mantiskanban (master)
+
+------------
+###Version by e-doceo
+* operating	: https://github.com/e-doceo/mantiskanban (master)
+
+------------
+###Version by Artur Lorenc (MantisKanban 2.0): 
+This is the original version of Corey Gaspard, extended by a change of.
+* The corrected errors
+* Standardization code
+* Further developed According To Their Own ideas and applications
+* Tested only on MantisBT 2.0
+
+///LIVE DEMO!!! http://mantiskanban.com/mantisbt/mantiskanban/
 
 ![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/images/mantis_logo.png "Logo")
-
-Requires Mantis vs 1.2.15 or greater.
 
 JS Configuration: config.js
 
@@ -70,6 +85,15 @@ Mantis Configuration:
     
     Next you need to associate the custom field with whatever project you want to have it show up on.
 
+  TaskList:
+	
+	If you want to define custom Task List, then in mantis go to Manage > ManageCustomFields.
+	
+	Then add a field called "TaskList" of type "String" with whatever possible values you want.
+	Set options (In its sole discretion): "Add to Filter" and "Display When": Reporting Issues, Updating Issues, Resolving Issues, Closing Issues
+	
+	Next you need to associate the custom field with whatever project you want to have it show up on.
+
   Default Filter:
 
     You need to setup a filter for project issues.   If you don't, then Mantis will deliver all issues.   When you
@@ -88,3 +112,6 @@ Custom Scrum Buckets:
 
 Mantis Statuses as Buckets:
 ![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/screenshots/screen4.png "Optional title")
+
+Full translation (eg Polish language):
+![Alt text](https://raw.github.com/alorenc/mantiskanban/dev/screenshots/screen5.png "Optional title")
