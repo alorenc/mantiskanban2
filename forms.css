@@ -115,7 +115,7 @@
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
 	display: inline-block;
-}	
+}
 
 #add-story-form  {
 }
@@ -197,6 +197,8 @@
 	white-space: normal;
 }
 
-
+.i18ntext {
+	margin: 0 4px;
+}
 
 
