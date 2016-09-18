@@ -1,3 +1,5 @@
+/* global Kanban, SOAPClient */
+
 var Mantis = {
 	_currentprojectid : 0,
 	_projectcategories : [],
@@ -7,6 +9,7 @@ var Mantis = {
 	_projectcustomfields : [],
 	_accesslevels : [],
 	_userprojects : [],
+	_users : [],
 	_priorities : null,
 	_tags : [],
 	_defaultaccesslevelforuserenum : 10,
@@ -15,7 +18,7 @@ var Mantis = {
 	_version : null,
 
 	ConnectURL : location.protocol + "//" + document.location.hostname + "/api/soap/mantisconnect.php",
-	
+
 	ClearForLogout : function() {
 		Mantis._currentprojectid = 0;
 		Mantis._currentprojectname = "";
@@ -28,6 +31,7 @@ var Mantis = {
 		Mantis._projectcustomfields = [];
 		Mantis._accesslevels = [];
 		Mantis._userprojects = [];
+		Mantis._users = [];
 		Mantis._defaultaccesslevelforuserenum = 10;
 		Mantis._tags = [];
 	},
@@ -53,11 +57,11 @@ var Mantis = {
 		"BUG_DELETE_SPONSORSHIP",
 		"BUG_ADD_RELATIONSHIP",
 		"BUG_DEL_RELATIONSHIP",
-		"BUG_CLONED_TO", 
+		"BUG_CLONED_TO",
 		"BUG_CREATED_FROM",
 		"CHECKIN",
 		"BUG_REPLACE_RELATIONSHIP",
-		"BUG_PAID_SPONSORSHIP", 
+		"BUG_PAID_SPONSORSHIP",
 		"TAG_ATTACHED",
 		"TAG_DETACHED",
 		"TAG_RENAMED"
@@ -68,23 +72,23 @@ var Mantis = {
 		Mantis.LoadTagsAsync();
 		Mantis.LoadSeveritiesAsync();
 		Mantis.LoadResolutionsAsync();
-	},	
-	
+	},
+
 	set DefaultFilterID(value) {
 		Mantis._defaultfilterid = value;
 	},
- 
+
 	get DefaultFilterID() {
-		return Mantis._defaultfilterid;  
+		return Mantis._defaultfilterid;
 	},
-	
+
 	set ClosedIssuesFilterID(value) {
 		Mantis._closedissuesfilterid = value;
 	},
 	get ClosedIssuesFilterID() {
-		return Mantis._closedissuesfilterid;  
+		return Mantis._closedissuesfilterid;
 	},
-	
+
 	get UserProjects() {
 		if(Mantis._userprojects.length == 0) {
 			Mantis._userprojects = Mantis.ProjectsGetUserAccessible();
@@ -105,12 +109,12 @@ var Mantis = {
 		}
 		return Mantis._priorities;
 	},
-	
+
 	get Statuses() {
 		if(Mantis._statues == null) {
-			Mantis._statues = Mantis.EnumStatus(null);  
+			Mantis._statues = Mantis.EnumStatus(null);
 		}
-		
+
 		return Mantis._statues;
 	},
 
@@ -142,14 +146,14 @@ var Mantis = {
 	LoadTagsSync : function() {
 		Mantis._tags = Mantis.TagGetAll(0,9999).results;
 	},
-	
+
 	get ProjectCategories() {
 		if(Mantis._projectcategories.length == 0) {
 			Mantis._projectcategories = Mantis.ProjectGetCategories((Mantis.CurrentProjectID == 0 ) ? Mantis.DefaultProjectID : Mantis.CurrentProjectID);
 		}
-	  return Mantis._projectcategories;  
+	  return Mantis._projectcategories;
 	},
-	
+
 	get ProjectUsers() {
 		if(Mantis._projectusers.length == 0) {
 			Mantis._projectusers = Mantis.ProjectGetUsers(Mantis._defaultaccesslevelforuserenum);
@@ -177,11 +181,11 @@ var Mantis = {
 		}
 		return Mantis._severities;
 	},
-	
+
 	get CurrentProjectID() {
 		return Mantis._currentprojectid;
 	},
-	
+
 	set CurrentProjectID(value) {
 
 		if(Mantis._currentprojectid != value) {
@@ -196,6 +200,11 @@ var Mantis = {
 
 	get CurrentProjectName() {
 		return Mantis._currentprojectname;
+	},
+
+	get Users() {
+		Mantis._users = Mantis.ProjectGetUsers(Mantis._accesslevels);
+		return Mantis._users;
 	},
 
 	Params : {
@@ -216,7 +225,7 @@ var Mantis = {
 		Tag : "tag",
 		Tags : "tags",
 		UserName : "username",
-		IssueAttachmentID : "issue_attachment_id",
+		IssueAttachmentID : "issue_attachment_id"
 	},
 
 	RemoveNullCustomFieldsFromIssue : function(issue) {
@@ -234,16 +243,16 @@ var Mantis = {
 			issue.custom_fields.splice(removeNullCustomFields[removeIndex] - removeIndex, 1);
 		}
 	},
-	
+
 	Methods : {
-		
+
 		Version : {
 			Name: "mc_version",
 			BuildParams : function() {
 				return new SOAPClientParameters();
 			}
 		},
-		
+
 		EnumStatus : {
 			Name: "mc_enum_status",
 			BuildParams : function() {
@@ -251,9 +260,9 @@ var Mantis = {
 				pl.add(Mantis.Params.UserName, Kanban.CurrentUser.UserName);
 				pl.add(Mantis.Params.Password, Kanban.CurrentUser.Password);
 				return pl;
-			},
+			}
 		},
-		
+
 		EnumPriority :{
 			Name : "mc_enum_priorities",
 			BuildParams : function() {
@@ -263,7 +272,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		EnumResolutions : {
 			Name : "mc_enum_resolutions",
 			BuildParams : function() {
@@ -283,7 +292,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		EnumGet :  {
 			Name : "mc_enum_get",
 			BuildParams : function(enumeration) {
@@ -314,7 +323,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		FilterGetIssues : {
 			Name : "mc_filter_get_issues",
 			BuildParams : function(projectid, filterid, pagenumber, perpage) {
@@ -340,7 +349,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		ProjectGetCategories : {
 		  Name : "mc_project_get_categories",
 		  BuildParams : function(projectid) {
@@ -363,7 +372,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		ProjectsGetUserAccessible : {
 			Name: "mc_projects_get_user_accessible",
 			BuildParams : function() {
@@ -373,7 +382,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		ProjectGetIssues : {
 			Name : "mc_project_get_issues",
 			BuildParams : function(projectid, pagenumber, perpage) {
@@ -397,7 +406,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		IssueAdd : {
 			Name : "mc_issue_add",
 			BuildParams : function(issue) {
@@ -407,7 +416,7 @@ var Mantis = {
 				pl.add(Mantis.Params.Issue, issue);
 				return pl;
 			}
-			
+
 		},
 
 		TagAdd :  {
@@ -430,7 +439,7 @@ var Mantis = {
 				pl.add(Mantis.Params.IssueID, issueID);
 				pl.add(Mantis.Params.Name, fileName);
 				pl.add(Mantis.Params.FileType, fileType);
-				pl.add(Mantis.Params.Content, fileContent)
+				pl.add(Mantis.Params.Content, fileContent);
 				return pl;
 			}
 		},
@@ -481,7 +490,7 @@ var Mantis = {
 			}
 
 		},
-		
+
 		IssueUpdate : {
 			Name : "mc_issue_update",
 			BuildParams : function(issueid, issue) {
@@ -505,7 +514,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		IssueNoteAdd : {
 			Name : "mc_issue_note_add",
 			BuildParams : function (issueid, noteobject) {
@@ -517,7 +526,7 @@ var Mantis = {
 				return pl;
 			}
 		},
-		
+
 		IssueAttachmentGet : {
 			Name : "mc_issue_attachment_get",
 			BuildParams : function(issueattachmentid) {
@@ -549,12 +558,12 @@ var Mantis = {
 				pl.add(Mantis.Params.UserName, Kanban.CurrentUser.UserName);
 				pl.add(Mantis.Params.Password, Kanban.CurrentUser.Password);
 				pl.add(Mantis.Params.IssueID, issueid);
-				return pl;				
+				return pl;
 			}
 		}
-		
+
 	},
-	
+
 	UpdateStructureMethods : {
 		Issue : {
 			UpdateStatus : function(issue, statusid, statusname) {
@@ -562,7 +571,7 @@ var Mantis = {
 				issue.status.id = statusid;
 				return issue;
 			},
-			
+
 			UpdateCustomField : function(issue, fieldname, fieldvalue) {
 				var fieldID = "";
 				if(issue.custom_fields === undefined) {
@@ -587,7 +596,7 @@ var Mantis = {
 
 				return issue;
 			},
-			
+
 			NewIssue : function(summary, description, projectid, handlerid, reporterid, statusid, priorityid, category) {
 				var newIssue = {
 					"id" : "",
@@ -598,14 +607,14 @@ var Mantis = {
 					"reporter" : { "id" : reporterid },
 					"category" : category
 				};
-				
+
 				if(priorityid !== undefined && priorityid !== null) newIssue["priority"] = { "id" : priorityid };
 				if(handlerid !== undefined && handlerid !== null) {
 					newIssue["handler"] = { "id" : handlerid };
 				} else {
 					newIssue["handler"] = { "id" : null };
 				}
-				return newIssue;   
+				return newIssue;
 			}
 		},
 		Tag :  {
@@ -641,7 +650,7 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.FilterGet.Name, Mantis.Methods.FilterGet.BuildParams(ProjectID), hascallback, callBack);
 	},
-	
+
 	FilterGetIssues : function(ProjectID, FilterID, PageNumber, PerPage, callBack) {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.FilterGetIssues.Name, Mantis.Methods.FilterGetIssues.BuildParams(ProjectID, FilterID, PageNumber, PerPage), hascallback, callBack);
@@ -651,7 +660,7 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.IssueAdd.Name, Mantis.Methods.IssueAdd.BuildParams(Issue), hascallback, callBack);
 	},
-	
+
 	IssueGet : function(IssueID, callBack) {
 		hascallback = callBack == null || callBack == undefined ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.IssueGet.Name, Mantis.Methods.IssueGet.BuildParams(IssueID), hascallback, callBack);
@@ -672,16 +681,16 @@ var Mantis = {
 
 	IssueAttachmentAdd : function(IssueID, FileName, FileType, FileContent, callBack) {
 		hascallback = callBack == null ? false : true;
-		return SOAPClient.invoke(Mantis.ConnectURL,  
-			Mantis.Methods.IssueAttachmentAdd.Name, 
-			Mantis.Methods.IssueAttachmentAdd.BuildParams(IssueID, FileName, FileType, FileContent), 
+		return SOAPClient.invoke(Mantis.ConnectURL,
+			Mantis.Methods.IssueAttachmentAdd.Name,
+			Mantis.Methods.IssueAttachmentAdd.BuildParams(IssueID, FileName, FileType, FileContent),
 			hascallback, callBack);
 	},
 	IssueAttachmentDelete : function(IssueAttachmentID, callBack) {
 		hascallback = callBack == null ? false : true;
-		return SOAPClient.invoke(Mantis.ConnectURL,  
-			Mantis.Methods.IssueAttachmentDelete.Name, 
-			Mantis.Methods.IssueAttachmentDelete.BuildParams(IssueAttachmentID), 
+		return SOAPClient.invoke(Mantis.ConnectURL,
+			Mantis.Methods.IssueAttachmentDelete.Name,
+			Mantis.Methods.IssueAttachmentDelete.BuildParams(IssueAttachmentID),
 			hascallback, callBack);
 
 	},
@@ -709,7 +718,7 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.IssueDelete.Name, Mantis.Methods.IssueDelete.BuildParams(IssueID), hascallback, callBack);
 	},
-	
+
 	IssueUpdate : function(IssueID, Issue, callBack) {
 		hascallback = callBack == null ? false : true;
 		//var updateIssue = jQuery.extend(true, {}, Issue);
@@ -741,17 +750,17 @@ var Mantis = {
 //   <part name="password" type="xsd:string" />
 //   <part name="tag_id" type="xsd:integer" /></message>
 // <message name="mc_tag_deleteResponse">
-//   <part name="return" type="xsd:boolean" /></message>	
+//   <part name="return" type="xsd:boolean" /></message>
 
 	Login : function(UserName, Password) {
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.Login.Name, Mantis.Methods.Login.BuildParams(UserName, Password), false, null);
 	},
-	
+
 	ProjectGetCategories :  function(ProjectID, callBack){
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.ProjectGetCategories.Name, Mantis.Methods.ProjectGetCategories.BuildParams(ProjectID), hascallback, callBack);
 	},
-	
+
 	ProjectGetIssues : function(ProjectID, PageNumber, PerPage, callBack) {
 		console.log("ProjectGetIssues : " + ProjectID);
 		hascallback = callBack == null ? false : true;
@@ -768,7 +777,7 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL, Mantis.Methods.ProjectGetUsers.Name, Mantis.Methods.ProjectGetUsers.BuildParams(Access), hascallback, callBack);
 	},
-	
+
 	ProjectsGetUserAccessible :  function(callBack) {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL, Mantis.Methods.ProjectsGetUserAccessible.Name, Mantis.Methods.ProjectsGetUserAccessible.BuildParams(), hascallback, callBack);
@@ -778,7 +787,7 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL, Mantis.Methods.ProjectGetCustomFields.Name, Mantis.Methods.ProjectGetCustomFields.BuildParams(ProjectID), hascallback, callBack);
 	},
-	
+
 	EnumGet : function(Enumeration, callBack) {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.EnumGet.Name, Mantis.Methods.EnumGet.BuildParams(Enumeration), hascallback, callBack);
@@ -793,32 +802,32 @@ var Mantis = {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.EnumResolutions.Name, Mantis.Methods.EnumResolutions.BuildParams(), hascallback, callBack);
 	},
-	
+
 	EnumSeverities : function(callBack) {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.EnumSeverities.Name, Mantis.Methods.EnumSeverities.BuildParams(), hascallback, callBack);
 	},
-	
+
 	EnumPriority : function(callBack) {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.EnumPriority.Name, Mantis.Methods.EnumPriority.BuildParams(), hascallback, callBack);
 	},
-	
+
 	EnumStatus : function(callBack) {
 		hascallback = callBack == null ? false : true;
 		return SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.EnumStatus.Name, Mantis.Methods.EnumStatus.BuildParams(), hascallback, callBack);
 	},
-	
+
 	Version : function(callBack) {
-		
+
 
 		hascallback = callBack == null ? false : true;
 
 		if(Mantis._version != null && !hascallback) return Mantis._version;
 		Mantis._version = SOAPClient.invoke(Mantis.ConnectURL,  Mantis.Methods.Version.Name, Mantis.Methods.Version.BuildParams(), hascallback, callBack);
 		return Mantis._version;
-	}    
-}
+	}
+};
 /*
  *<xsd:element name="id" type="xsd:integer" minOccurs="0"/>
  *<xsd:element name="view_state" type="tns:ObjectRef" minOccurs="0"/>
