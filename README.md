@@ -1,10 +1,8 @@
 #MantisKanban - expanded by alorenc
-============
+---
 
 Mantis Kanban that uses ajax and mantisconnect
 
-##History:
-============
 ###Version by Corey Gaspard
 * stable : https://github.com/cgaspard/mantiskanban (master)
 
@@ -13,12 +11,12 @@ Mantis Kanban that uses ajax and mantisconnect
 * operating	: https://github.com/e-doceo/mantiskanban (master)
 
 ------------
-###Version by Artur Lorenc (MantisKanban 2.0): 
+###Version by Artur Lorenc: 
 This is the original version of Corey Gaspard, extended by a change of.
 * The corrected errors
 * Standardization code
-* Further developed According To Their Own ideas and applications
 * Tested only on MantisBT 2.0
+* Further developed According To Their Own ideas and applications
 
 ///LIVE DEMO!!! http://mantiskanban.com/mantisbt/mantiskanban/
 
