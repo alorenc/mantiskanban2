@@ -40,11 +40,17 @@ var langStatus = {
 	90:"closed"
 };
 
+var langSticky = {
+	0:"no",
+	1:"yes"
+}
+
 var langObj = {
 "Severity": langSeverity,
 "Resolution": langResolution,
 "Priority": langPriority,
 "Status": langStatus,
+"Sticky": langSticky,
 "textAddNewStory":"Add a New Story",
 "textAddNote":"Add Note",
 "textAddTag":"Add",
@@ -66,6 +72,7 @@ var langObj = {
 "textLogout":"Logout",
 "textNew":"Add Story",
 "textNotes":"Notes",
+"textNote":"Note",
 "textSeverity":"Severity",
 "textPriority":"Priority",
 "textPiorities":"Piorities",
@@ -101,6 +108,8 @@ var langObj = {
 "textAssignToNoOne": "--- Assign To No One ---",
 "textGo": "Go",
 "textOneMinute": " minute",
-"textManyMinutes": " minutes"
+"textManyMinutes": " minutes",
+"textSticky": "Sticky",
+"textProjectID": "Project ID"
 
 };
