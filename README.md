@@ -12,11 +12,10 @@ Mantis Kanban that uses ajax and mantisconnect
 ---
 ###Version by e-doceo
 * operating	: https://github.com/e-doceo/mantiskanban (master)
-* 
 
 ---
 ###Version by Artur Lorenc: 
-This is the original version of Corey Gaspard, extended by a change of.
+This is the original version of Corey Gaspard, extended by a change of e-doceo. Further developed by Artur Lorenc:
 * The corrected errors
 * Standardization code
 * Tested only on MantisBT 2.0
@@ -104,16 +103,12 @@ JS Configuration: config.js
 ##Screenshots:
 
 Full Screen:
-///![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/screenshots/screen1.png "Optional title")
 
 Edit Story:
-///![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/screenshots/screen2.png "Optional title")
 
 Custom Scrum Buckets:
-///![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/screenshots/screen3.png "Optional title")
 
 Mantis Statuses as Buckets:
-///![Alt text](https://raw.github.com/cgaspard/mantiskanban/master/screenshots/screen4.png "Optional title")
 
 Full translation (eg Polish language):
 ![Alt text](https://raw.github.com/alorenc/mantiskanban/dev/screenshots/screen5.png "Optional title")
