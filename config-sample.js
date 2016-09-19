@@ -101,8 +101,7 @@ Kanban.AutoStatusOnCustomField = {
 
 // Use this to set default icons for categories
 Kanban.CategoryIconMap = {
-	"Bug" : "inf-sign",
-	"Translation" : ""
+	"Bug" : "fire text-danger"
 };
 
 // This is used to just define the Default Settings object, this info gets saved to local storage for next login
