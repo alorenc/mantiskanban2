@@ -1,26 +1,26 @@
 /* global Mantis, Kanban */
 
-/// Point to the location of your server
+// Point to the location of your server
 Mantis.ConnectURL = "http://mantis.server.com/api/soap/mantisconnect.php";
 
-/// Set this to the hostname of your server
-/// If you have mantis running inside a directory, you'll need to add that on as well.
-/// This field is used to build links like this http://mantis.server.com/view.php?id=847
+// Set this to the hostname of your server
+// If you have mantis running inside a directory, you'll need to add that on as well.
+// This field is used to build links like this http://mantis.server.com/view.php?id=847
 Mantis.ServerHostname = "mantis.server.com";
 
-/// The default filter to use when loading a projects issues
-/// If you leave this null, mantis will load whatever the last filter you used when you logged into the php site.
+// The default filter to use when loading a projects issues
+// If you leave this null, mantis will load whatever the last filter you used when you logged into the php site.
 Mantis.DefaultFilterID = "0";
 
-/// Use this value if you want to load additional closed issues, in addition to all the other statuses.   A good use for this is to load open issues
-/// with DefaultFilterID, and load certain number of recently closed issues with these parameters.
+// Use this value if you want to load additional closed issues, in addition to all the other statuses.   A good use for this is to load open issues
+// with DefaultFilterID, and load certain number of recently closed issues with these parameters.
 Mantis.ClosedIssuesFilterID = "0";
 
-/// How many issues should the call to the ClosedIssueFilterID return
+// How many issues should the call to the ClosedIssueFilterID return
 Kanban.NumberOfClosedMessagesToLoad = 10;
 
-/// This is the default project to be selected
-Mantis.CurrentProjectSelection = "0";
+// This is the default project to be selected
+Mantis.CurrentProjectSelection = 0;
 
 Mantis.TaskListField = "TaskList";
 
@@ -32,6 +32,7 @@ Kanban.DefaultCategory = "General";
 
 // Scrum Mode - default switch
 Kanban.ScrumMode = "Review";
+
 // Scrum default Status
 Kanban.ScrumDefaultStatus = "Backlog";
 
@@ -85,7 +86,7 @@ Kanban.ScrumModes = {
 //	}
 //}
 
-/// When a project has a custom field, you can specify mantis statuses to change to when entering this bucket
+// When a project has a custom field, you can specify mantis statuses to change to when entering this bucket
 Kanban.AutoStatusOnCustomField = {
 	"ScrumBucket" : {
 		"Backlog" : "10",
@@ -98,23 +99,26 @@ Kanban.AutoStatusOnCustomField = {
 	}
 };
 
-/// Use this to set default icons for categories
+// Use this to set default icons for categories
 Kanban.CategoryIconMap = {
 	"Bug" : "inf-sign",
 	"Translation" : ""
 };
 
-/// This is used to just define the Default Settings object, this info gets saved to local storage for next login
+// This is used to just define the Default Settings object, this info gets saved to local storage for next login
 var DefaultSettings = {
 	username : "",
 	stayLoggedIn : 1,
 	lastAccessTime : 0,
 	autoResizeColumns : true,
-	currentProject : Mantis.CurrentProjectSelection
+	currentProject : Mantis.CurrentProjectSelection,
+	connectURL : Mantis.ConnectURL
 };
 
+// Maintaining user sessions when not active for the specified number of minutes
+Kanban.InactiveSessionTimeUserInMinutes = 30; // minuts
 
-/// List of Installed Themes should be here
+// List of Installed Themes should be here
 Kanban.Themes = [
 	{name : "Default", stylesheet : "themes/default.css"},
 	{name : "Green", stylesheet : "themes/green.css"},

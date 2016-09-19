@@ -15,7 +15,9 @@ var Mantis = {
 	_defaultfilterid : null,
 	_closedissuesfilterid : null,
 	_version : null,
+
 	ConnectURL : location.protocol + "//" + document.location.hostname + "/api/soap/mantisconnect.php",
+
 	ClearForLogout : function() {
 		Mantis._currentprojectid = 0;
 		Mantis._currentprojectname = "";
@@ -31,6 +33,7 @@ var Mantis = {
 		Mantis._defaultaccesslevelforuserenum = 10;
 		Mantis._tags = [];
 	},
+	
 	HistoryUpdateTypes : [
 		"NORMAL_TYPE",
 		"NEW_BUG",

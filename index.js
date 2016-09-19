@@ -71,9 +71,7 @@ function window_load() {
 	});
 
 	$("#project-selector").hide();
-
 	document.getElementById("username").focus();
-
 	jQuery(document).ready(function($) {
 		$('#tabs').tab();
 	});
@@ -145,10 +143,23 @@ function Login() {
 	log("Login() called.");
 	document.getElementById("username").focus();
 
+	//put the user-entered data into the DefaultSettings array.
+	DefaultSettings.username = document.getElementById("username").value;
+	DefaultSettings.password = document.getElementById("password").value;
+	DefaultSettings.lastAccessTime = Math.round(new Date().getTime() / 1000);
+	saveSettingsToStorageMechanism();
+
+	KanbanLogin();
+
+	document.getElementById("username").value = '';
+	document.getElementById("password").value = '';
+}
+
+function KanbanLogin() {
 	try {
-		var retObj = Mantis.Login(document.getElementById("username").value, document.getElementById("password").value);
+		var retObj = Mantis.Login(DefaultSettings.username, DefaultSettings.password);
 		Kanban.CurrentUser = new KanbanUser(retObj.account_data);
-		Kanban.CurrentUser.Password = document.getElementById("password").value;
+		Kanban.CurrentUser.Password = DefaultSettings.password;
 
 		document.getElementById("gravatarcurrentuser").style.backgroundImage = "url(" + get_gravatar_image_url(Kanban.CurrentUser.Email, 35) + ")";
 
@@ -158,16 +169,7 @@ function Login() {
 		return;
 	}
 
-	DefaultSettings.connectURL = Mantis.ConnectURL;
 	StartLoading();
-
-	//put the user-entered data into the DefaultSettings array.
-	DefaultSettings.username = document.getElementById("username").value;
-	DefaultSettings.password = document.getElementById("password").value;
-	DefaultSettings.stayLoggedIn = 1;
-	DefaultSettings.lastAccessTime = Math.round(new Date().getTime() / 1000);
-	saveSettingsToStorageMechanism();
-
 	LoadSettingsFromLocalStorage();
 	if(DefaultSettings.kanbanListWidth == undefined) {
 
@@ -237,7 +239,7 @@ function DeleteIssue(kanbanIssue) {
 			});
 		}
 	} catch(e) {
-		StopLoading()
+		StopLoading();
 	}
 }
 
@@ -388,6 +390,12 @@ function Logout() {
 
 	Mantis.ClearForLogout();
 
+	DefaultSettings.username = '';
+	DefaultSettings.password = '';
+	saveSettingsToStorageMechanism();
+	document.getElementById("username").value = '';
+	document.getElementById("password").value = '';
+
 	HideProjectArea();
 	ShowLoginArea();
 }
@@ -396,7 +404,6 @@ function SelectProject(openStoryID) {
 	console.log("SelectProject() called.");
 
 	StartLoading();
-
 	CloseEditStory();
 	CloseAddStory();
 
@@ -508,9 +515,10 @@ function UpdateFilter(filterID) {
 function Refresh(refreshTime) {
 	DefaultSettings.refresh = refreshTime;
 	saveSettingsToStorageMechanism();
-
 	UpdateRefreshDisplay();
 
+	Kanban.RefreshTimeLocalStorage();
+	Kanban.ControlStayLoggedIn();
 	SelectProject();
 }
 
@@ -519,6 +527,7 @@ function RefreshDisplay() {
 	console.log("editing", editing);
 
 	if(editing != "true") {
+		Kanban.ControlStayLoggedIn();
 		SelectProject();
 	}
 }
@@ -878,8 +887,8 @@ function AutoLogin() {
 		log("window.localStorage is available!");
 		LoadSettingsFromLocalStorage();
 
-		if(document.getElementById("password").value != "") {
-			Login();
+		if(DefaultSettings.password != "") {
+			KanbanLogin(DefaultSettings.username, DefaultSettings.password);
 		}
 	}
 	else {
@@ -920,12 +929,7 @@ function LoadSettingsFromLocalStorage() {
 		}
 
 		//put the username in the field if the DefaultSettings.lastAccessTime is less than 30 days ago
-		var currentTime = Math.round(new Date().getTime() / 1000);
-		if(((currentTime - DefaultSettings.lastAccessTime) < 2592000) && DefaultSettings.stayLoggedIn == 1) {
-			log("user logged in less than 30 days ago put their name in the box");
-			document.getElementById("username").value = DefaultSettings.username;
-			document.getElementById("password").value = DefaultSettings.password;
-		}
+		Kanban.ControlStayLoggedIn(); // only refres browser
 	}
 	//otherwise load the DefaultSettings
 	else

@@ -54,17 +54,18 @@
 							<img src="images/mantis_logo.png" class="mantislogo" />
 						</div>
 						<div>
-							<form id="userLoginForm" class="userLoginForm" method="post">
+							<form id="userLoginForm" class="userLoginForm" method="post" autocomplete="off">
 								<br>
-								<input type="text" id="username" placeholder="Username" style="width: 160px;" value="" />
-								<input type="password" id="password" placeholder="Password" value="" style="width: 160px;" />
+								<input type="text" id="username" placeholder="Username" style="width: 160px;" value="" autocomplete="off"/>
+								<input type="password" id="password" placeholder="Password" value="" style="width: 160px;" autocomplete="off"/>
 								<br><br>
-								<div id="loginButton" class="btn btn-primary btn-small" onclick="Login();">Login</div>
+								<input type="submit" style="position: absolute; left: -9999px"/>
+								<div id="loginButton" class="btn btn-primary btn-small" onclick="Login();"><span class="i18ntext" data-text-id="textLogin"></span></div>
 							</form>
 						</div>
 					</form>
 					</div>
-					<div id="projectarea" class="projectarea">
+					<div id="projectarea" class="projectarea" style="display:none;">
 						<img src="images/mantis_logo.png" class="mantislogo loggedin" />
 						<div id="projectareabuttons">
 							<div class="rightButtons">

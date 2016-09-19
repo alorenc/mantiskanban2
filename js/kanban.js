@@ -1393,7 +1393,7 @@ function OpenAddStory() {
 
 	$("#add-summary").val("");
 	$("#add-description").val("");
-	//Kanban.RefreshTimeLocalStorage();
+	Kanban.RefreshTimeLocalStorage();
 	//document.getElementById("add-summary").value = "";
 	//document.getElementById("add-description").value = "";
 
@@ -1556,7 +1556,7 @@ function EditStory(storyID) {
 
 	$('a[href=#tabs-1]').tab('show');
 	ClearUploadList();
-	//Kanban.RefreshTimeLocalStorage();
+	Kanban.RefreshTimeLocalStorage();
 
 	var thisStory = Kanban.GetStoryByFieldValue("ID", storyID);
 
@@ -1768,6 +1768,32 @@ Kanban.LoadRuntimeSettings = function() {
 	document.getElementById("settings-list-width").value = getStyleRule(".kanbanlist", "width");
 	document.getElementById("settings-autofit-onresize").checked = DefaultSettings.autoResizeColumns;
 };
+
+Kanban.ControlStayLoggedIn = function() {
+	var TimeLocalStorage = Kanban.InactiveSessionTimeUserInMinutes * 60; // seconds
+	var currentTime = Math.round(new Date().getTime() / 1000);
+
+	if(DefaultSettings.stayLoggedIn == 1)
+	{
+		console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + TimeLocalStorage);
+		if(((currentTime - DefaultSettings.lastAccessTime) < TimeLocalStorage)) {
+			log("user logged in less than 30 days ago put their name in the box");
+			document.getElementById("username").value = DefaultSettings.username;
+			document.getElementById("password").value = DefaultSettings.password;
+		} else {
+			Logout();
+		}
+	}
+};
+
+// With the active use time is reset
+Kanban.RefreshTimeLocalStorage = function() {
+	var currentTime = Math.round(new Date().getTime() / 1000);
+	console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + Kanban.InactiveSessionTimeUserInMinutes * 60);
+
+	DefaultSettings.lastAccessTime = currentTime;
+	saveSettingsToStorageMechanism();
+}
 
 function ShowSettings() {
 	CloseAddStory();
