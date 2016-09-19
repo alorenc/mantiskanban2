@@ -40,11 +40,6 @@ var langStatus = {
 	90:"closed"
 };
 
-var langSticky = {
-	0:"no",
-	1:"yes"
-}
-
 var langObj = {
 "Severity": langSeverity,
 "Resolution": langResolution,
@@ -71,7 +66,6 @@ var langObj = {
 "textLogout":"登出",
 "textNew":"新增",
 "textNotes":"討論",
-"textNote":"討論",
 "textSeverity":"Severity",
 "textPiorities":"優先度",
 "textPriority":"優先度",
@@ -108,8 +102,6 @@ var langObj = {
 "textAssignToNoOne": "--- Assign To No One ---",
 "textGo": "Go",
 "textOneMinute": " minute",
-"textManyMinutes": " minutes",
-"textSticky": "Sticky",
-"textProjectID": "Project ID"
+"textManyMinutes": " minutes"
 
 };

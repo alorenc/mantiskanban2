@@ -40,17 +40,11 @@ var langStatus = {
 	90:"zamknięty"
 };
 
-var langSticky = {
-	0:"nie",
-	1:"tak"
-}
-
 var langObj = {
 "Severity": langSeverity,
 "Resolution": langResolution,
 "Priority": langPriority,
 "Status": langStatus,
-"Sticky": langSticky,
 "textAddNewStory":"Wprowadź szczegóły zgłoszenia",
 "textAddNote":"Dodaj notatkę",
 "textAddTag":"Dodaj",
@@ -71,8 +65,7 @@ var langObj = {
 "textHistory":"Historia",
 "textLogout":"Wyloguj",
 "textNew":"Dodaj zgłoszenie",
-"textNotes":"Komentarze",
-"textNote":"Komentarz",
+"textNotes":"Notatki",
 "textSeverity":"Ważność",
 "textPriority":"Priorytet",
 "textPiorities":"Priorytety",
@@ -85,7 +78,7 @@ var langObj = {
 "textSetting":"Ustawienia",
 "textStatus":"Status",
 "textSteps":"Kroki, by powtórzyć",
-"textSummary":"Temat",
+"textSummary":"Podsumowanie",
 "textTag1":"Tag 1",
 "textTag2":"Tag 2",
 "textTags":"Tagi (kliknij, aby usunąć):",
@@ -108,8 +101,6 @@ var langObj = {
 "textAssignToNoOne": "--- nieprzypisane ---",
 "textGo": "Idź do",
 "textOneMinute": " minuta",
-"textManyMinutes": " minut",
-"textSticky": "Przyklej",
-"textProjectID": "Projekt ID"
+"textManyMinutes": " minut"
 
 };
