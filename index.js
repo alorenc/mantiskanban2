@@ -197,26 +197,8 @@ function KanbanLogin() {
 	$('#scrumMode').bootstrapSwitch();
 	$('#scrumMode').on('switchChange.bootstrapSwitch', function(event, state) {
 		Kanban.ScrumMode = state ? "Review" : "Planif";
-		console.log('SelectProject index.js line 206');
 		SelectProject();
 	});
-
-//	console.log(Kanban.Priorities);
-//	if (Kanban.Priorities != null) {
-//		var priorityList = document.getElementById('prioritylegend');
-//		try { while(priorityList.childNodes.length > 0) { priorityList.removeChild(priorityList.firstChild); } } catch(e) {}
-//
-//		for (var priority in Kanban.Priorities) {
-//			var projectDiv = document.createElement("div");
-//			projectDiv.innerHTML = priority;
-//			projectDiv.setAttribute("priority", Kanban.Priorities[priority].value);
-//
-//			priorityList.appendChild(projectDiv);
-//		}
-//	}
-//
-//	SelectProject();
-//	console.log('SelectProject index.js line 225');
 
 	Mantis.Preload();
 	StopLoading();
@@ -401,8 +383,6 @@ function Logout() {
 }
 
 function SelectProject(openStoryID) {
-	console.log("SelectProject() called.");
-
 	StartLoading();
 	CloseEditStory();
 	CloseAddStory();
@@ -417,6 +397,8 @@ function SelectProject(openStoryID) {
 	Kanban.Stories = [];
 	Kanban.AssignedUsers = [];
 	Kanban.AssignedUsersSelected = [];
+	Kanban.AssignedPrioritySelected = [];
+	Kanban.AssignedSeveritySelected = [];
 	var assignedUserContainer = document.getElementById("project-users-gravatars-container");
 	try {
 		while(assignedUserContainer.childNodes.length > 0) {
@@ -426,17 +408,11 @@ function SelectProject(openStoryID) {
 	}
 
 	Kanban.ClearListGUI();
-
 	Mantis.CurrentProjectID = document.getElementById("seletedproject").value;
-
-	UpdateFilterList();
-
+	BuildMantisFilterList();
 	BuildKanbanListFromMantisStatuses();
-
 	Kanban.BuildListGUI();
-
 	AutoAdjustListWidth();
-
 	VerifyDefaultFitlers();
 
 	if(Kanban.CurrentProject.ParentProject) {
@@ -454,9 +430,9 @@ function SelectProject(openStoryID) {
 				if(document.getElementById("searchfield").value != "") {
 					SearchForStory(false);
 				}
-				CreateListOfAssignedStories();
 				BuildKanbanAssignedUsersGUI();
-
+				KanbanRememberFilters();
+				RefreshStoriesDisplay();
 			});
 		}, 10);
 		if(Mantis.ClosedIssuesFilterID !== null) {
@@ -465,15 +441,16 @@ function SelectProject(openStoryID) {
 	} else {
 		var retObj = Mantis.ProjectGetIssues(Mantis.CurrentProjectID, 0, Mantis.NumberOfIssueToLoad);
 		CreateKanbanStoriesFromMantisIssues(retObj);
-		CreateListOfAssignedStories();
 		BuildKanbanAssignedUsersGUI();
+		KanbanRememberFilters();
+		RefreshStoriesDisplay();
 		$(".tempLoadingDiv").hide();//hide the loading gifs
 		if(document.getElementById("searchfield").value != "") {
 			SearchForStory(false);
 		}
-
-		StopLoading();
 	}
+
+	StopLoading();
 }
 
 function VerifyDefaultFitlers() {
@@ -490,15 +467,13 @@ function VerifyDefaultFitlers() {
 		}
 	}
 	if(!foundFilter)
-		Mantis.DefaultFilterID = null;
+		Mantis.DefaultFilterID = 0;
 	if(!foundClosedFilter)
 		Mantis.ClosedIssuesFilterID = null;
-
 }
 
 function UpdateFilter(filterID) {
 	for(var i = 0; i < Mantis.ProjectFilterList.length; i++) {
-		console.log(Mantis.ProjectFilterList[i].id, filterID);
 		if(Mantis.ProjectFilterList[i].id == filterID) {
 			$('#selectedFilterText').text(Mantis.ProjectFilterList[i].name);
 			Mantis.DefaultFilterID = filterID;
@@ -508,7 +483,7 @@ function UpdateFilter(filterID) {
 	}
 
 	$('#selectedFilterText').text(langObj.textSelectFilter);
-	Mantis.DefaultFilterID = null;
+	Mantis.DefaultFilterID = 0;
 	SelectProject();
 }
 
@@ -522,17 +497,12 @@ function Refresh(refreshTime) {
 	SelectProject();
 }
 
-function RefreshDisplay() {
-	var editing = document.getElementById("kanbancontent").getAttribute("editing");
-	console.log("editing", editing);
-
-	if(editing != "true") {
-		Kanban.ControlStayLoggedIn();
-		SelectProject();
-	}
-}
-
 function UpdateRefreshDisplay() {
+	DefaultSettings.FiltersUsers = (undefined !== Kanban.AssignedUsersSelected) ? Kanban.AssignedUsersSelected : [];
+	DefaultSettings.FiltersPriority = (undefined !== Kanban.AssignedPrioritySelected) ? Kanban.AssignedPrioritySelected : [];
+	DefaultSettings.FiltersSeverity = (undefined !== Kanban.AssignedSeveritySelected) ? Kanban.AssignedSeveritySelected : [];
+	saveSettingsToStorageMechanism();
+
 	if(DefaultSettings.refresh > 0) {
 		var langMinutes = (DefaultSettings.refresh / 60) > 1 ? langObj.textManyMinutes : langObj.textOneMinute;
 		$('#selected-refresh').text((DefaultSettings.refresh / 60) + ' ' + langMinutes);
@@ -546,9 +516,18 @@ function UpdateRefreshDisplay() {
 	}
 }
 
-function UpdateFilterList() {
+function RefreshDisplay() {
+	var editing = document.getElementById("kanbancontent").getAttribute("editing");
 
-	log("UpdateFilterList() called.");
+	if(editing != "true") {
+		Kanban.ControlStayLoggedIn();
+		SelectProject();
+	}
+}
+
+function BuildMantisFilterList() {
+
+	log("BuildMantisFilterList() called.");
 
 	var filterList = document.getElementById("filterlist");
 
@@ -592,7 +571,7 @@ function LoadFilterAsync(FilterID, Page, Limit, Callback) {
 			CreateKanbanStoriesFromMantisIssues(retObj);
 		} catch(e) {
 			if(Mantis.DefaultFilterID == FilterID)
-				Mantis.DefaultFilterID = null;
+				Mantis.DefaultFilterID = 0;
 			if(Mantis.ClosedIssuesFilterID == FilterID)
 				Mantis.ClosedIssuesFilterID = null;
 			saveSettingsToStorageMechanism();
@@ -609,7 +588,6 @@ function DoneLoadingIssuesCallback(filterID, retObj) {
 	CreateKanbanStoriesFromMantisIssues(retObj);
 	LoadingIssuesList.splice(LoadingIssuesList.indexOf(filterID) - 1, 1);
 	if(LoadingIssuesList.length == 0) {
-		console.log("Done Loading " + filterID);
 		StopLoading();
 	}
 	$(".tempLoadingDiv").hide();//hide the loading gifs
@@ -741,6 +719,8 @@ function GetUserColor(digits) {
 }
 
 function BuildKanbanAssignedUsersGUI() {
+	CreateListOfAssignedStories();
+
 	var kanbanUserListContainer = document.getElementById("project-users-gravatars-container");
 	kanbanUserListContainer.innerHTML = "";
 
@@ -756,7 +736,7 @@ function BuildKanbanAssignedUsersGUI() {
 	var thisUser = Kanban.AssignedUsers[kbu];
 	var userGravatar = document.createElement("div");
 	userGravatar.innerHTML = "X";
-	userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems");
+	userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems cp");
 	userGravatar.setAttribute("style", "color: #fff; background: #e77; text-align:center; padding-top:5px; vertical-align:middle;");
 
 	userGravatar.setAttribute("data-toggle", "tooltip");
@@ -769,7 +749,6 @@ function BuildKanbanAssignedUsersGUI() {
 	userGravatar.setAttribute("id", "ug");
 
 	userListDiv.appendChild(userGravatar);
-
 	for(var kbu = 0; kbu < Kanban.AssignedUsers.length; kbu++) {
 		var thisUser = Kanban.AssignedUsers[kbu];
 
@@ -778,7 +757,7 @@ function BuildKanbanAssignedUsersGUI() {
 		var userEmail = (thisUser.Email === undefined) ? '' : thisUser.Email;
 		userGravatar.innerHTML = shortName;
 
-		userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems");
+		userGravatar.setAttribute("class", "gravatarcontainer userlistgravataritems cp");
 		userGravatar.setAttribute("style", GetUserColor(thisUser.UserName.substring(0, 3)) + " text-align:center; padding-top:5px; vertical-align:middle;");
 
 		//userGravatar.setAttribute("data-container", "body");
@@ -794,7 +773,6 @@ function BuildKanbanAssignedUsersGUI() {
 		userGravatar.setAttribute("id", "ug" + thisUser.ID);
 
 		kanbanUserListContainer.appendChild(userGravatar);
-
 	}
 
 	$(".userlistgravataritems").click(function() {
@@ -824,11 +802,93 @@ function BuildKanbanAssignedUsersGUI() {
 	});
 }
 
+function KanbanRememberFilters() {
+	var userList = DefaultSettings.FiltersUsers;
+	var priorityList = DefaultSettings.FiltersPriority;
+	var severityList = DefaultSettings.FiltersSeverity;
+
+	if(userList.length > 0) {
+		for(var ui = 0; ui < userList.length; ui++) {
+			if(!$("#ug"+userList[ui]).hasClass("selected")) {
+				$("#ug"+userList[ui]).addClass('selected');
+				$("#ug"+userList[ui]).css("outline", "medium solid #dd2222");
+			}
+
+			Kanban.AssignedUsersSelected.push(userList[ui]);
+		}
+	}
+	if(priorityList.length > 0) {
+		for(var pi = 0; pi < priorityList.length; pi++) {
+			if(!$("#op_priority_"+priorityList[pi]).hasClass('borders')) {
+				$("#op_priority_"+priorityList[pi]).addClass('borders');
+			}
+
+			Kanban.AssignedPrioritySelected.push(priorityList[pi]);
+		}
+	}
+	if(severityList.length > 0) {
+		for(var si = 0; si < severityList.length; si++) {
+			if(!$("#op_severity_"+severityList[si]).hasClass('borders')) {
+				$("#op_severity_"+severityList[si]).addClass('borders');
+			}
+
+			Kanban.AssignedSeveritySelected.push(severityList[si]);
+		}
+	}
+}
+
+function AssignPriority(id) {
+	AssignOptions(id, 'priority');
+}
+
+function AssignSeverity(id) {
+	AssignOptions(id, 'severity');
+}
+
+function AssignOptions(id, type) {
+	var obj = $("#op_" + type + "_" + id);
+	var Assigned = (type === 'severity') ? Kanban.AssignedSeveritySelected: Kanban.AssignedPrioritySelected;
+
+	if(!obj.hasClass("borders")) {
+		obj.addClass("borders");
+		Assigned.push(id);
+	} else {
+		obj.removeClass("borders");
+
+		var index = Assigned.indexOf(id);
+		if(index > -1) {
+			Assigned.splice(index, 1);
+		}
+	}
+
+	RefreshStoriesDisplay();
+}
+
 function RefreshStoriesDisplay() {
 	for(var si = 0; si < Kanban.Stories.length; si++) {
 		var story = Kanban.Stories[si];
 
-		story.Element.style.display = ((Kanban.AssignedUsersSelected.indexOf(story.HandlerID) > -1) || (Kanban.AssignedUsersSelected.length == 0)) ? 'block' : 'none';
+		var conditionUser = ((Kanban.AssignedUsersSelected.indexOf(story.HandlerID) > -1) || (Kanban.AssignedUsersSelected.length == 0));
+		var conditionPriority = ((Kanban.AssignedPrioritySelected.indexOf(story.PriorityID) > -1) || (Kanban.AssignedPrioritySelected.length == 0));
+		var conditionSeverity = ((Kanban.AssignedSeveritySelected.indexOf(story.SeverityID) > -1) || (Kanban.AssignedSeveritySelected.length == 0));
+
+		if(conditionUser) {
+			story.Element.style.display = "block";
+
+			if(conditionPriority) {
+				story.Element.style.display = "block";
+
+				if(conditionSeverity) {
+					story.Element.style.display = "block";
+				} else {
+					story.Element.style.display = "none";
+				}
+			} else {
+				story.Element.style.display = "none";
+			}
+		} else {
+			story.Element.style.display = "none";
+		}
 	}
 
 	UpdateKanbanListTitle();
@@ -893,7 +953,6 @@ function AutoLogin() {
 	}
 	else {
 		log("no native support for HTML5 storage :( maybe try dojox.storage or a third-party solution");
-		LoadSettingsFromCookieStorage();
 	}
 }
 
@@ -939,10 +998,6 @@ function LoadSettingsFromLocalStorage() {
 		log("loaded DefaultSettings in to user saved settings.");
 		log(localStorage.mantiskanbanSettings);
 	}
-}
-
-function LoadSettingsFromCookieStorage() {
-
 }
 
 function saveSettingsToStorageMechanism() {

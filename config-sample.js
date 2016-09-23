@@ -63,29 +63,6 @@ Kanban.ScrumModes = {
 	}
 };
 
-// Disabled because switching system "priority"/"severity" does not include the translation of language
-// kanbanclasses.js >> BuildKanbanStoryDiv >> Line 512 and Line 655
-// index.js >> Line 211 >> if (Kanban.Priorities != null)
-//
-//Kanban.PriorityField = "Priority";
-//Kanban.Priorities = {
-//	"Immediate" : {
-//		"value" : 60
-//	},
-//	"Urgente" : {
-//		"value" : 50
-//	},
-//	"Elevée" : {
-//		"value" : 40
-//	},
-//	"Normale" : {
-//		"value" : 30
-//	},
-//	"Basse" : {
-//		"value" : 20
-//	}
-//}
-
 // When a project has a custom field, you can specify mantis statuses to change to when entering this bucket
 Kanban.AutoStatusOnCustomField = {
 	"ScrumBucket" : {
@@ -111,7 +88,10 @@ var DefaultSettings = {
 	lastAccessTime : 0,
 	autoResizeColumns : true,
 	currentProject : Mantis.CurrentProjectSelection,
-	connectURL : Mantis.ConnectURL
+	connectURL : Mantis.ConnectURL,
+	FiltersUsers : [],		//id users filters default
+	FiltersPriority : [],	//weight priority default
+	FiltersSeverity : []	//weight severity default
 };
 
 // Maintaining user sessions when not active for the specified number of minutes
@@ -123,4 +103,3 @@ Kanban.Themes = [
 	{name : "Green", stylesheet : "themes/green.css"},
 	{name : "Trello", stylesheet : "themes/trello.css"}
 ];
-

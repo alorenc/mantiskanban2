@@ -13,7 +13,7 @@
 		<!--
 		<link crossorigin href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 		-->
-		<script src="//code.jquery.com/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="bootstrap/js/bootstrap-switch.min.js"></script>
 		<script src="js/modernizr-latest.js" type="text/javascript"></script>
@@ -405,19 +405,30 @@
 					</div>
 				</div>
 				<div id="prioritylegend">
-					<div priority="immediate"><div class="i18ntext" data-text-id="Priority_60"></div></div>
-					<div priority="urgent"><div class="i18ntext" data-text-id="Priority_50"></div></div>
-					<div priority="high"><div class="i18ntext" data-text-id="Priority_40"></div></div>
-					<div priority="normal"><div class="i18ntext" data-text-id="Priority_30"></div></div>
-					<div priority="low"><div class="i18ntext" data-text-id="Priority_20"></div></div>
-					<div priority="none"><div class="i18ntext" data-text-id="Priority_10"></div></div>
+						<div class="legend-label"><span class="i18ntext" data-text-id="textOptionsPiorities"></span></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('60');"><div id="op_priority_60" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_60"></span></div><div class="ribbon priority-immediate"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('50');"><div id="op_priority_50" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_50"></span></div><div class="ribbon priority-urgent"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('40');"><div id="op_priority_40" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_40"></span></div><div class="ribbon priority-high"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('30');"><div id="op_priority_30" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_30"></span></div><div class="ribbon priority-normal"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('20');"><div id="op_priority_20" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_20"></span></div><div class="ribbon priority-low"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('10');"><div id="op_priority_10" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_10"></span><span class="i18ntext" data-text-id="textOptionsDefault"></span></div><div class="ribbon priority-none"><span>&nbsp;</span></div></div>
+
+						<div class="legend-label"><span class="i18ntext" data-text-id="textOptionsSeverity"></span></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('80');"><div id="op_severity_80" class="legend-ex-box" severity="block"><span class="i18ntext" data-text-id="Severity_80"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('70');"><div id="op_severity_70" class="legend-ex-box" severity="crash"><span class="i18ntext" data-text-id="Severity_70"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('60');"><div id="op_severity_60" class="legend-ex-box" severity="major"><span class="i18ntext" data-text-id="Severity_60"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('50');"><div id="op_severity_50" class="legend-ex-box" severity="minor"><span class="i18ntext" data-text-id="Severity_50"></span><span class="i18ntext" data-text-id="textOptionsDefault"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('40');"><div id="op_severity_40" class="legend-ex-box" severity="tweak"><span class="i18ntext" data-text-id="Severity_40"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('30');"><div id="op_severity_30" class="legend-ex-box" severity="text"><span class="i18ntext" data-text-id="Severity_30"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('20');"><div id="op_severity_20" class="legend-ex-box" severity="trivial"><span class="i18ntext" data-text-id="Severity_20"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('10');"><div id="op_severity_10" class="legend-ex-box" severity="feature"><span class="i18ntext" data-text-id="Severity_10"></span></div></div>
 				</div>
 			</div>
 
 		</div>
 
-		<div id="priorities-displayer" onmouseover="ShowPriorityLegend();" onmouseout="HidePriorityLegend();">
-			<span class="i18ntext" data-text-id="textPiorities"></span> &gt;
+		<div id="priorities-displayer" onclick="ToggleLegend();">
+			<span class="i18ntext" data-text-id="textOptions"></span> &gt;
 		</div>
 		<input type="hidden" style="display:none;" id="seletedproject" name="selectedproject" />
 		<div id="attachmentdisplay" class="" style="" onclick="CloseLightBox();">

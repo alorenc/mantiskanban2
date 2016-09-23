@@ -271,6 +271,12 @@ KanbanStory.prototype = {
 	set SeverityID(value) {
 		this.StorySource.severity.id = value;
 	},
+	get SeverityName() {
+		return this.StorySource.severity.name;
+	},
+	set SeverityName(value) {
+		this.StorySource.severity.name = value;
+	},
 	get ResolutionID() {
 		return this.StorySource.resolution.id;
 	},
@@ -482,9 +488,6 @@ KanbanStory.prototype = {
 		storyDiv.setAttribute("onclick", "EditStory('" + this.ID + "');");
 		storyDiv.setAttribute("category", this.CategoryID);
 
-		// TODO: Enables the prioritization "Severity", currently excluded because they do not support the translations
-		//storyDiv.classList.add("sev_" + ((Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID));
-
 		storyDiv.addEventListener('dragstart', DragStart, false);
 		storyDiv.addEventListener("dragend", DragEnd, false);
 
@@ -494,6 +497,12 @@ KanbanStory.prototype = {
 
 		storyDiv.addEventListener('drop', Drop, false);
 
+		var dropBox = document.createElement("div");
+		dropBox.setAttribute("class", "kanbanbox");
+		dropBox.setAttribute("listid", "listid" + this.ListID);
+		dropBox.setAttribute("storyid", "storydiv" + this.ID);
+		dropBox.setAttribute("dropdivid", "dropdiv" + this.ID);
+
 		var dropDiv = document.createElement("div");
 		dropDiv.setAttribute("class", "kanbandropper");
 		dropDiv.setAttribute("id", "dropdiv" + this.ID);
@@ -501,7 +510,7 @@ KanbanStory.prototype = {
 		dropDiv.setAttribute("storyid", "storydiv" + this.ID);
 		dropDiv.setAttribute("dropdivid", "dropdiv" + this.ID);
 		//dropDiv.addEventListener('dragleave', function(event) {event.stopPropagation();}, false);
-		storyDiv.appendChild(dropDiv);
+		dropBox.appendChild(dropDiv);
 
 		var storyContainerDiv = document.createElement("div");
 		storyContainerDiv.setAttribute("class", "kanbanstory");
@@ -519,20 +528,30 @@ KanbanStory.prototype = {
 		if(this.HandlerName == Kanban.CurrentUser.UserName) {
 			storyContainerDiv.classList.add("mystory");
 		}
-		storyDiv.appendChild(storyContainerDiv);
+		dropBox.appendChild(storyContainerDiv);
+
+		var taskComplete = Kanban.HowManyCompleteTasks(this.Tasks);
+		var dropRibbonSpan = document.createElement("span");
+		var dropRibbon = document.createElement("div");
+		dropRibbonSpan.innerHTML = (this.Tasks.length > 0) ? ((taskComplete * 100) / this.Tasks.length) + "%" : "&nbsp;";
+		dropRibbon.setAttribute("class", "ribbon priority-" + this.PriorityName);
+		dropRibbon.setAttribute("id", "ribbon" + this.ID);
+		dropRibbon.appendChild(dropRibbonSpan);
+		dropBox.appendChild(dropRibbon);
+		storyDiv.appendChild(dropBox);
 
 		var kanbanStoryHeaderAreaDiv = document.createElement("div");
 		kanbanStoryHeaderAreaDiv.setAttribute("class", "kanbanstoryheaderarea");
 		kanbanStoryHeaderAreaDiv.setAttribute("listid", "listid" + this.ListID);
 		kanbanStoryHeaderAreaDiv.setAttribute("storyid", "storydiv" + this.ID);
 		kanbanStoryHeaderAreaDiv.setAttribute("dropdivid", "dropdiv" + this.ID);
-		;
 		storyContainerDiv.appendChild(kanbanStoryHeaderAreaDiv);
 
 		var storyDivSeverity = document.createElement("section");
 		storyDivSeverity.setAttribute("class", "kanbanstoryissuenumber");
 		storyDivSeverity.setAttribute("id", "storyseverity" + this.ID);
-		storyDivSeverity.setAttribute("priority", this.SeverityID);
+		storyDivSeverity.setAttribute("severity", this.SeverityID);
+		storyDivSeverity.setAttribute("priority", this.PriorityID);
 		storyDivSeverity.setAttribute("listid", "listid" + this.ListID);
 		storyDivSeverity.setAttribute("storyid", "storydiv" + this.ID);
 		storyDivSeverity.setAttribute("dropdivid", "dropdiv" + this.ID);
@@ -617,9 +636,7 @@ KanbanStory.prototype = {
 		storyDivSeverityContainer.setAttribute("listid", "listid" + this.ListID);
 		storyDivSeverityContainer.setAttribute("storyid", "storydiv" + this.ID);
 		storyDivSeverityContainer.setAttribute("dropdivid", "dropdiv" + this.ID);
-		// TODO: Enables the prioritization "Severity", currently excluded because they do not support the translations
-		//storyDivSeverityContainer.setAttribute("priority", (Kanban.PriorityField != "Severity") ? this.PriorityID : this.SeverityID);
-		storyDivSeverityContainer.setAttribute("priority", this.PriorityName);
+		storyDivSeverityContainer.setAttribute("severity", this.SeverityName);
 		storyDivTitle.appendChild(storyDivSeverityContainer);
 
 		if(this.Element != null) {

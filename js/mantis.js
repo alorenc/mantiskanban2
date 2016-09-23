@@ -33,7 +33,7 @@ var Mantis = {
 		Mantis._defaultaccesslevelforuserenum = 10;
 		Mantis._tags = [];
 	},
-	
+
 	HistoryUpdateTypes : [
 		"NORMAL_TYPE",
 		"NEW_BUG",

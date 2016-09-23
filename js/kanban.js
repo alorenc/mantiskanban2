@@ -84,7 +84,6 @@ var Kanban = {
 	Stories: [],
 	AssignedUsers : [],
 
-
 	/*
 	 * @name HasStory
 	 * @returns {boolean} Returns true if the story is already loaded into the "Mantis.Stories" array.
@@ -155,12 +154,11 @@ var Kanban = {
 				}
 			}
 
-			console.log(Kanban._listIDField, document.getElementById("add-custom-field").value);
+//			console.log(Kanban._listIDField, document.getElementById("add-custom-field").value);
 			Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, Kanban._listIDField, document.getElementById("add-custom-field").value);
 		}
 
-		console.log(newIssueStruct.custom_fields);
-
+//		console.log(newIssueStruct.custom_fields);
 		Kanban.AddStory(summary, description, handlerid, reporterid, statusid, priorityid, category, customfieldvalue);
 	},
 
@@ -197,22 +195,22 @@ var Kanban = {
 
 	AddGlowToRelatedStories : function(id) {
 		var foundStory = Kanban.GetStoryByFieldValue("ID", id);
-		if(foundStory.RelatedStories.length > 0) foundStory.Element.children[1].classList.add("glow");
+		if(foundStory.RelatedStories.length > 0) foundStory.Element.children[0].children[1].classList.add("glow");
 		for(var rel = 0; rel < foundStory.RelatedStories.length; rel++) {
 			var foundRelation = Kanban.GetStoryByFieldValue("ID", foundStory.RelatedStories[rel]);
 			if(foundRelation && foundRelation.Element) {
-				foundRelation.Element.children[1].classList.add("glow");
+				foundRelation.Element.children[0].children[1].classList.add("glow");
 			}
 		}
 	},
 
 	RemoveGlowToRelatedStories : function(id) {
 		var foundStory = Kanban.GetStoryByFieldValue("ID", id);
-		if(foundStory.RelatedStories.length > 0) foundStory.Element.children[1].classList.remove("glow");
+		if(foundStory.RelatedStories.length > 0) foundStory.Element.children[0].children[1].classList.remove("glow");
 		for(var rel = 0; rel < foundStory.RelatedStories.length; rel++) {
 			var foundRelation = Kanban.GetStoryByFieldValue("ID", foundStory.RelatedStories[rel]);
 			if(foundRelation && foundRelation.Element) {
-				foundRelation.Element.children[1].classList.remove("glow");
+				foundRelation.Element.children[0].children[1].classList.remove("glow");
 			}
 		}
 	},
@@ -544,11 +542,14 @@ function UpdateStoryFromFormData() {
 		} catch(e) {
 			console.log(e);
 			alert("Error:" + e.message);
+			StopLoading();
 		} finally {
 			Kanban.BlockUpdates = false;
 			StopLoading();
 		}
 	});
+
+	StopLoading();
 }
 
 function UpdateStoryStatusWhenCustomFieldUpdated(UpatedStory, CustomFieldName, CustomFieldValue) {
@@ -958,6 +959,7 @@ function SaveNewTask(storyID, taskDescription) {
 		document.getElementById("edit-newtasktext").value = "";
 	} catch(e) {
 		console.log(e);
+		console.log('SaveNewTask');
 		alert("Error Saving Task: " + e.message);
 	} finally {
 		StopLoading();
@@ -969,29 +971,25 @@ function ChangeTaskStatus(storyID, taskID, isChecked) {
 	if(Mantis.Version() < "1.3.0") return;
 	Kanban.BlockUpdates = true;
 	StartLoading();
-	Mantis.IssueGet(storyID, function(editStory) {
-		try {
-			var taskList = editStory.Tasks;
 
-			if(isChecked) {
-				taskList[taskID].Status = "complete";
-			} else {
-				taskList[taskID].Status = "open";
-			}
-			editStory.Tasks = taskList;
+	try {
+		var newStory = new KanbanStory(Mantis.IssueGet(storyID));
+		var taskList = newStory.Tasks;
+		taskList[taskID].Status = isChecked ? "complete" : "open";
+		newStory.Tasks = taskList;
 
-			Mantis.IssueUpdate(editStory.ID, editStory.StorySource);
-			editStory = Kanban.UpdateUnderlyingStorySource(editStory, true);
-			AddTasksToStoryEditForm(editStory);
-			document.getElementById("edit-newtasktext").value = "";
-		} catch(e) {
-			console.log(e);
-			alert("Error Saving Task: " + e.message);
-		} finally {
-			StopLoading();
-			Kanban.BlockUpdates = false;
-		}
-	});
+		Mantis.IssueUpdate(newStory.ID, newStory.StorySource);
+		newStory = Kanban.UpdateUnderlyingStorySource(newStory, true);
+		AddTasksToStoryEditForm(newStory);
+		document.getElementById("edit-newtasktext").value = "";
+	} catch(e) {
+		console.log(e);
+		console.log('ChangeTaskStatus');
+		alert("Error Saving Task: " + e.message);
+	} finally {
+		StopLoading();
+		Kanban.BlockUpdates = false;
+	}
 }
 
 function ChangeTaskDescription(storyID, taskID, desc) {
@@ -1001,26 +999,29 @@ function ChangeTaskDescription(storyID, taskID, desc) {
 	Kanban.BlockUpdates = true;
 	StartLoading();
 
-	Mantis.IssueGet(storyID, function(editStory) {
-		try {
-			var taskList = editStory.Tasks;
-			if(desc == taskList[taskID].Description) return;
+	try {
+		var newStory = new KanbanStory(Mantis.IssueGet(storyID));
+		var taskList = newStory.Tasks;
+		if(desc == taskList[taskID].Description)
+			return;
 
-			taskList[taskID].Description = desc;
-			editStory.Tasks = taskList;
+		taskList[taskID].Description = desc;
+		newStory.Tasks = taskList;
 
-			Mantis.IssueUpdate(editStory.ID, editStory.StorySource);
-			editStory = Kanban.UpdateUnderlyingStorySource(editStory, true);
-			AddTasksToStoryEditForm(editStory);
-			document.getElementById("edit-newtasktext").value = "";
-		} catch(e) {
-			console.log(e);
-			alert("Error Saving Task: " + e.message);
-		} finally {
-			StopLoading();
-			Kanban.BlockUpdates = false;
-		}
-	});
+		Mantis.IssueUpdate(newStory.ID, newStory.StorySource);
+		newStory = Kanban.UpdateUnderlyingStorySource(newStory, true);
+		AddTasksToStoryEditForm(newStory);
+		document.getElementById("edit-newtasktext").value = "";
+	} catch(e) {
+		console.log('ChangeTaskDescription');
+		alert("Error Saving Task: " + e.message);
+		StopLoading();
+	} finally {
+		StopLoading();
+		Kanban.BlockUpdates = false;
+	}
+
+	StopLoading();
 }
 
 /*
@@ -1334,11 +1335,9 @@ function AddHistoryToStoryEditFormCallback(KanbanStory) {
 }
 
 function SearchForStory(localOnly) {
-
-	if(localOnly == undefined) localOnly = false;
+ 	if(localOnly == undefined) localOnly = false;
 
 	var issueID = document.getElementById("searchfield").value;
-
 	var foundIssue = GetStoryIfLoaded(issueID);
 
 	if(foundIssue == null && (localOnly == undefined || !localOnly)) {
@@ -1719,11 +1718,17 @@ function EditStory(storyID) {
 
 }
 
-function ShowPriorityLegend() {
+function ToggleLegend() {
+	var value = document.getElementById("contentarea").getAttribute("showingpriority");
+	var toggle = ("true" == value) ? "false" : "true";
+	document.getElementById("contentarea").setAttribute("showingpriority", toggle);
+}
+
+function ShowLegend() {
 	document.getElementById("contentarea").setAttribute("showingpriority", "true");
 }
 
-function HidePriorityLegend() {
+function HideLegend() {
 	document.getElementById("contentarea").setAttribute("showingpriority", "false");
 }
 
@@ -1793,6 +1798,18 @@ Kanban.RefreshTimeLocalStorage = function() {
 
 	DefaultSettings.lastAccessTime = currentTime;
 	saveSettingsToStorageMechanism();
+}
+
+Kanban.HowManyCompleteTasks = function(tasks) {
+	var sum = 0;
+	if(tasks.length > 0) {
+		for(var ti = 0; ti < tasks.length; ti++) {
+			if(tasks[ti].Status == 'complete') {
+				sum++;
+			}
+		}
+	}
+	return sum;
 }
 
 function ShowSettings() {

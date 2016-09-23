@@ -110,6 +110,10 @@ var langObj = {
 "textOneMinute": " minuta",
 "textManyMinutes": " minut",
 "textSticky": "Przyklej",
-"textProjectID": "Projekt ID"
+"textProjectID": "Projekt ID",
+"textOptions": "Ważność / Priorytet",
+"textOptionsPiorities": "Priorytet:",
+"textOptionsSeverity": "Ważnoś (pasek):",
+"textOptionsDefault": "- domyślny"
 
 };
