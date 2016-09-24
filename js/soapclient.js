@@ -93,12 +93,12 @@ SOAPClientParameters._serialize = function(o)
 									break;
 							}
 							if(type == "Object") {
-								s += "<Object>" + SOAPClientParameters._serialize(o[p]) + "</Object>"
+								s += "<Object>" + SOAPClientParameters._serialize(o[p]) + "</Object>";
 							} else {
-								s += "<" + type + ">" + SOAPClientParameters._serialize(o[p]) + "</" + type + ">"
+								s += "<" + type + ">" + SOAPClientParameters._serialize(o[p]) + "</" + type + ">";
 							}
 						} else    // associative array
-							s += "<" + p + ">" + SOAPClientParameters._serialize(o[p]) + "</" + p + ">"
+							s += "<" + p + ">" + SOAPClientParameters._serialize(o[p]) + "</" + p + ">";
 					}
 				} else // Object or custom function
 					for(var p in o)
@@ -109,7 +109,7 @@ SOAPClientParameters._serialize = function(o)
 		}
 	}
 	return s;
-}
+};
 
 function SOAPClient() {
 }
@@ -122,7 +122,7 @@ SOAPClient.invoke = function(url, method, parameters, async, callback) {
 		SOAPClient._loadWsdl(url, method, parameters, async, callback);
 	else
 		return SOAPClient._loadWsdl(url, method, parameters, async, callback);
-}
+};
 
 // private: wsdl cache
 SOAPClient_cacheWsdl = new Array();
