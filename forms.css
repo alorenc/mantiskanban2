@@ -106,7 +106,7 @@
 
 .editform {
 	height: 100%;
-	width: 575px;
+	width: 599px;
 	background-color: #FFFFFF;
 	border-left: solid 1px #999;
 	border-top: 1px solid #999;
@@ -115,7 +115,7 @@
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
 	display: inline-block;
-}	
+}
 
 #add-story-form  {
 }
@@ -197,6 +197,8 @@
 	white-space: normal;
 }
 
-
+.i18ntext {
+	margin: 0 4px;
+}
 
 

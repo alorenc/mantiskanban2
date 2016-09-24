@@ -6,26 +6,24 @@
 		<link rel="shortcut icon" href="images/favicon.ico">
 
 		<script language="javascript" type="text/javascript" src="js/iso8601.min.js"></script>
-		<script language="javascript" type="text/javascript" src="js/gravatar.js"></script>
+		<script language="javascript" type="text/javascript" src="js/gravatar.min.js"></script>
+		<script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
+		<script language="javascript" type="text/javascript" src="js/modernizr-latest.min.js"></script>
+
+		<script language="javascript" type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+		<script language="javascript" type="text/javascript" src="bootstrap/js/bootstrap-switch.min.js"></script>
+
+		<script language="javascript" type="text/javascript" src="i18n/i18n.js"></script>
+		<script language="javascript" type="text/javascript" src="i18n/lang/en-us.js"></script>
 
 		<link crossorigin rel="Stylesheet" href="bootstrap/css/bootstrap.min.css" />
 		<link crossorigin rel="Stylesheet" href="bootstrap/css/bootstrap-switch.min.css" />
-		<!--
-		<link crossorigin href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-		-->
-		<script src="//code.jquery.com/jquery.js"></script>
-		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="bootstrap/js/bootstrap-switch.min.js"></script>
-
-		<script src="js/modernizr-latest.js" type="text/javascript"></script>
-		
+		<!--<link crossorigin href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">-->
 		<link crossorigin rel="stylesheet" href="kanban.css" />
 		<link crossorigin rel="stylesheet" href="forms.css" />
-
-	   <link id="themeLink" href="themes/default.css" rel="stylesheet" type="text/css" />
-
+		<link id="themeLink" href="themes/default.css" rel="stylesheet" type="text/css" />
 		<link crossorigin rel="stylesheet" href="custom.css" />
-		
+
 		<script language="javascript" type="text/javascript" src="js/global.js"></script>
 		<script language="javascript" type="text/javascript" src="js/soapclient.js"></script>
 		<script language="javascript" type="text/javascript" src="js/mantis.js"></script>
@@ -33,7 +31,7 @@
 		<script language="javascript" type="text/javascript" src="js/kanbanclasses.js"></script>
 		<script language="javascript" type="text/javascript" src="config.js"></script>
 		<script language="javascript" type="text/javascript" src="index.js"></script>
-		
+
 		<title>Mantis Kanban</title>
 
 	</head>
@@ -47,7 +45,7 @@
 					<div class="dot dot4"></div>
 				</div>
 				<img id="loadedimage" src="images/loaded.png"  style="display:none;"/>
-			</div>                        
+			</div>
 			<div class="headerarea" style="width:100%;">
 				<div>
 					<div id="loginarea" class="loginarea" style="width:100%; padding-top:200px; text-align:center;">
@@ -55,17 +53,18 @@
 							<img src="images/mantis_logo.png" class="mantislogo" />
 						</div>
 						<div>
-							<form id="userLoginForm" class="userLoginForm" method="post">
+							<form id="userLoginForm" class="userLoginForm" method="post" autocomplete="off">
 								<br>
-								<input type="text" id="username" placeholder="Username" style="width: 160px;" value="" />
-								<input type="password" id="password" placeholder="Password" value="" style="width: 160px;" />
+								<input type="text" id="username" placeholder="Username" style="width: 160px;" value="" autocomplete="off"/>
+								<input type="password" id="password" placeholder="Password" value="" style="width: 160px;" autocomplete="off"/>
 								<br><br>
-								<div id="loginButton" class="btn btn-primary btn-small" onclick="Login();">Login</div>
+								<input type="submit" style="position: absolute; left: -9999px"/>
+								<div id="loginButton" class="btn btn-primary btn-small" onclick="Login();"><span class="i18ntext" data-text-id="textLogin"></span></div>
 							</form>
 						</div>
 					</form>
 					</div>
-					<div id="projectarea" class="projectarea">
+					<div id="projectarea" class="projectarea" style="display:none;">
 						<img src="images/mantis_logo.png" class="mantislogo loggedin" />
 						<div id="projectareabuttons">
 							<div class="rightButtons">
@@ -73,47 +72,47 @@
 
 								<div class="btn-group">
 									<button class="btn btn-success btn-small dropdown-toggle" type="button" data-toggle="dropdown">
-										<i class="glyphicon glyphicon-refresh"></i> <span id="selected-refresh">No</span> <span class="caret"></span>
+										<i class="glyphicon glyphicon-refresh"></i><span id="selected-refresh" class="i18ntext" data-text-id="textReload"></span><span class="caret"></span>
 									</button>
 									<ul id="refreshlist" class="dropdown-menu">
-										<li><a href="#" onclick="Refresh(0);">No</a></li>
+										<li><a href="#" onclick="Refresh(0);"><span class="i18ntext" data-text-id="textReload"></span></a></li>
 										<li role="separator" class="divider"></li>
-										<li><a href="#" onclick="Refresh(60);">1 minute</a></li>
-										<li><a href="#" onclick="Refresh(300);">5 minutes</a></li>
-										<li><a href="#" onclick="Refresh(600);">10 minutes</a></li>
-										<li><a href="#" onclick="Refresh(900);">15 minutes</a></li>
-										<li><a href="#" onclick="Refresh(1800);">30 minutes</a></li>
+										<li><a href="#" onclick="Refresh(60);">1&nbsp;<span class="i18ntext" data-text-id="textOneMinute"></span></a></li>
+										<li><a href="#" onclick="Refresh(300);">5&nbsp;<span class="i18ntext" data-text-id="textManyMinutes"></span></a></li>
+										<li><a href="#" onclick="Refresh(600);">10&nbsp;<span class="i18ntext" data-text-id="textManyMinutes"></span></a></li>
+										<li><a href="#" onclick="Refresh(900);">15&nbsp;<span class="i18ntext" data-text-id="textManyMinutes"></span></a></li>
+										<li><a href="#" onclick="Refresh(1800);">30&nbsp;<span class="i18ntext" data-text-id="textManyMinutes"></span></a></li>
 									</ul>
 								</div>
 
-								<div class="btn btn-info btn-small" onclick="ShowSettings();"><i class="glyphicon glyphicon-info-sign"></i> Settings</div>
+								<div class="btn btn-info btn-small" onclick="ShowSettings();"><i class="glyphicon glyphicon-info-sign"></i><span class="i18ntext" data-text-id="textSettings"></span></div>
 
 								<div id="gravatarcurrentuser" class="btn gravatarcurrentuser" style=""></div>
-								<div class="btn btn-default btn-small" onclick="Logout();"><i class="glyphicon glyphicon-log-out"></i> Logout</div>
+								<div class="btn btn-default btn-small" onclick="Logout();"><i class="glyphicon glyphicon-log-out"></i><span class="i18ntext" data-text-id="textLogout"></span></div>
 							</div>
 
 							<div class="rightButtons2">
 								<div class="" style="display:inline-block; padding-left: 20px; padding-right: 20px;">
-									<div class="btn btn-danger btn-small" onclick="OpenAddStory(); "><i class="glyphicon glyphicon-plus-sign"></i> Add Story</div>
+									<div class="btn btn-danger btn-small" onclick="OpenAddStory(); "><i class="glyphicon glyphicon-plus-sign"></i><span class="i18ntext" data-text-id="textNew"></span></div>
 								</div>
 								<div class="" style="display:inline-block; padding-left: 10px;">
 									<input type="text" id="searchfield" placeholder="Issue #" class="form-control input-small search-query" style="width:150px;" onkeyup="if(this.value.length > 0 && event.keyCode == 13) { SearchForStory(); }"/>
-									<div class="btn btn-primary btn-small" onclick="SearchForStory()"><i class="glyphicon glyphicon-search"></i> Go</div>
+									<div class="btn btn-primary btn-small" onclick="SearchForStory()"><i class="glyphicon glyphicon-search"></i><span class="i18ntext" data-text-id="textGo"></span></div>
 								</div>
 							</div>
 
 							<div class="otherbuttoncontainer" style="margin-bottom: 20px; display:block;">
 								<div class="btn-group">
 									<button class="btn btn-primary btn-small dropdown-toggle" type="button" data-toggle="dropdown">
-										<i class="glyphicon glyphicon-dashboard"></i> <span id="selected-project-name">Select Project</span> <span class="caret"></span>
-									</button>						
+										<i class="glyphicon glyphicon-dashboard"></i> <span id="selected-project-name" class="i18ntext" data-text-id="textSelectProject"></span> <span class="caret"></span>
+									</button>
 									<ul id="projectlist" class="dropdown-menu scrollable-menu">
 									<!-- dropdown menu links -->
 									</ul>
 								</div>
 								<div class="btn-group">
 									<a class="btn dropdown-toggle btn-warning btn-small" data-toggle="dropdown" href="#">
-										<i class="glyphicon glyphicon-filter"></i> <span id="selectedFilterText">Select Filter</span> <span class="caret"></span>
+										<i class="glyphicon glyphicon-filter"></i> <span id="selectedFilterText" class="i18ntext" data-text-id="textSelectFilter"></span> <span class="caret"></span>
 									</a>
 									<ul id="filterlist" class="dropdown-menu scrollable-menu">
 									<!-- dropdown menu links -->
@@ -136,94 +135,95 @@
 						<div class="editing-content">
 							<div>
 								<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-									<li class="active" ><a href="#tabs-1" data-toggle="tab">General</a></li>
-									<li><a href="#tabs-2" data-toggle="tab">Description</a></li>
-									<li><a href="#tabs-3" data-toggle="tab">Notes</a></li>
-									<li><a href="#tabs-4" data-toggle="tab">Attachments</a></li>
-									<li><a href="#tabs-5" data-toggle="tab">Tasks</a></li>
-									<li><a href="#tabs-6" data-toggle="tab">History</a></li>
+									<li class="active" ><a href="#tabs-1" data-toggle="tab"><div class="i18ntext" data-text-id="textGeneral"></div></a></li>
+									<li><a href="#tabs-2" data-toggle="tab"><div class="i18ntext" data-text-id="textDescription"></div></a></li>
+									<li><a href="#tabs-3" data-toggle="tab"><div class="i18ntext" data-text-id="textNotes"></div></a></li>
+									<li><a href="#tabs-4" data-toggle="tab"><div class="i18ntext" data-text-id="textAttachments"></div></a></li>
+									<li><a href="#tabs-5" data-toggle="tab"><div class="i18ntext" data-text-id="textTodo"></div></a></li>
+									<li><a href="#tabs-6" data-toggle="tab"><div class="i18ntext" data-text-id="textHistory"></div></a></li>
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active" id="tabs-1">
 										<form class="form-horizontal">
 											<input type="hidden" id="edit-story-id" name="edit-story-id" />
 												<div class="control-group col-xs-12">
-													<label class="control-label" for="edit-summary">Summary:</label>
+												<label class="control-label" for="edit-summary"><div class="i18ntext" data-text-id="textSummary"></div></label>
 													<div class="controls">
 														<input type="text" name="edit-summary" id="edit-summary" class="form-control input-small" />
 													</div>
 												</div>
 												<div class="control-group col-xs-12">
-													<label class="control-label" for="edit-summary">Tags (click to delete):</label>
+												<label class="control-label" for="edit-summary"><div class="i18ntext" data-text-id="textTags"></div></label>
 													<div class="tagsborderarea">
-														<div class="tagscontainer" id="edit-story-tags-container"></div>
+													<div class="tagscontainer" id="edit-story-tags-container">
+													</div>
 
 														<div class="input-group">
 															<div class="input-group-btn">
-																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Add Existing <span class="caret"></span></button>
+																<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="i18ntext" data-text-id="textExistTags"></span><span class="caret"></span></button>
 																<ul id="edit-story-tags-list" class="dropdown-menu">
-																	<li><a href="#">Tag 1</a></li>
-																	<li><a href="#">Tag 2</a></li>
+																	<li><a href="#"><div class="i18ntext" data-text-id="textTag1"></div></a></li>
+																	<li><a href="#"><div class="i18ntext" data-text-id="textTag2"></div></a></li>
 																</ul>
 															</div>
 															<input type="text" id="edit-story-new-tag" class="form-control">
 															<div class="input-group-btn">
-																<div class="btn btn-danger" onclick="AddNewTagFromEditForm();"><span class="glyphicon glyphicon-plus"> Add</span></div>
+														  		<div class="btn btn-danger" onclick="AddNewTagFromEditForm();"><span class="glyphicon glyphicon-plus"><span class="i18ntext" data-text-id="textAddTag"></span></span></div>
 															</div>
 														</div>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-project">Project:</label>
+												<label class="control-label" for="edit-project"><div class="i18ntext" data-text-id="textProject"></div></label>
 													<div class="controls">
 														<select name="edit-project" id="edit-project" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-status">Status:</label>
+												<label class="control-label" for="edit-status"><div class="i18ntext" data-text-id="textStatus"></div></label>
 													<div class="controls">
 														<select name="edit-status" id="edit-status" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-severity">Severity:</label>
+													<label class="control-label" for="edit-severity"><div class="i18ntext" data-text-id="textSeverity"></div></label>
 													<div class="controls">
 														<select name="edit-severity" id="edit-severity" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-resolution">Resolution</label>
+												<label class="control-label" for="edit-resolution"><div class="i18ntext" data-text-id="textResolution"></div></label>
 													<div class="controls">
 														<select name="edit-resolution" id="edit-resolution" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-priority">Priority:</label>
+												<label class="control-label" for="edit-priority"><div class="i18ntext" data-text-id="textPriority"></div></label>
 													<div class="controls">
 														<select name="edit-priority" id="edit-priority" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-category">Category</label>
+												<label class="control-label" for="edit-category"><div class="i18ntext" data-text-id="textCategory"></div></label>
 													<div class="controls">
 														<select name="edit-category" id="edit-category" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-reporter">Reporter:</label>
+												<label class="control-label" for="edit-reporter"><div class="i18ntext" data-text-id="textReporter"></div></label>
 													<div class="controls">
 														<select name="edit-reporter" id="edit-reporter" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div class="control-group col-xs-6">
-													<label class="control-label" for="edit-assignedto">Assigned To:</label>
+												<label class="control-label" for="edit-assignedto"><div class="i18ntext" data-text-id="textAssignedTo"></div></label>
 													<div class="controls">
 														<select name="edit-assignedto" id="edit-assignedto" class="form-control input-small"></select>
 													</div>
 												</div>
 												<div id="customEdit"></div>
 												<div class="control-group col-xs-10">
-													<label class="control-label" for="edit-datesubmitted">Date Submitted:</label>
+												<label class="control-label" for="edit-datesubmitted"><div class="i18ntext" data-text-id="textDateSubmitted"></div></label>
 													<div class="controls">
 														<div style="display:inline-block;" id="edit-datesubmitted"></div>
 													</div>
@@ -231,30 +231,30 @@
 										</form>
 									</div>
 									<div class="tab-pane form-controls" id="tabs-2">
-										<label for="edit-description">Description</label>
+										<label for="edit-description"><div class="i18ntext" data-text-id="textDescription"></div></label>
 										<textarea name="edit-description" id="edit-description" class="input-large form-control" placeholder="Description"></textarea>
-										<label for="edit-reproduce">Steps</label>
+										<label for="edit-reproduce"><div class="i18ntext" data-text-id="textSteps"></div></label>
 										<textarea name="edit-reproduce" id="edit-reproduce" class="input-large form-control" placeholder="Steps"></textarea>
 									</div>
 									<div class="tab-pane" id="tabs-3">
 										<div class="fill">
 											<div id="edit-story-notes-container" name="edit-story-notes-container" class="notesarea"></div>
-											<textarea class="edit-newnotetext input-large form-control" id="edit-newnotetext" name="edit-newnotetext" title="Enter new notes here."></textarea><br />
-											<div class="btn btn-success addNoteButton" id="edit-story-new-note-save-button" name=""><span class="glyphicon glyphicon-arrow-up"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Note&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-up"></span></div><br>
+											<textarea class="edit-newnotetext input-large form-control" id="edit-newnotetext" name="edit-newnotetext" title="Enter new notes here."></textarea>
+											<div class="btn btn-success addNoteButton" id="edit-story-new-note-save-button" name=""><span class="glyphicon glyphicon-arrow-up"></span><span class="i18ntext" data-text-id="textAddNote"></span><span class="glyphicon glyphicon-arrow-up"></span></div><br>
 										</div>
 									</div>
 									<div class="tab-pane" id="tabs-4">
 										<div class="fill">
 											<div id="edit-story-attachment-container" name="edit-story-attachment-container" class="attachmentsarea"></div>
 											<div class="btn-group">
-												<div class="btn btn-success" id="edit-story-new-attach-save-button" name="" onclick="SaveNewAttachments();"><span class="glyphicon glyphicon-arrow-up"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upload Attachments To Story&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-up"></span></div>
-												<div class="btn btn-warning" onclick="ClearUploadList();">Clear Upload List</div>
+												<div class="btn btn-success" id="edit-story-new-attach-save-button" name="" onclick="SaveNewAttachments();"><span class="glyphicon glyphicon-arrow-up"></span><span class="i18ntext" data-text-id="textUploadAttachments"></span><span class="glyphicon glyphicon-arrow-up"></span></div>
+												<div class="btn btn-warning" onclick="ClearUploadList();"><div class="i18ntext" data-text-id="textDeleteAttachemets"></div></div>
 											</div>
 											<br>
 
 											  <div style="position:relative;">
 													<a class='btn btn-primary' href='javascript:;'>
-														Choose File To Add...
+														<div class="i18ntext" data-text-id="textChooseFile"></div>
 														<input type="file" id="newAttachmentFile" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
 													</a>
 													&nbsp;
@@ -267,7 +267,8 @@
 										<div class="fill">
 											<textarea class="edit-newtasktext input-large form-control" id="edit-newtasktext" name="edit-newtasktext" title="Enter New Tasks Here"></textarea><br>
 											<div class="btn btn-success addTaskButton" id="edit-story-new-task-save-button" name="">
-												<span class="glyphicon glyphicon-arrow-down"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add Task&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<span class="glyphicon glyphicon-arrow-down"></span>
+												<span class="i18ntext" data-text-id="textAddTask"></span>
 												<span class="glyphicon glyphicon-arrow-down"></span>
 											</div>
 											<div id="edit-story-tasks-container" name="edit-story-tasks-container" class="tasksarea"></div>
@@ -277,7 +278,7 @@
 										<div class="fill">
 											<div class="historyarea" id="edit-story-historys-container"></div>
 										</div>
-									</div>									
+									</div>
 								</div>
 							</div>
 						</div>
@@ -288,59 +289,59 @@
 					</div>
 					<div id="add-story-form" class="editform">
 						<div class="editing-header">
-							<h4>Add a New Story</h4>
+							<h4><div class="i18ntext" data-text-id="textAddNewStory"></div></h4>
 						</div>
 						<div class="btn-group editing-buttons">
-							<div onclick="CloseAddStory();" class="btn btn-warning">Close</div>
-							<div onclick="Kanban.AddStoryFromFormData();" class="btn btn-primary">Save New Story</div>
+							<div onclick="CloseAddStory();" class="btn btn-warning"><div class="i18ntext" data-text-id="textClose"></div></div>
+							<div onclick="Kanban.AddStoryFromFormData();" class="btn btn-primary"><div class="i18ntext" data-text-id="textSaveNewStory"></div></div>
 						</div>
 						<div class="editing-content">
 							<form class="form-horizontal">
 								<div class="control-group">
-									<label class="control-label" for="add-summary">Summary</label>
+									<label class="control-label" for="add-summary"><div class="i18ntext" data-text-id="textSummary"></div></label>
 									<div class="controls">
 										<input class="form-control" type="text" name="add-summary" id="add-summary" placeholder="Summary" />
 									</div>
 								</div>
 								<div class="contol-group" id="add-custom-field-container" name="add-custom-field-container">
-									<label class="control-label" for="add-custom-field">Bucket:</label>
+									<label class="control-label" for="add-custom-field"><div class="i18ntext" data-text-id="textBucket"></div></label>
 									<div class="controls">
 										<select class="form-control" name="add-custom-field" id="add-custom-field" ></select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="add-status">Status</label>
+									<label class="control-label" for="add-status"><div class="i18ntext" data-text-id="textStatus"></div></label>
 									<div class="controls">
 										<select class="form-control" name="add-status" id="add-status" placeholder="Status"></select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="add-priority">Priority</label>
+									<label class="control-label" for="add-priority"><div class="i18ntext" data-text-id="textPriority"></div></label>
 									<div class="controls">
 										<select class="form-control" name="add-priority" id="add-priority"></select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="add-cateogry">Category</label>
+									<label class="control-label" for="add-cateogry"><div class="i18ntext" data-text-id="textCategory"></div></label>
 									<div class="controls">
 										<select class="form-control" name="add-category" id="add-category"></select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="add-reporter">Reporter</label>
+									<label class="control-label" for="add-reporter"><div class="i18ntext" data-text-id="textReporter"></div></label>
 									<div class="controls">
 										<select class="form-control" name="add-reporter" id="add-reporter"></select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="add-assignedto">Handler</label>
+									<label class="control-label" for="add-assignedto"><div class="i18ntext" data-text-id="textHandler"></div></label>
 									<div class="controls">
 										<select class="form-control" name="add-assignedto" id="add-assignedto" class=""></select>
 									</div>
 								</div>
 								<div id="customAdd"></div>
 								<div class="control-group">
-									<label class="control-label" for="add-description">Description</label>
+									<label class="control-label" for="add-description"><div class="i18ntext" data-text-id="textDescription"></div></label>
 									<div class="controls">
 										<textarea class="form-control" name="add-description" id="add-description" class="input-large"></textarea>
 									</div>
@@ -350,36 +351,36 @@
 					</div>
 					<div id="edit-settings-form" class="editform">
 						<div class="editing-header">
-							<h4>Settings</h4>
+							<h4><div class="i18ntext" data-text-id="textSettings"></div></h4>
 						</div>
 						<div class="btn-group editing-buttons">
-							<div onclick="CloseSettings();" class="btn btn-warning">Close</div>							
-							<div onclick="Kanban.SaveSettings(); CloseSettings();" class="btn btn-primary">Save Settings</div>
+							<div onclick="CloseSettings();" class="btn btn-warning"><span class="i18ntext" data-text-id="textClose"></span></div>
+							<div onclick="Kanban.SaveSettings(); CloseSettings();" class="btn btn-primary"><span class="i18ntext" data-text-id="textSaveSettings"></span></div>
 						</div>
 						<div class="editing-content">
 							<form class="form-horizontal" onsubmit="Kanban.SaveSettings(); CloseSettings();">
 								<div class="control-group">
 									<table class="table">
 										<tr>
-											<td colspan="2"><label class="control-label" for="settings-list-width">List Width</label></td>
+											<td colspan="2"><label class="control-label" for="settings-list-width"><div class="i18ntext" data-text-id="textListWidth"></div></label></td>
 										</tr>
 										<tr>
-											<td>												
+											<td>
 												<div class="controls">
 													<input type="text" class="form-control" name="settings-list-width" id="settings-list-width" placeholder="List Width" />
 												</div>
 											</td>
 											<td>
-												<span onclick="FitColsToScreen(); Kanban.SaveSettings(); CloseSettings();" class="btn btn-success">Auto-Fit&nbsp;<span class="glyphicon glyphicon-resize-horizontal"></span></span>
+												<span onclick="FitColsToScreen(); Kanban.SaveSettings(); CloseSettings();" class="btn btn-success"><div class="i18ntext" data-text-id="textAutoFit"></div>&nbsp;<span class="glyphicon glyphicon-resize-horizontal"></span></span>
 											</td>
 										</tr>
 										<tr>
 											<td colspan="2">
-												<label class="control-label" for="settings-list-width">Auto-Fit When Browser Resizes</label>
+												<label class="control-label" for="settings-list-width"><div class="i18ntext" data-text-id="textAutoFitBrowse"></div></label>
 											</td>
 										</tr>
 										<tr>
-											<td>												
+											<td>
 												<div class="controls">
 													<input type="checkbox" class="form-control" name="settings-autofit-onresize" id="settings-autofit-onresize" />
 												</div>
@@ -387,39 +388,50 @@
 										</tr>
 										<tr>
 											<td colspan="2">
-												<label class="control-label" for="settings-selectedTheme">Theme:</label>
+												<label class="control-label" for="settings-selectedTheme"><div class="i18ntext" data-text-id="textTheme"></div></label>
 											</td>
-										</tr>										
+										</tr>
 										<tr>
 											<td colspan="2">
 												<select id="settings-selectedTheme" name="settings-selectedTheme"class=" form-control input-small">
 												</select>
 											</td>
 										</tr>
-									</table>								
+									</table>
 								</div>
 							</form>
 						</div>
-					</div>	
+					</div>
 				</div>
 				<div id="prioritylegend">
-					<div priority="immediate">Immediate</div>
-					<div priority="urgent">Urgent</div>
-					<div priority="high">High</div>
-					<div priority="normal">Normal</div>
-					<div priority="low">Low</div>
-					<div priority="none">No</div>
-				</div>				
+						<div class="legend-label"><span class="i18ntext" data-text-id="textOptionsPiorities"></span></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('60');"><div id="op_priority_60" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_60"></span></div><div class="ribbon priority-immediate"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('50');"><div id="op_priority_50" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_50"></span></div><div class="ribbon priority-urgent"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('40');"><div id="op_priority_40" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_40"></span></div><div class="ribbon priority-high"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('30');"><div id="op_priority_30" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_30"></span></div><div class="ribbon priority-normal"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('20');"><div id="op_priority_20" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_20"></span></div><div class="ribbon priority-low"><span>&nbsp;</span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignPriority('10');"><div id="op_priority_10" class="legend-ex-box"><span class="i18ntext" data-text-id="Priority_10"></span><span class="i18ntext" data-text-id="textOptionsDefault"></span></div><div class="ribbon priority-none"><span>&nbsp;</span></div></div>
+
+						<div class="legend-label"><span class="i18ntext" data-text-id="textOptionsSeverity"></span></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('80');"><div id="op_severity_80" class="legend-ex-box" severity="block"><span class="i18ntext" data-text-id="Severity_80"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('70');"><div id="op_severity_70" class="legend-ex-box" severity="crash"><span class="i18ntext" data-text-id="Severity_70"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('60');"><div id="op_severity_60" class="legend-ex-box" severity="major"><span class="i18ntext" data-text-id="Severity_60"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('50');"><div id="op_severity_50" class="legend-ex-box" severity="minor"><span class="i18ntext" data-text-id="Severity_50"></span><span class="i18ntext" data-text-id="textOptionsDefault"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('40');"><div id="op_severity_40" class="legend-ex-box" severity="tweak"><span class="i18ntext" data-text-id="Severity_40"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('30');"><div id="op_severity_30" class="legend-ex-box" severity="text"><span class="i18ntext" data-text-id="Severity_30"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('20');"><div id="op_severity_20" class="legend-ex-box" severity="trivial"><span class="i18ntext" data-text-id="Severity_20"></span></div></div>
+						<div class="legend-ex-story cp" onclick="AssignSeverity('10');"><div id="op_severity_10" class="legend-ex-box" severity="feature"><span class="i18ntext" data-text-id="Severity_10"></span></div></div>
+				</div>
 			</div>
 
 		</div>
 
-		<div id="priorities-displayer" onmouseover="ShowPriorityLegend();" onmouseout="HidePriorityLegend();">
-			Priorities &gt;
+		<div id="priorities-displayer" onclick="ToggleLegend();">
+			<span class="i18ntext" data-text-id="textOptions"></span> &gt;
 		</div>
 		<input type="hidden" style="display:none;" id="seletedproject" name="selectedproject" />
 		<div id="attachmentdisplay" class="" style="" onclick="CloseLightBox();">
-				<a href="#" class="btn btn-primary pull-right" style="margin-right: 20px; margin-top: 20px;" onclick="CloseLightBox();"><i class="glyphicons glyphicons-white glyphicons-close"></i>Close</a>
+				<a href="#" class="btn btn-primary pull-right" style="margin-right: 20px; margin-top: 20px;" onclick="CloseLightBox();"><i class="glyphicons glyphicons-white glyphicons-close"></i><div class="i18ntext" data-text-id="textClose"></div></a>
 				<br>
 				<center>
 					<div class="" style="padding-left: 40px; height: 100%; verticle-align: middle;">
