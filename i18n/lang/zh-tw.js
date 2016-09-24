@@ -43,7 +43,7 @@ var langStatus = {
 var langSticky = {
 	0:"no",
 	1:"yes"
-}
+};
 
 var langObj = {
 "Severity": langSeverity,
