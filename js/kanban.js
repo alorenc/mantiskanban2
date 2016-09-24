@@ -1,36 +1,33 @@
 /* global Mantis, langObj, e, returnObj, urlParams, DefaultSettings, AutoAdjustListWidth */
 
 var Kanban = {
-
 	Preload : function() {
 		Mantis.Preload();
 	},
-
 	get CurrentProject() {
 		for(var i = 0; i < Kanban.Projects.length; i++) {
 			if(document.getElementById("seletedproject").value == Kanban.Projects[i].ID) {
 				return Kanban.Projects[i];
 			}
 		}
-		return new KanbanProject({ "name": "No Name", "id": 0 });
+		return new KanbanProject({
+			"name" : "No Name",
+			"id" : 0
+		});
 	},
-
 	get CurrentUser() {
 		return Kanban._currentUser;
 	},
-
 	set CurrentUser(value) {
 		Kanban._currentUser = value;
 	},
-
 	get Tags() {
 		return Mantis.Tags;
 	},
-
 	get ProjectUsers() {
 		var usersGet = Mantis.ProjectUsers;
 
-		if (usersGet.length > 0) {
+		if(usersGet.length > 0) {
 			for(var ui = 0; ui < usersGet.length; ui++) {
 				Kanban._projectUsers[usersGet[ui].id] = usersGet[ui].name;
 			}
@@ -38,14 +35,12 @@ var Kanban = {
 
 		return Kanban._projectUsers;
 	},
-
-	BlockUpdates: false,
-	Dragging: false,
-	UsingCustomField: false,
-	_listIDField: 'ScrumBucket',
+	BlockUpdates : false,
+	Dragging : false,
+	UsingCustomField : false,
+	_listIDField : 'ScrumBucket',
 	_currentUser : null,
 	_projectUsers : [],
-
 	GetCategoryIcon : function(category) {
 		if(Kanban.CategoryIconMap == undefined) {
 			return "bookmark";
@@ -55,89 +50,84 @@ var Kanban = {
 			return Kanban.CategoryIconMap[category];
 		}
 	},
-
 	GetUserByID : function(userid) {
 		for(var ui = 0; ui < Kanban.CurrentProject.Users.lenth; ui++) {
-			if(Kanban.CurrentProject.Users[ui].ID == userid) return Kanban.CurrentProject.Users[ui];
+			if(Kanban.CurrentProject.Users[ui].ID == userid)
+				return Kanban.CurrentProject.Users[ui];
 		}
 		return null;
 	},
-
 	GetListByID : function(listid) {
 		for(var li = 0; li < Kanban.Lists.length; li++) {
-			if(Kanban.Lists[li].ID == listid) return Kanban.Lists[li];
+			if(Kanban.Lists[li].ID == listid)
+				return Kanban.Lists[li];
 		}
 		return null;
 	},
-
-	UndoInfo: {
-		StoryDiv: null,
-		ListDiv: null
+	UndoInfo : {
+		StoryDiv : null,
+		ListDiv : null
 	},
-
 	get Container() {
 		return document.getElementById("kanbancontent");
 	},
-
-	Projects: [],
-	Lists: [],
-	Stories: [],
+	Projects : [],
+	Lists : [],
+	Stories : [],
 	AssignedUsers : [],
-
 	/*
 	 * @name HasStory
 	 * @returns {boolean} Returns true if the story is already loaded into the "Mantis.Stories" array.
 	 * @argument {int} id The ID of the story to look for
 	 */
-	HasStory: function(id) {
+	HasStory : function(id) {
 		for(var i = 0; i < Kanban.Stories.length; i++) {
-			if(Kanban.Stories[i].ID == id) return true;
+			if(Kanban.Stories[i].ID == id)
+				return true;
 		}
 		return false;
 	},
-
-	HasProject: function(id) {
+	HasProject : function(id) {
 		for(var i = 0; i < Kanban.Projects.length; i++) {
-			if(Kanban.Projects[i].ID == id) return true;
+			if(Kanban.Projects[i].ID == id)
+				return true;
 		}
 		return false;
 	},
-
 	/*
 	 * @name HasList
 	 * @returns {boolean} Returns true if the list is already loaded into the "Mantis.Lists" array.
 	 * @argument {int} id The ID of the list to look for
 	 */
-	HasList: function(id) {
+	HasList : function(id) {
 		for(var i = 0; i < Kanban.Lists.length; i++) {
-			if(Kanban.Lists[i].ID == id) return true;
+			if(Kanban.Lists[i].ID == id)
+				return true;
 		}
 		return false;
 	},
-
-	CloseAddStoryDialog: function() {
+	CloseAddStoryDialog : function() {
 		CloseAddStory();
 	},
-
-	GetStoryByFieldValue: function(field, value) {
+	GetStoryByFieldValue : function(field, value) {
 		for(var i = 0; i < Kanban.Stories.length; i++) {
-			if(Kanban.Stories[i][field] == value) return Kanban.Stories[i];
+			if(Kanban.Stories[i][field] == value)
+				return Kanban.Stories[i];
 		}
 		return null;
 	},
-
-	ReplaceStory: function(Story) {
+	ReplaceStory : function(Story) {
 		for(var i = 0; i < Kanban.Stories.length; i++) {
 			if(Story.ID == Kanban.Stories[i].ID) {
 				Kanban.Stories[i] = Story;
 			}
 		}
 	},
-
-	AddStoryFromFormData: function() {
+	AddStoryFromFormData : function() {
 		var summary = $("#add-summary").val();
 		var description = $("#add-description").val();
-		if ((description == null) || (description == "")) description = "-";
+		if((description == null) || (description == ""))
+			description = "-";
 		var handlerid = document.getElementById("add-assignedto").value;
 		var reporterid = document.getElementById("add-reporter").value;
 		var statusid = document.getElementById("add-status").value;
@@ -147,9 +137,9 @@ var Kanban = {
 		var newIssueStruct = Mantis.UpdateStructureMethods.Issue.NewIssue(summary, description, Mantis.CurrentProjectID, handlerid, reporterid, statusid, priorityid, category);
 
 		if(Kanban.UsingCustomField) {
-			for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+			for(var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
 				var custom_field = Mantis.ProjectCustomFields[i];
-				if (custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
+				if(custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
 					Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, custom_field.field.name, document.getElementById("add-" + custom_field.field.name).value);
 				}
 			}
@@ -161,8 +151,7 @@ var Kanban = {
 //		console.log(newIssueStruct.custom_fields);
 		Kanban.AddStory(summary, description, handlerid, reporterid, statusid, priorityid, category, customfieldvalue);
 	},
-
-	AddStoryToArray: function(storyToAdd) {
+	AddStoryToArray : function(storyToAdd) {
 		if(!Kanban.HasStory(storyToAdd.ID)) {
 			if(storyToAdd.ListID != null) {
 				Kanban.Stories[Kanban.Stories.length] = storyToAdd;
@@ -173,29 +162,26 @@ var Kanban = {
 			}
 		}
 	},
-
-	AddListToArray: function(listToAdd) {
+	AddListToArray : function(listToAdd) {
 		if(!Kanban.HasList(listToAdd.ID)) {
 			Kanban.Lists[Kanban.Lists.length] = listToAdd;
 		}
 	},
-
-	ClearListGUI: function() {
+	ClearListGUI : function() {
 		while(Kanban.Container.childNodes.length != 0) {
 			Kanban.Container.removeChild(Kanban.Container.firstChild);
 		}
 	},
-
-	UndoLastKanbanMove: function() {
+	UndoLastKanbanMove : function() {
 		if(Kanban.UndoInfo.ListDiv !== null) {
 			Kanban.UndoInfo.ListDiv.insertBefore(Kanban.UndoInfo.StoryDiv, Kanban.UndoInfo.ListDiv.lastChild);
 			Kanban.UndoInfo.StoryDiv.setAttribute("listid", Kanban.UndoInfo.ListDiv.getAttribute("id"));
 		}
 	},
-
 	AddGlowToRelatedStories : function(id) {
 		var foundStory = Kanban.GetStoryByFieldValue("ID", id);
-		if(foundStory.RelatedStories.length > 0) foundStory.Element.children[0].children[1].classList.add("glow");
+		if(foundStory.RelatedStories.length > 0)
+			foundStory.Element.children[0].children[1].classList.add("glow");
 		for(var rel = 0; rel < foundStory.RelatedStories.length; rel++) {
 			var foundRelation = Kanban.GetStoryByFieldValue("ID", foundStory.RelatedStories[rel]);
 			if(foundRelation && foundRelation.Element) {
@@ -203,10 +189,10 @@ var Kanban = {
 			}
 		}
 	},
-
 	RemoveGlowToRelatedStories : function(id) {
 		var foundStory = Kanban.GetStoryByFieldValue("ID", id);
-		if(foundStory.RelatedStories.length > 0) foundStory.Element.children[0].children[1].classList.remove("glow");
+		if(foundStory.RelatedStories.length > 0)
+			foundStory.Element.children[0].children[1].classList.remove("glow");
 		for(var rel = 0; rel < foundStory.RelatedStories.length; rel++) {
 			var foundRelation = Kanban.GetStoryByFieldValue("ID", foundStory.RelatedStories[rel]);
 			if(foundRelation && foundRelation.Element) {
@@ -214,13 +200,13 @@ var Kanban = {
 			}
 		}
 	},
-
-	BuildListGUI: function() {
+	BuildListGUI : function() {
 		for(var li = 0; li < Kanban.Lists.length; li++) {
 			var kanbanListItem = Kanban.Lists[li];
 
 			var existingElement = document.getElementById("listid" + kanbanListItem.ID);
-			if(existingElement !== null) continue;
+			if(existingElement !== null)
+				continue;
 
 			///The main container
 			var listDiv = document.createElement("div");
@@ -236,7 +222,7 @@ var Kanban = {
 			///The title container
 			var listDivTitle = document.createElement("div");
 			listDivTitle.setAttribute("class", "kanbanlisttitle");
-			listDivTitle.setAttribute("id","kanbanlisttitle"+li);
+			listDivTitle.setAttribute("id", "kanbanlisttitle" + li);
 			listDivTitle.setAttribute("listid", "listid" + kanbanListItem.ID);
 			listDivTitle.innerHTML = kanbanListItem.Name.capitalize();
 			listDiv.appendChild(listDivTitle);
@@ -304,7 +290,8 @@ Kanban.SaveSettings = function() {
 Kanban.ApplySettingsAtLogin = function() {
 	try {
 		modifyStyleRule(".kanbanlist", "width", DefaultSettings.kanbanListWidth);
-	} catch(e)  {}
+	} catch(e) {
+	}
 	if(DefaultSettings.autoResizeColumns) {
 		window.addEventListener("resize", AutoAdjustListWidth);
 		AutoAdjustListWidth();
@@ -425,8 +412,10 @@ function DragEnd(event) {
 
 function Drop(event) {
 	event.preventDefault();
-	if(event.target.id == "kanbancontent") return;
-	if(Kanban.BlockUpdates) return;
+	if(event.target.id == "kanbancontent")
+		return;
+	if(Kanban.BlockUpdates)
+		return;
 
 	var data = event.dataTransfer.getData("Text");
 	event.target.classList.remove('over');
@@ -455,7 +444,7 @@ function Drop(event) {
 			listToDropIn = document.getElementById(event.target.getAttribute("listid"));
 			UpdateListForCanbanStory(sourceElement.Story, listToDropIn.List, UpdateKanbanStoryComplete);
 			listToDropIn.Container.appendChild(sourceElement);
-		} else if (event.target.getAttribute("class") == "kanbanlisttitle") {
+		} else if(event.target.getAttribute("class") == "kanbanlisttitle") {
 			listToDropIn = document.getElementById(event.target.getAttribute("listid"));
 			UpdateListForCanbanStory(sourceElement.Story, listToDropIn.List, UpdateKanbanStoryComplete);
 			listToDropIn.Container.insertBefore(sourceElement, listToDropIn.Container.firstChild);
@@ -491,7 +480,7 @@ function MoveKanbanStoryToProperList(kanbanStory) {
 		thisList = Kanban.GetListByID(kanbanStory.StorySource.status.id);
 		thisList.AddNewStoryUI(kanbanStory);
 	} catch(e) {
-		if (e.message === 'thisList is null') {
+		if(e.message === 'thisList is null') {
 			alert('Error Update: You can not move the issue. Subprojects must have the same ScumBucket');
 		} else {
 			alert('Error: Update: ' + e.message);
@@ -519,7 +508,7 @@ function UpdateKanbanStoryComplete(result) {
 	} else {
 		try {
 			var foundStory = Kanban.GetStoryByFieldValue("ID", document.getElementById("edit-story-id").value);
-			if (foundStory == null) {
+			if(foundStory == null) {
 				foundStory = Kanban.GetStoryByFieldValue("ID", Kanban.UndoInfo.StoryDiv.getAttribute("id").substr(8));
 			}
 			if(foundStory !== null) {
@@ -556,13 +545,13 @@ function UpdateKanbanListTitle() {
 		var nbItem = 0;
 		var workload = 0;
 		for(var si = 0; si < kanbanListItem.Stories.length; si++) {
-			if ((kanbanListItem.Stories[si].Element != null) && (kanbanListItem.Stories[si].Element.style != null) && (kanbanListItem.Stories[si].Element.style.display != 'none')) {
+			if((kanbanListItem.Stories[si].Element != null) && (kanbanListItem.Stories[si].Element.style != null) && (kanbanListItem.Stories[si].Element.style.display != 'none')) {
 				nbItem++;
 
 				var cf = kanbanListItem.Stories[si].StorySource.custom_fields;
-				if (cf != null) {
-					for (var t = 0; t < cf.length; t++) {
-						if ((cf[t].field != null) && (cf[t].field.name == 'ChargeRestante') && (cf[t].value != null)) {
+				if(cf != null) {
+					for(var t = 0; t < cf.length; t++) {
+						if((cf[t].field != null) && (cf[t].field.name == 'ChargeRestante') && (cf[t].value != null)) {
 							workload += parseFloat(cf[t].value);
 						}
 					}
@@ -593,7 +582,7 @@ function UpdateKanbanListTitle() {
 //		}
 //		existingElement.innerHTML = content;
 
-		existingElement.innerHTML = kanbanListItem.Name.capitalize() + " (" + nbItem + ((workload > 0) ? " => " + workload + "j" :"") + ")";
+		existingElement.innerHTML = kanbanListItem.Name.capitalize() + " (" + nbItem + ((workload > 0) ? " => " + workload + "j" : "") + ")";
 	}
 }
 
@@ -604,49 +593,49 @@ function UpdateStoryFromFormData() {
 	var thisStory = Kanban.GetStoryByFieldValue("ID", document.getElementById("edit-story-id").value);
 	Mantis.IssueGet(thisStory.ID, function(storyToUpdate) {
 		try {
-			if (thisStory.Summary != $("#edit-summary").val()) {
+			if(thisStory.Summary != $("#edit-summary").val()) {
 				storyToUpdate.summary = $("#edit-summary").val();
 			}
-			if (thisStory.Description != $("#edit-description").val()) {
+			if(thisStory.Description != $("#edit-description").val()) {
 				storyToUpdate.description = $("#edit-description").val();
 			}
 
-			if (thisStory.HandlerID != document.getElementById("edit-assignedto").value) {
+			if(thisStory.HandlerID != document.getElementById("edit-assignedto").value) {
 				storyToUpdate.handler = {
-					"name": "",
-					"id": (document.getElementById("edit-assignedto").value == "") ? null : document.getElementById("edit-assignedto").value
+					"name" : "",
+					"id" : (document.getElementById("edit-assignedto").value == "") ? null : document.getElementById("edit-assignedto").value
 				};
 			}
-			if (thisStory.SeverityID != document.getElementById("edit-severity").value) {
+			if(thisStory.SeverityID != document.getElementById("edit-severity").value) {
 				storyToUpdate.severity.id = (document.getElementById("edit-severity").value == "") ? null : document.getElementById("edit-severity").value;
 			}
-			if (thisStory.ResolutionID != document.getElementById("edit-resolution").value) {
+			if(thisStory.ResolutionID != document.getElementById("edit-resolution").value) {
 				storyToUpdate.resolution.id = (document.getElementById("edit-resolution").value == "") ? null : document.getElementById("edit-resolution").value;
 			}
 
-			if (thisStory.ProjectID != document.getElementById("edit-project").value) {
+			if(thisStory.ProjectID != document.getElementById("edit-project").value) {
 				storyToUpdate.project.id = document.getElementById("edit-project").value;
 			}
-			if (thisStory.ReporterID != document.getElementById("edit-reporter").value) {
+			if(thisStory.ReporterID != document.getElementById("edit-reporter").value) {
 				storyToUpdate.reporter.id = document.getElementById("edit-reporter").value;
 			}
-			if (thisStory.PriorityID != document.getElementById("edit-priority").value) {
+			if(thisStory.PriorityID != document.getElementById("edit-priority").value) {
 				storyToUpdate.priority.id = document.getElementById("edit-priority").value;
 			}
-			if (thisStory.StatusID != document.getElementById("edit-status").value) {
+			if(thisStory.StatusID != document.getElementById("edit-status").value) {
 				storyToUpdate.status.id = document.getElementById("edit-status").value;
 			}
-			if (thisStory.Reproduce != document.getElementById("edit-reproduce").value) {
+			if(thisStory.Reproduce != document.getElementById("edit-reproduce").value) {
 				storyToUpdate.steps_to_reproduce = document.getElementById("edit-reproduce").value;
 			}
-			if (thisStory.CategoryID != document.getElementById("edit-category").value) {
+			if(thisStory.CategoryID != document.getElementById("edit-category").value) {
 				storyToUpdate.category = document.getElementById("edit-category").value;
 			}
 
 			if(Kanban.UsingCustomField) {
-				for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+				for(var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
 					var custom_field = Mantis.ProjectCustomFields[i];
-					if (custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
+					if(custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
 						Mantis.UpdateStructureMethods.Issue.UpdateCustomField(storyToUpdate, custom_field.field.name, document.getElementById("edit-" + custom_field.field.name).value);
 					}
 				}
@@ -706,7 +695,7 @@ function UpdateListForCanbanStory(KanbanStoryToUpdate, KanbanListToMoveTo, Updat
 		for(var li = 0; li < Kanban.Lists.length; li++) {
 			var kanbanList = Kanban.Lists[li];
 
-			if (kanbanList.ID == KanbanListToMoveTo.ID) {
+			if(kanbanList.ID == KanbanListToMoveTo.ID) {
 				kanbanList.AddStory(KanbanStoryToUpdate);
 			} else {
 				kanbanList.RemoveStory(KanbanStoryToUpdate);
@@ -747,11 +736,13 @@ function HandleDragOver(e) {
 	var storyID = e.target.getAttribute("storyid");
 	if(storyID != e.target.getAttribute("id")) {
 		var dropDiv = document.getElementById(e.target.getAttribute("dropdivid"));
-		if(storyID == previousDragOverItem) return false;
+		if(storyID == previousDragOverItem)
+			return false;
 
 		previousDragOverItem = storyID;
 		ClearAllDragHoverAreas();
-		if(dropDiv != null) dropDiv.classList.add("over");
+		if(dropDiv != null)
+			dropDiv.classList.add("over");
 	}
 	return false;
 }
@@ -809,7 +800,8 @@ function ClearUploadList() {
 
 function SaveNewAttachments() {
 	try {
-		if(Kanban.BlockUpdates) return;
+		if(Kanban.BlockUpdates)
+			return;
 		Kanban.BlockUpdates = true;
 		StartLoading();
 		var attachmentList = document.getElementById("newAttachmentList");
@@ -819,10 +811,10 @@ function SaveNewAttachments() {
 				var storyID = $("#edit-story-id").val();
 				var myStory = Kanban.GetStoryByFieldValue("ID", storyID);
 				Mantis.IssueAttachmentAdd(storyID,
-					attachmentDiv.getAttribute("filename"),
-					attachmentDiv.getAttribute("filetype"),
-					attachmentDiv.getAttribute("filedata"));
-			} catch (e) {
+						attachmentDiv.getAttribute("filename"),
+						attachmentDiv.getAttribute("filetype"),
+						attachmentDiv.getAttribute("filedata"));
+			} catch(e) {
 				alert("Error Uploading Attachments: \r\n" + e.message);
 			}
 		}
@@ -844,7 +836,8 @@ function SaveNewAttachments() {
 
 function DeleteAttachment(AttachmentID) {
 	try {
-		if(!confirm("Are you sure you want to delete this attachment?")) return;
+		if(!confirm("Are you sure you want to delete this attachment?"))
+			return;
 
 		Kanban.BlockUpdates = true;
 		StartLoading();
@@ -852,7 +845,8 @@ function DeleteAttachment(AttachmentID) {
 		///If delete worked, remove the element
 		var attachmentElement = document.getElementById("attachmentcontainer" + AttachmentID);
 		var storyID = attachmentElement.getAttribute("storyid");
-		if(!attachmentElement) return;
+		if(!attachmentElement)
+			return;
 
 		///Update the UI
 		attachmentElement.parentNode.removeChild(attachmentElement);
@@ -877,7 +871,8 @@ function LoadTagsInDropDown() {
 		while(editFormTags.childNodes.length > 0) {
 			editFormTags.removeChild(editFormTags.firstChild);
 		}
-	} catch(e) {}
+	} catch(e) {
+	}
 
 	for(var ti = 0; ti < Kanban.Tags.length; ti++) {
 		var thisTag = Kanban.Tags[ti];
@@ -907,7 +902,8 @@ function AddTagsToStoryEditForm(KanbanStory) {
 		while(tagsContainer.childNodes.length > 0) {
 			tagsContainer.removeChild(tagsContainer.firstChild);
 		}
-	} catch(e) {}
+	} catch(e) {
+	}
 
 	for(var tcnt = 0; tcnt < KanbanStory.Tags.length; tcnt++) {
 		var thisTag = KanbanStory.Tags[tcnt];
@@ -926,7 +922,8 @@ function AddTagsToStoryEditForm(KanbanStory) {
 
 function AddNewTagFromEditForm() {
 	var newTagText = document.getElementById("edit-story-new-tag").value;
-	if(newTagText == "") return;
+	if(newTagText == "")
+		return;
 	var newTagStructure = Mantis.UpdateStructureMethods.Tag.NewTag(newTagText, newTagText);
 	var newTagID = Mantis.TagAdd(newTagStructure);
 	Mantis.LoadTagsSync();
@@ -975,9 +972,11 @@ function AddAttachmentToStoryEditForm(KanbanStory) {
 		while(attachmentsContainer.childNodes.length > 0) {
 			attachmentsContainer.removeChild(attachmentsContainer.firstChild);
 		}
-	} catch(e) {}
+	} catch(e) {
+	}
 
-	if(KanbanStory.Attachments == undefined || KanbanStory.Attachments.length == 0) return;
+	if(KanbanStory.Attachments == undefined || KanbanStory.Attachments.length == 0)
+		return;
 
 	for(var i = 0; i < KanbanStory.Attachments.length; i++) {
 		var thisAttachment = KanbanStory.Attachments[i];
@@ -998,7 +997,8 @@ function AddAttachmentToStoryEditForm(KanbanStory) {
 	// <xsd:element name="download_url" type="xsd:anyURI" minOccurs="0"/>
 	// <xsd:element name="user_id" type="xsd:integer" minOccurs="0"/>
 
-	if(KanbanStory.Attachments === undefined) return;
+	if(KanbanStory.Attachments === undefined)
+		return;
 
 	for(var i = 0; i < KanbanStory.Attachments.length; i++) {
 		var thisAttachment = KanbanStory.Attachments[i];
@@ -1021,11 +1021,12 @@ function AddAttachmentToStoryEditForm(KanbanStory) {
 			attachmentImage.setAttribute("src", "images/loading.gif");
 			attachmentImage.setAttribute("class", "kanbanimageattachment");
 			attachmentImage.setAttribute("onclick", "OpenLightBox('#attachment" + thisAttachment.id + "');");
-			Mantis.IssueAttachmentGet(thisAttachment.id, thisAttachment.content_type, function(result, attachmentID, attachementContentType){
+			Mantis.IssueAttachmentGet(thisAttachment.id, thisAttachment.content_type, function(result, attachmentID, attachementContentType) {
 				var foundAttachmentImage = document.getElementById("attachment" + attachmentID);
 				var resultText = "";
 				resultText = result["#text"];
-				if(resultText == undefined) resultText = result;
+				if(resultText == undefined)
+					resultText = result;
 				//console.log("ATTACHMENT ID " + attachmentID + ": " + resultText);
 				foundAttachmentImage.setAttribute("src", "data:" + attachementContentType + ";base64," + resultText);
 			});
@@ -1038,13 +1039,14 @@ function AddAttachmentToStoryEditForm(KanbanStory) {
 			attachmentFileName.setAttribute("class", "attachmentname");
 			attachmentFileName.setAttribute("download", thisAttachment.filename);
 			attachmentFileName.innerHTML = thisAttachment.filename;
-			Mantis.IssueAttachmentGet(thisAttachment.id, thisAttachment.content_type, function(result, attachmentID, attachementContentType){
+			Mantis.IssueAttachmentGet(thisAttachment.id, thisAttachment.content_type, function(result, attachmentID, attachementContentType) {
 				var foundAttachmentDiv = document.getElementById("attachment" + attachmentID);
 				var resultText = "";
 				resultText = result["#text"];
-				if(resultText == undefined) resultText = result;
+				if(resultText == undefined)
+					resultText = result;
 				//console.log("ATTACHMENT ID " + attachmentID + ": " + resultText);
-				foundAttachmentDiv.setAttribute("href", "data:application/octet-stream;base64,"+ resultText + "");
+				foundAttachmentDiv.setAttribute("href", "data:application/octet-stream;base64," + resultText + "");
 
 
 			});
@@ -1057,7 +1059,8 @@ function AddAttachmentToStoryEditForm(KanbanStory) {
 
 function SaveNewTask(storyID, taskDescription) {
 	/// Requires mantis 1.3.0 at minimum
-	if(Mantis.Version() < "1.3.0") return;
+	if(Mantis.Version() < "1.3.0")
+		return;
 
 	try {
 		taskDescription = FormatTextAsHTML(taskDescription);
@@ -1083,7 +1086,8 @@ function SaveNewTask(storyID, taskDescription) {
 }
 function ChangeTaskStatus(storyID, taskID, isChecked) {
 	/// Requires mantis 1.3.0 at minimum
-	if(Mantis.Version() < "1.3.0") return;
+	if(Mantis.Version() < "1.3.0")
+		return;
 	Kanban.BlockUpdates = true;
 	StartLoading();
 
@@ -1109,7 +1113,8 @@ function ChangeTaskStatus(storyID, taskID, isChecked) {
 
 function ChangeTaskDescription(storyID, taskID, desc) {
 	/// Requires mantis 1.3.0 at minimum
-	if(Mantis.Version() < "1.3.0") return;
+	if(Mantis.Version() < "1.3.0")
+		return;
 
 	Kanban.BlockUpdates = true;
 	StartLoading();
@@ -1140,14 +1145,15 @@ function ChangeTaskDescription(storyID, taskID, desc) {
 }
 
 /*
-* @name AddTasksToStoryEditForm
-* @param {KanbanStory} KanbanStory The story to display the tasks for
-* @description Adds existing task to the edit for of a story
-*/
+ * @name AddTasksToStoryEditForm
+ * @param {KanbanStory} KanbanStory The story to display the tasks for
+ * @description Adds existing task to the edit for of a story
+ */
 function AddTasksToStoryEditForm(KanbanStory) {
 
 	/// Requires mantis 1.3.0 at minimum
-	if(Mantis.Version() < "1.3.0") return;
+	if(Mantis.Version() < "1.3.0")
+		return;
 
 	var taskContainer = document.getElementById("edit-story-tasks-container");
 	var taskSaveButton = document.getElementById("edit-story-new-task-save-button");
@@ -1156,11 +1162,13 @@ function AddTasksToStoryEditForm(KanbanStory) {
 		while(taskContainer.childNodes.length > 0) {
 			taskContainer.removeChild(taskContainer.firstChild);
 		}
-	} catch(e) {}
+	} catch(e) {
+	}
 
 	taskSaveButton.setAttribute("onclick", "SaveNewTask(" + KanbanStory.ID + ", document.getElementById('edit-newtasktext').value);");
 
-	if(KanbanStory.Tasks === undefined) return;
+	if(KanbanStory.Tasks === undefined)
+		return;
 
 	for(var i = 0; i < KanbanStory.Tasks.length; i++) {
 		var thisTask = KanbanStory.Tasks[i];
@@ -1196,10 +1204,10 @@ function AddTasksToStoryEditForm(KanbanStory) {
 }
 
 /*
-* @name AddNotesToStoryEditForm
-* @param {KanbanStory} KanbanStory The story to display the notes for
-* @description Adds existing notes to the edit for of a story
-*/
+ * @name AddNotesToStoryEditForm
+ * @param {KanbanStory} KanbanStory The story to display the notes for
+ * @description Adds existing notes to the edit for of a story
+ */
 function AddNotesToStoryEditForm(KanbanStory) {
 	var notesContainer = document.getElementById("edit-story-notes-container");
 	var noteSaveButton = document.getElementById("edit-story-new-note-save-button");
@@ -1208,16 +1216,18 @@ function AddNotesToStoryEditForm(KanbanStory) {
 		while(notesContainer.childNodes.length > 0) {
 			notesContainer.removeChild(notesContainer.firstChild);
 		}
-	} catch(e) {}
+	} catch(e) {
+	}
 
 	noteSaveButton.setAttribute("onclick", "SaveNewNote(" + KanbanStory.ID + ", document.getElementById('edit-newnotetext').value);")
-	noteTextArea.addEventListener("onkeydown", function (e) {
-		if ((keyCode == 10 || keyCode == 13) && event.ctrlKey) {
+	noteTextArea.addEventListener("onkeydown", function(e) {
+		if((keyCode == 10 || keyCode == 13) && event.ctrlKey) {
 			SaveNewNote(" + KanbanStory.ID + ", noteTextArea.value);
 		}
 	});
 
-	if(KanbanStory.Notes === undefined) return;
+	if(KanbanStory.Notes === undefined)
+		return;
 
 	for(var i = 0; i < KanbanStory.Notes.length; i++) {
 		var thisNote = KanbanStory.Notes[i];
@@ -1225,7 +1235,8 @@ function AddNotesToStoryEditForm(KanbanStory) {
 		var noteDiv = document.createElement("div");
 		noteDiv.setAttribute("class", "notecontainer");
 		noteDiv.setAttribute("storyid", KanbanStory.ID);
-		if(thisNote.reporter.name === undefined) thisNote.reporter.name = "User " + thisNote.reporter.id;
+		if(thisNote.reporter.name === undefined)
+			thisNote.reporter.name = "User " + thisNote.reporter.id;
 		noteDiv.setAttribute("style", GetStyleCodeFor3Digits(thisNote.reporter.name.substring(0, 3), .8));
 
 		var noteDate = new Date(Date.parse(thisNote.date_submitted));
@@ -1233,7 +1244,7 @@ function AddNotesToStoryEditForm(KanbanStory) {
 		var divNoteHeader = document.createElement("div");
 		divNoteHeader.setAttribute("class", "noteheader gravatarcontainer");
 		divNoteHeader.innerHTML = "<b>" + thisNote.reporter.real_name + "<br> " + noteDate.toLocaleString() + "</b>";
-		divNoteHeader.style.backgroundImage = "url(" + get_gravatar_image_url (thisNote.reporter.email, 40) + ")";
+		divNoteHeader.style.backgroundImage = "url(" + get_gravatar_image_url(thisNote.reporter.email, 40) + ")";
 
 		noteDiv.appendChild(divNoteHeader);
 
@@ -1248,10 +1259,10 @@ function AddNotesToStoryEditForm(KanbanStory) {
 
 
 /*
-* @name AddHistoryToStoryEditForm
-* @param {KanbanStory} KanbanStory The story to display the histories for
-* @description Adds existing histories to the edit for of a story
-*/
+ * @name AddHistoryToStoryEditForm
+ * @param {KanbanStory} KanbanStory The story to display the histories for
+ * @description Adds existing histories to the edit for of a story
+ */
 function AddHistoryToStoryEditForm(KanbanStory) {
 	var historysContainer = document.getElementById("edit-story-historys-container");
 
@@ -1259,7 +1270,8 @@ function AddHistoryToStoryEditForm(KanbanStory) {
 		while(historysContainer.childNodes.length > 0) {
 			historysContainer.removeChild(historysContainer.firstChild);
 		}
-	} catch(e) {}
+	} catch(e) {
+	}
 
 	Kanban.ProjectUsers;
 	//console.log(Kanban._currentUser);
@@ -1351,17 +1363,17 @@ function HistoryHtml(thisHistory) {
 			break
 	}
 
-	if (viewField) {
+	if(viewField) {
 		historyInnerHtml += ":";
 		historyInnerHtml += "<span class=\"label label-warning\">" + HistoryTranslateField(thisHistory.field) + "</span>";
 	}
 
-	if (viewValue1) {
+	if(viewValue1) {
 		historyInnerHtml += viewField ? "--" : ':';
 		historyInnerHtml += HistoryCreateLink(urlValue1, thisHistory.field, thisHistory.old_value, "label-danger");
 	}
 
-	if (viewValue2) {
+	if(viewValue2) {
 		historyInnerHtml += "=>";
 		historyInnerHtml += HistoryCreateLink(urlValue2, thisHistory.field, thisHistory.new_value, "label-success");
 	}
@@ -1450,7 +1462,8 @@ function AddHistoryToStoryEditFormCallback(KanbanStory) {
 }
 
 function SearchForStory(localOnly) {
- 	if(localOnly == undefined) localOnly = false;
+	if(localOnly == undefined)
+		localOnly = false;
 
 	var issueID = document.getElementById("searchfield").value;
 	var foundIssue = GetStoryIfLoaded(issueID);
@@ -1472,17 +1485,17 @@ function SearchForStory(localOnly) {
 				SelectProject();
 			}
 		});
-	} else if (foundIssue != null) {
+	} else if(foundIssue != null) {
 		EditStory(issueID);
 		document.getElementById("searchfield").value = "";
-	} else if (localOnly) {
+	} else if(localOnly) {
 		alert("Unable to open issue, probably its closed and we don't support editing it yet.");
 	}
 }
 
 function GetStoryIfLoaded(issueID) {
 	for(var iid = 0; iid < Kanban.Stories.length; iid++) {
-		var thisStory =Kanban.Stories[iid];
+		var thisStory = Kanban.Stories[iid];
 		if(thisStory.ID == issueID) {
 			return thisStory;
 		}
@@ -1572,7 +1585,8 @@ function OpenAddStory() {
 	var foundDefaultCategory = false;
 	for(var i = 0; i < Mantis.ProjectCategories.length; i++) {
 		var category = Mantis.ProjectCategories[i];
-		if(category == null) continue;
+		if(category == null)
+			continue;
 		selectAddCategories.options[selectAddCategories.options.length] = new Option(category.capitalize(), category);
 		if(Kanban.DefaultCategory != undefined) {
 			if(Kanban.DefaultCategory == category) {
@@ -1581,14 +1595,15 @@ function OpenAddStory() {
 			}
 		}
 	}
-	if(!foundDefaultCategory) selectAddCategories.selectedIndex = 0;
+	if(!foundDefaultCategory)
+		selectAddCategories.selectedIndex = 0;
 
 	console.log('Add new issue');
 	if(Kanban.UsingCustomField) {
 		var toInsert = "";
-		for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+		for(var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
 			var custom_field = Mantis.ProjectCustomFields[i];
-			if (custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
+			if(custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
 				var inputField = '<input type="text" name="add-' + custom_field.field.name + '" id="add-' + custom_field.field.name + '" class="form-control input-small" />';
 				toInsert += '<div class="control-group"><label class="control-label" for="add-' + custom_field.field.name + '">' + custom_field.field.name + ':</label><div class="controls">' + inputField + '</div></div>';
 
@@ -1674,10 +1689,10 @@ function EditStory(storyID) {
 
 	var thisStory = Kanban.GetStoryByFieldValue("ID", storyID);
 
-	document.getElementById("editing-header").style.backgroundImage = "url(" + get_gravatar_image_url (thisStory.AssignedToUser.Email, 80) + ")";
+	document.getElementById("editing-header").style.backgroundImage = "url(" + get_gravatar_image_url(thisStory.AssignedToUser.Email, 80) + ")";
 
 	/// Thanks to todace for sample code https://github.com/todace
-	document.getElementById("edit-story-title").innerHTML = "<a target=\"_new\" class=\"btn btn-primary\" href=http://" + Mantis.ServerHostname + "/view.php?id=" + thisStory.ID + ">"+ thisStory.ID + "</a> &nbsp; " + (thisStory.Summary.length > 40 ? thisStory.Summary.substring(0, 37) + "..." : thisStory.Summary);
+	document.getElementById("edit-story-title").innerHTML = "<a target=\"_new\" class=\"btn btn-primary\" href=http://" + Mantis.ServerHostname + "/view.php?id=" + thisStory.ID + ">" + thisStory.ID + "</a> &nbsp; " + (thisStory.Summary.length > 40 ? thisStory.Summary.substring(0, 37) + "..." : thisStory.Summary);
 	$("#edit-story-id").val(thisStory.ID);
 	$("#edit-summary").val(thisStory.Summary);
 	$("#edit-description").val(thisStory.Description);
@@ -1778,7 +1793,8 @@ function EditStory(storyID) {
 
 	for(var i = 0; i < Mantis.ProjectCategories.length; i++) {
 		var category = Mantis.ProjectCategories[i];
-		if(category == null) category = "";
+		if(category == null)
+			category = "";
 		selectEditCategory.options[selectEditCategory.options.length] = new Option(category.capitalize(), category);
 		if(thisStory.CategoryID == category) {
 			selectEditCategory.selectedIndex = i;
@@ -1786,10 +1802,12 @@ function EditStory(storyID) {
 	}
 
 	/// Requires mantis 1.3.0 at minimum
-	if(Mantis.Version() > "1.3.0") AddTasksToStoryEditForm(thisStory);
+	if(Mantis.Version() > "1.3.0")
+		AddTasksToStoryEditForm(thisStory);
 
 	/// Requires mantis 1.3.0 at minimum
-	if(Mantis.Version() > "1.3.0") AddHistoryToStoryEditForm(thisStory);
+	if(Mantis.Version() > "1.3.0")
+		AddHistoryToStoryEditForm(thisStory);
 
 	AddNotesToStoryEditForm(thisStory);
 	AddAttachmentToStoryEditForm(thisStory);
@@ -1797,9 +1815,9 @@ function EditStory(storyID) {
 
 	if(Kanban.UsingCustomField) {
 		var toInsert = "";
-		for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
+		for(var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
 			var custom_field = Mantis.ProjectCustomFields[i];
-			if (custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
+			if(custom_field.field.name != Kanban._listIDField && custom_field.field.name != Mantis.TaskListField) {
 				var currentValue = "";
 				for(var iq = 0; iq < thisStory.StorySource.custom_fields.length; iq++) {
 					var customField = thisStory.StorySource.custom_fields[iq];
@@ -1861,7 +1879,8 @@ function ShowSettings() {
 
 	var selecteStyle = 0;
 
-	if(DefaultSettings.selectedStyle) selectedStyle = DefaultSettings.selectedStyle;
+	if(DefaultSettings.selectedStyle)
+		selectedStyle = DefaultSettings.selectedStyle;
 
 	for(var q = 0; q < Kanban.Themes.length; q++) {
 		var thisTheme = Kanban.Themes[q];
