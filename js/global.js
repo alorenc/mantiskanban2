@@ -1,54 +1,58 @@
 
 String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
+	return this.charAt(0).toUpperCase() + this.slice(1);
+};
 
 String.prototype.htmlencode = function() {
-  var el = document.createElement("div");
-  el.innerText = el.textContent = this.toString();
-  return el.innerHTML;
-}
+	var el = document.createElement("div");
+	el.innerText = el.textContent = this.toString();
+	return el.innerHTML;
+};
 
-function pad(width, string, padding) { 
-  return (width <= string.length) ? string : pad(width, padding + string, padding)
+function pad(width, string, padding) {
+	return (width <= string.length) ? string : pad(width, padding + string, padding);
 }
 
 function GetStyleCodeFor3Digits(digits, opacity) {
-	if(digits.length > 3) digits = digits.substring(0, 3)
-	if(digits.length < 3) digits = pad(3, digits, "0");
+	if(digits.length > 3)
+		digits = digits.substring(0, 3);
+	if(digits.length < 3)
+		digits = pad(3, digits, "0");
 
 	var setOpacityTo = (opacity == undefined) ? "1" : opacity;
 	var colorObject = GetColorCodeFor3Digits(digits);
 	var textContrast = GetColorContrastForRBG(colorObject.first, colorObject.second, colorObject.third);
-	return "color: " + textContrast + "; background: rgba(" + colorObject.first + "," + colorObject.second + "," + colorObject.third + ", " + setOpacityTo + ") !important; /* W3C */"
+	return "color: " + textContrast + "; background: rgba(" + colorObject.first + "," + colorObject.second + "," + colorObject.third + ", " + setOpacityTo + ") !important; /* W3C */";
 }
 
 function FormatTextAsHTML(textToFormat) {
-	var reNewLines=/[\n\r]/g;
-	textToFormat=textToFormat.replace(reNewLines, "<br />");
-	var reTabs=/[\t]/g;
-	textToFormat=textToFormat.replace(reTabs, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+	var reNewLines = /[\n\r]/g;
+	textToFormat = textToFormat.replace(reNewLines, "<br />");
+	var reTabs = /[\t]/g;
+	textToFormat = textToFormat.replace(reTabs, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 
 	return textToFormat.toString();
 }
 
 
 function GetStyleCodeFor3DigitsHalfShaded(digits) {
-	if(digits.length > 3) digits = digits.substring(0, 3)
-	if(digits.length < 3) digits = pad(3, digits, "0");
+	if(digits.length > 3)
+		digits = digits.substring(0, 3);
+	if(digits.length < 3)
+		digits = pad(3, digits, "0");
 
 	var colorObject = GetColorCodeFor3Digits(digits);
 	var textContrast = GetColorContrastForRBG(colorObject.first, colorObject.second, colorObject.third);
-	return "color: " + textContrast + "; background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(41,137,216,0) 50%,rgba(" + colorObject.first + "," + colorObject.second + "," + colorObject.third + ",1) 51%,rgba(" + colorObject.first + "," + colorObject.second + "," + colorObject.third + ",1) 100%) !important; /* W3C */"
+	return "color: " + textContrast + "; background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(41,137,216,0) 50%,rgba(" + colorObject.first + "," + colorObject.second + "," + colorObject.third + ",1) 51%,rgba(" + colorObject.first + "," + colorObject.second + "," + colorObject.third + ",1) 100%) !important; /* W3C */";
 }
 
 function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
 }
 
 function rgbToHex(r, g, b) {
-    return componentToHex(r) + componentToHex(g) + componentToHex(b);
+	return componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 function GetColorContrastForRBG(r, g, b) {
@@ -56,12 +60,13 @@ function GetColorContrastForRBG(r, g, b) {
 	return getContrastYIQ(hexValue);
 }
 
-function getContrastYIQ(hexcolor){
-	if(hexcolor.indexOf("#") > 0) hexcolor = hexcolor.replace("#", '');
-	var r = parseInt(hexcolor.substr(0,2),16);
-	var g = parseInt(hexcolor.substr(2,2),16);
-	var b = parseInt(hexcolor.substr(4,2),16);
-	var yiq = ((r*299)+(g*587)+(b*114))/1000;
+function getContrastYIQ(hexcolor) {
+	if(hexcolor.indexOf("#") > 0)
+		hexcolor = hexcolor.replace("#", '');
+	var r = parseInt(hexcolor.substr(0, 2), 16);
+	var g = parseInt(hexcolor.substr(2, 2), 16);
+	var b = parseInt(hexcolor.substr(4, 2), 16);
+	var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 	return (yiq >= 128) ? '#343434' : 'white';
 }
 
@@ -80,7 +85,7 @@ function GetColorCodeFor3Digits(digits) {
 
 	if(first > second && first > third) {
 		first = 225;
-	} else if (second > first && second > third) {
+	} else if(second > first && second > third) {
 		second = 225;
 	} else {
 		third = 225;
@@ -99,10 +104,14 @@ function GetColorCodeFor3Digits(digits) {
 	// }
 
 	//97 - 122
-	
 
 
-	return {"first":first, "second":second, "third":third};
+
+	return {
+		"first" : first,
+		"second" : second,
+		"third" : third
+	};
 }
 
 var colorCodes = {
@@ -236,4 +245,4 @@ var colorCodes = {
 		"background" : "#000000",
 		"foreground" : "#FFFFFF"
 	}
-}
+};
