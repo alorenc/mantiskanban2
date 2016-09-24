@@ -286,6 +286,121 @@ var Kanban = {
 	}
 };
 
+Kanban.ApplyTheme = function(styleID) {
+	DefaultSettings.selectedStyle = styleID;
+	var style = Kanban.Themes[styleID];
+	$("#themeLink").attr("href", style.stylesheet);
+};
+
+Kanban.SaveSettings = function() {
+	//modifyStyleRule(selectorText, value)
+	DefaultSettings.kanbanListWidth = document.getElementById("settings-list-width").value;
+	DefaultSettings.autoResizeColumns = document.getElementById("settings-autofit-onresize").checked;
+	DefaultSettings.selectedStyle = document.getElementById("settings-selectedTheme").value;
+	saveSettingsToStorageMechanism();
+	Kanban.ApplySettings();
+};
+
+Kanban.ApplySettingsAtLogin = function() {
+	try {
+		modifyStyleRule(".kanbanlist", "width", DefaultSettings.kanbanListWidth);
+	} catch(e)  {}
+	if(DefaultSettings.autoResizeColumns) {
+		window.addEventListener("resize", AutoAdjustListWidth);
+		AutoAdjustListWidth();
+	}
+};
+
+Kanban.ApplySettings = function() {
+	var listWidthValue = document.getElementById("settings-list-width").value;
+	modifyStyleRule(".kanbanlist", "width", listWidthValue);
+	window.removeEventListener("resize", AutoAdjustListWidth);
+	if(DefaultSettings.autoResizeColumns) {
+		AutoAdjustListWidth();
+		window.addEventListener("resize", AutoAdjustListWidth);
+	}
+
+	Kanban.ApplyTheme(document.getElementById("settings-selectedTheme").value);
+};
+
+Kanban.LoadRuntimeSettings = function() {
+	document.getElementById("settings-list-width").value = getStyleRule(".kanbanlist", "width");
+	document.getElementById("settings-autofit-onresize").checked = DefaultSettings.autoResizeColumns;
+};
+
+Kanban.ControlStayLoggedIn = function() {
+	var TimeLocalStorage = Kanban.InactiveSessionTimeUserInMinutes * 60; // seconds
+	var currentTime = Math.round(new Date().getTime() / 1000);
+
+	if(DefaultSettings.stayLoggedIn == 1)
+	{
+		console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + TimeLocalStorage);
+		if(((currentTime - DefaultSettings.lastAccessTime) < TimeLocalStorage)) {
+			log("user logged in less than 30 days ago put their name in the box");
+			document.getElementById("username").value = DefaultSettings.username;
+			document.getElementById("password").value = DefaultSettings.password;
+		} else {
+			Logout();
+		}
+	}
+};
+
+// With the active use time is reset
+Kanban.RefreshTimeLocalStorage = function() {
+	var currentTime = Math.round(new Date().getTime() / 1000);
+	console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + Kanban.InactiveSessionTimeUserInMinutes * 60);
+
+	DefaultSettings.lastAccessTime = currentTime;
+	saveSettingsToStorageMechanism();
+};
+
+Kanban.HowManyCompleteTasks = function(tasks) {
+	var sum = 0;
+	if(tasks.length > 0) {
+		for(var ti = 0; ti < tasks.length; ti++) {
+			if(tasks[ti].Status == 'complete') {
+				sum++;
+			}
+		}
+	}
+	return sum;
+};
+
+Kanban.AddStory = function(summary, description, handlerid, reporterid, statusid, priorityid, category, customfield) {
+	var newIssueStruct = Mantis.UpdateStructureMethods.Issue.NewIssue(summary, description, Mantis.CurrentProjectID, handlerid, reporterid, statusid, priorityid, category);
+	if(customfield !== null) {
+		Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, Kanban._listIDField, customfield);
+	}
+	Mantis.IssueAdd(newIssueStruct, Kanban.AddStoryAsyncCallback);
+};
+
+Kanban.AddStoryAsyncCallback = function(result) {
+	Kanban.BlockUpdates = false;
+	StopLoading();
+	if(isNaN(result)) {
+		alert("Error Adding: " + result);
+	} else {
+		try {
+			var newStory = new KanbanStory(Mantis.IssueGet(result));
+			newStory.BuildKanbanStoryDiv();
+			if(newStory.List != null) {
+				newStory.List.AddNewStoryUI(newStory);
+			}
+			Kanban.CloseAddStoryDialog();
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
+	UpdateKanbanListTitle();
+};
+
+Kanban.UpdateUnderlyingStorySource = function(originalStory) {
+	var mantisIssue = Mantis.IssueGet(originalStory.ID, null);
+	originalStory.StorySource = mantisIssue;
+	return originalStory;
+};
+
 function DragCancel(event) {
 	console.log("DragCancel1");
 	event.preventDefault();
@@ -1677,12 +1792,9 @@ function EditStory(storyID) {
 	if(Mantis.Version() > "1.3.0") AddHistoryToStoryEditForm(thisStory);
 
 	AddNotesToStoryEditForm(thisStory);
-
 	AddAttachmentToStoryEditForm(thisStory);
-
 	AddTagsToStoryEditForm(thisStory);
 
-	console.log('Edit Issue');
 	if(Kanban.UsingCustomField) {
 		var toInsert = "";
 		for (var i = 0; i < Mantis.ProjectCustomFields.length; i++) {
@@ -1718,6 +1830,9 @@ function EditStory(storyID) {
 
 }
 
+
+
+
 function ToggleLegend() {
 	var value = document.getElementById("contentarea").getAttribute("showingpriority");
 	var toggle = ("true" == value) ? "false" : "true";
@@ -1730,86 +1845,6 @@ function ShowLegend() {
 
 function HideLegend() {
 	document.getElementById("contentarea").setAttribute("showingpriority", "false");
-}
-
-Kanban.ApplyTheme = function(styleID) {
-	DefaultSettings.selectedStyle = styleID;
-	var style = Kanban.Themes[styleID];
-	$("#themeLink").attr("href", style.stylesheet);
-};
-
-Kanban.SaveSettings = function() {
-	//modifyStyleRule(selectorText, value)
-	DefaultSettings.kanbanListWidth = document.getElementById("settings-list-width").value;
-	DefaultSettings.autoResizeColumns = document.getElementById("settings-autofit-onresize").checked;
-	DefaultSettings.selectedStyle = document.getElementById("settings-selectedTheme").value;
-	saveSettingsToStorageMechanism();
-	Kanban.ApplySettings();
-};
-
-Kanban.ApplySettingsAtLogin = function() {
-	try {
-		modifyStyleRule(".kanbanlist", "width", DefaultSettings.kanbanListWidth);
-	} catch(e)  {}
-	if(DefaultSettings.autoResizeColumns) {
-		window.addEventListener("resize", AutoAdjustListWidth);
-		AutoAdjustListWidth();
-	}
-};
-
-Kanban.ApplySettings = function() {
-	var listWidthValue = document.getElementById("settings-list-width").value;
-	modifyStyleRule(".kanbanlist", "width", listWidthValue);
-	window.removeEventListener("resize", AutoAdjustListWidth);
-	if(DefaultSettings.autoResizeColumns) {
-		AutoAdjustListWidth();
-		window.addEventListener("resize", AutoAdjustListWidth);
-	}
-
-	Kanban.ApplyTheme(document.getElementById("settings-selectedTheme").value);
-};
-
-Kanban.LoadRuntimeSettings = function() {
-	document.getElementById("settings-list-width").value = getStyleRule(".kanbanlist", "width");
-	document.getElementById("settings-autofit-onresize").checked = DefaultSettings.autoResizeColumns;
-};
-
-Kanban.ControlStayLoggedIn = function() {
-	var TimeLocalStorage = Kanban.InactiveSessionTimeUserInMinutes * 60; // seconds
-	var currentTime = Math.round(new Date().getTime() / 1000);
-
-	if(DefaultSettings.stayLoggedIn == 1)
-	{
-		console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + TimeLocalStorage);
-		if(((currentTime - DefaultSettings.lastAccessTime) < TimeLocalStorage)) {
-			log("user logged in less than 30 days ago put their name in the box");
-			document.getElementById("username").value = DefaultSettings.username;
-			document.getElementById("password").value = DefaultSettings.password;
-		} else {
-			Logout();
-		}
-	}
-};
-
-// With the active use time is reset
-Kanban.RefreshTimeLocalStorage = function() {
-	var currentTime = Math.round(new Date().getTime() / 1000);
-	console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + Kanban.InactiveSessionTimeUserInMinutes * 60);
-
-	DefaultSettings.lastAccessTime = currentTime;
-	saveSettingsToStorageMechanism();
-}
-
-Kanban.HowManyCompleteTasks = function(tasks) {
-	var sum = 0;
-	if(tasks.length > 0) {
-		for(var ti = 0; ti < tasks.length; ti++) {
-			if(tasks[ti].Status == 'complete') {
-				sum++;
-			}
-		}
-	}
-	return sum;
 }
 
 function ShowSettings() {

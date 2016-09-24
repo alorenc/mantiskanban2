@@ -648,38 +648,3 @@ KanbanStory.prototype = {
 		return storyDiv;
 	}
 };
-
-Kanban.AddStory = function(summary, description, handlerid, reporterid, statusid, priorityid, category, customfield) {
-	var newIssueStruct = Mantis.UpdateStructureMethods.Issue.NewIssue(summary, description, Mantis.CurrentProjectID, handlerid, reporterid, statusid, priorityid, category);
-	if(customfield !== null) {
-		Mantis.UpdateStructureMethods.Issue.UpdateCustomField(newIssueStruct, Kanban._listIDField, customfield);
-	}
-	Mantis.IssueAdd(newIssueStruct, Kanban.AddStoryAsyncCallback);
-};
-
-Kanban.AddStoryAsyncCallback = function(result) {
-	Kanban.BlockUpdates = false;
-	StopLoading();
-	if(isNaN(result)) {
-		alert("Error Adding: " + result);
-	} else {
-		try {
-			var newStory = new KanbanStory(Mantis.IssueGet(result));
-			newStory.BuildKanbanStoryDiv();
-			if(newStory.List != null) {
-				newStory.List.AddNewStoryUI(newStory);
-			}
-			Kanban.CloseAddStoryDialog();
-		} catch(e) {
-			console.log(e);
-		}
-	}
-
-	UpdateKanbanListTitle();
-};
-
-Kanban.UpdateUnderlyingStorySource = function(originalStory) {
-	var mantisIssue = Mantis.IssueGet(originalStory.ID, null);
-	originalStory.StorySource = mantisIssue;
-	return originalStory;
-};
