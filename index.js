@@ -807,6 +807,8 @@ function KanbanRememberFilters() {
 	var priorityList = DefaultSettings.FiltersPriority;
 	var severityList = DefaultSettings.FiltersSeverity;
 
+	if(undefined === userList) return;
+
 	if(userList.length > 0) {
 		for(var ui = 0; ui < userList.length; ui++) {
 			if(!$("#ug"+userList[ui]).hasClass("selected")) {
