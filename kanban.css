@@ -535,7 +535,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 	height: 0px;
 	text-align: center;
 	background-color: rgb(217, 83, 79);
-	transition: height .3s ease;add
+	transition: height .3s;
 }
 .kanbandropper.over{
 	height: 40px;
@@ -768,7 +768,7 @@ background: none repeat scroll 0% 0% rgba(57, 130, 203, 1);
 
 .ui-combobox {
     position: relative;
-    display: inline-block;repeat
+    display: inline-block;
 }
 .ui-combobox-toggle {
     position: absolute;
