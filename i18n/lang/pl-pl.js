@@ -114,6 +114,22 @@ var langObj = {
 "textOptions": "Ważność / Priorytet",
 "textOptionsPiorities": "Priorytet:",
 "textOptionsSeverity": "Ważnoś (pasek):",
-"textOptionsDefault": "- domyślny"
+"textOptionsDefault": "- domyślny",
+
+"errHeadDefault": "Błąd: ",
+"errHeadUpdate": "Bład aktualizacji: ",
+"errHeadDelete": "Błąd przy usuwaniu: ",
+"errHeadSavingNote": "Błąd zapisu notatki: ",
+"errHeadSavingTask": "Bład zapisu zadania: ",
+"errHeadAddingStory": "Błąd dodawnia zgłoszenia: ",
+"errHeadUpdatingStory": "Błąd aktualizacji zgłoszenia: ",
+"errHeadUpdatingAttachments": "Błąd aktualizacji załączników: ",
+"errHeadNotLoadingStories": "Brak zgłoszeń: ",
+
+"errMsgNotLoadingStories": "Brak zgłoszeń dla filtra: ",
+"errMsgUpdateMoveIssue": "Nie można przesynąć zgłoszenia. Podprojekty muszą być przypisanego do tego samego  ten sam ScumBucket",
+"errMsgSupportCustomField": "Obsługa pól niestandardowych, dostępna w MantisBT od wersji 1.3.0 lub wyższej.",
+"errMsgUnableOpenIssue": "Nie można otworzyć zgłoszenia pewnie jest zamknięte, a my nie obsługujemy jeszcze edytowania go.",
+"errMsgIssueNotFound": "Nie znaleziono zgłoszenia!"
 
 };

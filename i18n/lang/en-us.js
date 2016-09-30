@@ -114,6 +114,22 @@ var langObj = {
 "textOptions": "Legends",
 "textOptionsPiorities": "Priorities (ribbon):",
 "textOptionsSeverity": "Severity (bar):",
-"textOptionsDefault": "default"
+"textOptionsDefault": "default",
+
+"errHeadDefault": "Error: ",
+"errHeadUpdate": "Error Update: ",
+"errHeadDelete": "Error Deleting: ",
+"errHeadSavingNote": "Error Saving Note: ",
+"errHeadSavingTask": "Error Saving Task: ",
+"errHeadAddingStory": "Error Adding: ",
+"errHeadUpdatingStory": "Error Updating Story: ",
+"errHeadUpdatingAttachments": "Error Uploading Attachments: ",
+"errHeadNotLoadingStories": "Error Loading Stories: ",
+
+"errMsgNotLoadingStories": "Error Loading Stories For Filter",
+"errMsgUpdateMoveIssue": "You can not move the issue. Subprojects must have the same ScumBucket",
+"errMsgSupportCustomField": "Support custom fields, available in MantisBT version 1.3.0 or higher.",
+"errMsgUnableOpenIssue": "Unable to open issue, probably its closed and we don't support editing it yet.",
+"errMsgIssueNotFound": "Issue not found!"
 
 };

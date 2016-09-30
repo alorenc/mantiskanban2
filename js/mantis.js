@@ -758,6 +758,9 @@ var Mantis = {
 			return Mantis._version;
 		Mantis._version = SOAPClient.invoke(Mantis.ConnectURL, Mantis.Methods.Version.Name, Mantis.Methods.Version.BuildParams(), hascallback, callBack);
 		return Mantis._version;
+	},
+	SupportCustomField : function() {
+		return (Mantis.Version() >= "1.3.0");
 	}
 };
 /*

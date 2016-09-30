@@ -158,7 +158,7 @@ var KanbanStory = function(RawObject) {
 	this._list = null;
 	this._histories = null;
 	this.StorySource = RawObject;
-	//alert(JSON.stringify(RawObject.notes))
+	//ShowAlert(langObj.errHeadDefault, JSON.stringify(RawObject.notes));
 	this.UsesCustomField = false;
 	this.JoinList();
 	if(!Kanban.HasStory(this.ID)) {

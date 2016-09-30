@@ -1,4 +1,6 @@
 
+/* global BootstrapDialog, langObj */
+
 String.prototype.capitalize = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 };
@@ -246,3 +248,28 @@ var colorCodes = {
 		"foreground" : "#FFFFFF"
 	}
 };
+
+/**
+ * Boostral Dialog open
+ *
+ * @param {string} headTitle
+ * @param {string} message
+ * @param {string} type BootstrapDialog.TYPE_DEFALT, TYPE_INFO, TYPE_PRIMARY, TYPE_SUCCESS, TYPE_WARNING, TYPE_DANGER
+ * @returns {undefined}
+ */
+function BootstrapDialogAlert(headTitle, message, type) {
+
+	var dialogInstance = new BootstrapDialog();
+        dialogInstance.setTitle(headTitle);
+        dialogInstance.setMessage(message);
+        dialogInstance.setType(type);
+        dialogInstance.open();
+}
+
+/**
+ * Show alert
+ *
+ * @param {string} headTitle
+ * @param {string} message
+ */
+function ShowAlert(headTitle, message) {BootstrapDialogAlert(headTitle, message, BootstrapDialog.TYPE_DANGER);}

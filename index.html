@@ -12,12 +12,14 @@
 
 		<script language="javascript" type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 		<script language="javascript" type="text/javascript" src="bootstrap/js/bootstrap-switch.min.js"></script>
+		<script language="javascript" type="text/javascript" src="bootstrap/js/bootstrap-dialog.min.js"></script>
 
 		<script language="javascript" type="text/javascript" src="i18n/i18n.js"></script>
 		<script language="javascript" type="text/javascript" src="i18n/lang/en-us.js"></script>
 
 		<link crossorigin rel="Stylesheet" href="bootstrap/css/bootstrap.min.css" />
 		<link crossorigin rel="Stylesheet" href="bootstrap/css/bootstrap-switch.min.css" />
+		<link crossorigin rel="Stylesheet" href="bootstrap/css/bootstrap-dialog.min.css" />
 		<!--<link crossorigin href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">-->
 		<link crossorigin rel="stylesheet" href="kanban.css" />
 		<link crossorigin rel="stylesheet" href="forms.css" />
@@ -135,12 +137,12 @@
 						<div class="editing-content">
 							<div>
 								<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-									<li class="active" ><a href="#tabs-1" data-toggle="tab"><div class="i18ntext" data-text-id="textGeneral"></div></a></li>
-									<li><a href="#tabs-2" data-toggle="tab"><div class="i18ntext" data-text-id="textDescription"></div></a></li>
-									<li><a href="#tabs-3" data-toggle="tab"><div class="i18ntext" data-text-id="textNotes"></div></a></li>
-									<li><a href="#tabs-4" data-toggle="tab"><div class="i18ntext" data-text-id="textAttachments"></div></a></li>
-									<li><a href="#tabs-5" data-toggle="tab"><div class="i18ntext" data-text-id="textTodo"></div></a></li>
-									<li><a href="#tabs-6" data-toggle="tab"><div class="i18ntext" data-text-id="textHistory"></div></a></li>
+									<li id="tab_general" class="active" ><a href="#tabs-1" data-toggle="tab"><div class="i18ntext" data-text-id="textGeneral"></div></a></li>
+									<li id="tab_desc"><a href="#tabs-2" data-toggle="tab"><div class="i18ntext" data-text-id="textDescription"></div></a></li>
+									<li id="tab_notes"><a href="#tabs-3" data-toggle="tab"><div class="i18ntext" data-text-id="textNotes"></div></a></li>
+									<li id="tab_attachments"><a href="#tabs-4" data-toggle="tab"><div class="i18ntext" data-text-id="textAttachments"></div></a></li>
+									<li id="tab_todo"><a href="#tabs-5" data-toggle="tab"><div class="i18ntext" data-text-id="textTodo"></div></a></li>
+									<li id="tab_history"><a href="#tabs-6" data-toggle="tab"><div class="i18ntext" data-text-id="textHistory"></div></a></li>
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active" id="tabs-1">

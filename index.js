@@ -576,7 +576,7 @@ function LoadFilterAsync(FilterID, Page, Limit, Callback) {
 				Mantis.ClosedIssuesFilterID = null;
 			saveSettingsToStorageMechanism();
 			StopLoading();
-			alert("Error Loading Stories For Filter: " + e.message);
+			ShowAlert(langObj.errHeadNotLoadingStories, langObj.errMsgNotLoadingStories + e.message);
 		}
 
 	} finally {
