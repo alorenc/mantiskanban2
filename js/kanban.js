@@ -335,8 +335,6 @@ Kanban.ControlStayLoggedIn = function() {
 // With the active use time is reset
 Kanban.RefreshTimeLocalStorage = function() {
 	var currentTime = Math.round(new Date().getTime() / 1000);
-	console.log((currentTime - DefaultSettings.lastAccessTime) + " < " + Kanban.InactiveSessionTimeUserInMinutes * 60);
-
 	DefaultSettings.lastAccessTime = currentTime;
 	saveSettingsToStorageMechanism();
 };
@@ -416,8 +414,6 @@ function DragEnd(event) {
  * @param event
  */
 function Drop(event) {
-	console.log(ErrorHandler);
-
 	event.preventDefault();
 	if(event.target.id == "kanbancontent")
 		return;
@@ -1202,18 +1198,21 @@ function AddTasksToStoryEditForm(KanbanStory) {
 		var taskCompleted = document.createElement("input");
 		taskCompleted.setAttribute("type", "checkbox");
 		taskCompleted.setAttribute("storyid", KanbanStory.ID);
+
 		if(thisTask.Status == "complete") {
 			taskCompleted.setAttribute("checked", "");
 		}
+
 		taskCompleted.setAttribute("onmouseup", "ChangeTaskStatus(" + KanbanStory.ID + ", " + i + ", !this.checked);");
-		///TODO: update task field when unchecking and checking
 		taskDiv.appendChild(taskCompleted);
 
 		var taskTextDiv = document.createElement("div");
 		taskTextDiv.setAttribute("class", "tasktext");
+
 		if(thisTask.Status == "complete") {
 			taskTextDiv.setAttribute("style", "text-decoration: line-through;");
 		}
+
 		taskTextDiv.innerHTML = thisTask.Description;
 		taskTextDiv.setAttribute("onclick", "this.setAttribute('editing', 'true');this.contentEditable='true'; document.execCommand('selectAll',false,null);");
 		taskTextDiv.setAttribute("onblur", "ChangeTaskDescription(" + KanbanStory.ID + ", " + i + ", this.innerHTML);this.contentEditable='false';this.setAttribute('editing', 'false');");

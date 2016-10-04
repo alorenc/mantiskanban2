@@ -22,6 +22,12 @@ Kanban.NumberOfClosedMessagesToLoad = 10;
 // This is the default project to be selected
 Mantis.CurrentProjectSelection = 0;
 
+// Data from Mantis such as: status, resolution, severities and priorities.
+// They are constants, and therefore are cached.
+// Set how often have to be refreshed
+Mantis.MantisConstantRefresh = 24; // hours
+
+// Set the name of a custom field with MantisBT (type textarea) to handle the task list
 Mantis.TaskListField = "TaskList";
 
 // The default name for the custom field containg split column  of Mantis (ScrumBucket)

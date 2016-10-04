@@ -1011,9 +1011,7 @@ function saveSettingsToStorageMechanism() {
 	}
 	else {
 		//put the cookie version of the saveCurrentSettings() here.
-
 	}
-
 }
 
 function AutoAdjustListWidth() {

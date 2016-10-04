@@ -1,15 +1,17 @@
-/* global Kanban, SOAPClient */
+/* global Kanban, SOAPClient, DefaultSettings */
 
 var Mantis = {
 	_currentprojectid : 0,
-	_projectcategories : [],
+	_currentprojectname : "",
 	_statues : null,
+	_resolutions : null,
 	_severities : null,
+	_priorities : null,
 	_projectusers : [],
 	_projectcustomfields : [],
+	_projectcategories : [],
 	_accesslevels : [],
 	_userprojects : [],
-	_priorities : null,
 	_tags : [],
 	_defaultaccesslevelforuserenum : 10,
 	_defaultfilterid : null,
@@ -21,17 +23,19 @@ var Mantis = {
 	ClearForLogout : function() {
 		Mantis._currentprojectid = 0;
 		Mantis._currentprojectname = "";
-		Mantis._projectcategories = [];
 		Mantis._statues = null;
 		Mantis._resolutions = null;
 		Mantis._severities = null;
 		Mantis._priorities = null;
 		Mantis._projectusers = [];
 		Mantis._projectcustomfields = [];
+		Mantis._projectcategories = [];
 		Mantis._accesslevels = [];
 		Mantis._userprojects = [];
-		Mantis._defaultaccesslevelforuserenum = 10;
 		Mantis._tags = [];
+		Mantis._defaultfilterid = null;
+		Mantis._closedissuesfilterid = null;
+		Mantis._version = null;
 	},
 
 	HistoryUpdateTypes : [
@@ -63,13 +67,38 @@ var Mantis = {
 		"TAG_ATTACHED",
 		"TAG_DETACHED",
 		"TAG_RENAMED"
-				//		100: "PLUGIN_HISTORY"
+//		100: "PLUGIN_HISTORY"
 	],
+
+	Params : {
+		Access : "access",
+		Content : "content",
+		Enumeration : "enumeration",
+		FileType : "file_type",
+		FilterID : "filter_id",
+		IssueID : "issue_id",
+		IssueID_Caps : "issueId",
+		Issue : "issue",
+		Name : "name",
+		Note : "note",
+		Password : "password",
+		PageNumber : "page_number",
+		PerPage : "per_page",
+		ProjectID : "project_id",
+		Tag : "tag",
+		Tags : "tags",
+		UserName : "username",
+		IssueAttachmentID : "issue_attachment_id"
+	},
+
 	Preload : function() {
 		Mantis.LoadTagsAsync();
-		Mantis.LoadSeveritiesAsync();
+		Mantis.LoadStatuesAsync();
 		Mantis.LoadResolutionsAsync();
+		Mantis.LoadSeveritiesAsync();
+		Mantis.LoadPrioritiesAsync();
 	},
+
 	set DefaultFilterID(value) {
 		Mantis._defaultfilterid = value;
 	},
@@ -94,42 +123,11 @@ var Mantis = {
 		}
 		return Mantis._accesslevels;
 	},
-	get Priorities() {
-		if(Mantis._priorities == null) {
-			Mantis._priorities = Mantis.EnumPriority();
-		}
-		return Mantis._priorities;
-	},
-	get Statuses() {
-		if(Mantis._statues == null) {
-			Mantis._statues = Mantis.EnumStatus(null);
-		}
-
-		return Mantis._statues;
-	},
 	get Tags() {
 		if(Mantis._tags == null || Mantis._tags.length == 0) {
 			Mantis._tags = Mantis.TagGetAll(0, 9999);
 		}
 		return Mantis._tags;
-	},
-	LoadTagsAsync : function() {
-		Mantis.TagGetAll(0, 9999, function(retObj) {
-			Mantis._tags = retObj.results;
-		});
-	},
-	LoadResolutionsAsync : function() {
-		Mantis.EnumResolutions(function(retObject) {
-			Mantis._resolutions = retObject;
-		});
-	},
-	LoadSeveritiesAsync : function() {
-		Mantis.EnumSeverities(function(retObject) {
-			Mantis._severities = retObject;
-		});
-	},
-	LoadTagsSync : function() {
-		Mantis._tags = Mantis.TagGetAll(0, 9999).results;
 	},
 	get ProjectCategories() {
 		if(Mantis._projectcategories.length == 0) {
@@ -149,17 +147,29 @@ var Mantis = {
 		}
 		return Mantis._projectcustomfields;
 	},
+	get Statuses() {
+		if(Mantis._statues == null) {
+			LoadStatuesAsync();
+		}
+		return Mantis._statues;
+	},
 	get  Resolutions() {
 		if(Mantis._resolutions == null) {
-			Mantis._resolutions = Mantis.EnumResolutions();
+			LoadResolutionsAsync();
 		}
 		return Mantis._resolutions;
 	},
 	get  Severities() {
 		if(Mantis._severities == null) {
-			Mantis._severities = Mantis.EnumSeverities();
+			LoadSeveritiesAsync();
 		}
 		return Mantis._severities;
+	},
+	get Priorities() {
+		if(Mantis._priorities == null) {
+			LoadPrioritiesAsync();
+		}
+		return Mantis._priorities;
 	},
 	get CurrentProjectID() {
 		return Mantis._currentprojectid;
@@ -178,25 +188,78 @@ var Mantis = {
 	get CurrentProjectName() {
 		return Mantis._currentprojectname;
 	},
-	Params : {
-		Access : "access",
-		Content : "content",
-		Enumeration : "enumeration",
-		FileType : "file_type",
-		FilterID : "filter_id",
-		IssueID : "issue_id",
-		IssueID_Caps : "issueId",
-		Issue : "issue",
-		Name : "name",
-		Note : "note",
-		Password : "password",
-		PageNumber : "page_number",
-		PerPage : "per_page",
-		ProjectID : "project_id",
-		Tag : "tag",
-		Tags : "tags",
-		UserName : "username",
-		IssueAttachmentID : "issue_attachment_id"
+
+	LoadTagsSync : function() {
+		Mantis._tags = Mantis.TagGetAll(0, 9999).results;
+	},
+	LoadTagsAsync : function() {
+		Mantis.TagGetAll(0, 9999, function(retObj) {
+			Mantis._tags = retObj.results;
+		});
+	},
+	LoadStatuesAsync : function() {
+		var TimeLocalStorage = Mantis.MantisConstantRefresh * 3600; // seconds
+		var currentTime = Math.round(new Date().getTime() / 1000);
+		var checkTime = ((currentTime - DefaultSettings.MantisStatuesLastTime) < TimeLocalStorage);
+
+		if(DefaultSettings.hasOwnProperty('MantisStatues') && DefaultSettings.MantisStatues != null && checkTime){
+			Mantis._statues = DefaultSettings.MantisStatues;
+		} else {
+			Mantis.EnumStatus(function(retObject) {
+				Mantis._statues = retObject;
+				DefaultSettings.MantisStatues = retObject;
+				DefaultSettings.MantisStatuesLastTime = Math.round(new Date().getTime() / 1000);
+				saveSettingsToStorageMechanism();
+			});
+		}
+	},
+	LoadResolutionsAsync : function() {
+		var TimeLocalStorage = Mantis.MantisConstantRefresh * 3600; // seconds
+		var currentTime = Math.round(new Date().getTime() / 1000);
+		var checkTime = ((currentTime - DefaultSettings.MantisResolutionsLastTime) < TimeLocalStorage);
+
+		if(DefaultSettings.hasOwnProperty('MantisResolutions') && DefaultSettings.MantisResolutions != null && checkTime){
+			Mantis._resolutions = DefaultSettings.MantisResolutions;
+		} else {
+			Mantis.EnumResolutions(function(retObject) {
+				Mantis._resolutions = retObject;
+				DefaultSettings.MantisResolutions = retObject;
+				DefaultSettings.MantisResolutionsLastTime = Math.round(new Date().getTime() / 1000);
+				saveSettingsToStorageMechanism();
+			});
+		}
+	},
+	LoadSeveritiesAsync : function() {
+		var TimeLocalStorage = Mantis.MantisConstantRefresh * 3600; // seconds
+		var currentTime = Math.round(new Date().getTime() / 1000);
+		var checkTime = ((currentTime - DefaultSettings.MantisSeveritiesLastTime) < TimeLocalStorage);
+
+		if(DefaultSettings.hasOwnProperty('MantisSeverities') && DefaultSettings.MantisSeverities != null && checkTime){
+			Mantis._severities = DefaultSettings.MantisSeverities;
+		} else {
+			Mantis.EnumSeverities(function(retObject) {
+				Mantis._severities = retObject;
+				DefaultSettings.MantisSeverities = retObject;
+				DefaultSettings.MantisSeveritiesLastTime = Math.round(new Date().getTime() / 1000);
+				saveSettingsToStorageMechanism();
+			});
+		}
+	},
+	LoadPrioritiesAsync : function() {
+		var TimeLocalStorage = Mantis.MantisConstantRefresh * 3600; // seconds
+		var currentTime = Math.round(new Date().getTime() / 1000);
+		var checkTime = ((currentTime - DefaultSettings.MantisPrioritiesLastTime) < TimeLocalStorage);
+
+		if(DefaultSettings.hasOwnProperty('MantisPriorities') && DefaultSettings.MantisPriorities != null && checkTime){
+			Mantis._priorities = DefaultSettings.MantisPriorities;
+		} else {
+			Mantis.EnumPriority(function(retObject) {
+				Mantis._priorities = retObject;
+				DefaultSettings.MantisPriorities = retObject;
+				DefaultSettings.MantisPrioritiesLastTime = Math.round(new Date().getTime() / 1000);
+				saveSettingsToStorageMechanism();
+			});
+		}
 	},
 	RemoveNullCustomFieldsFromIssue : function(issue) {
 		if(issue.custom_fields === undefined)
