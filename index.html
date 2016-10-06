@@ -145,6 +145,7 @@
 									<li id="tab_history"><a href="#tabs-6" data-toggle="tab"><div class="i18ntext" data-text-id="textHistory"></div></a></li>
 								</ul>
 								<div class="tab-content">
+									<!--General-->
 									<div class="tab-pane active" id="tabs-1">
 										<form class="form-horizontal">
 											<input type="hidden" id="edit-story-id" name="edit-story-id" />
@@ -232,24 +233,35 @@
 												</div>
 										</form>
 									</div>
+									<!--Description-->
 									<div class="tab-pane form-controls" id="tabs-2">
 										<label for="edit-description"><div class="i18ntext" data-text-id="textDescription"></div></label>
 										<textarea name="edit-description" id="edit-description" class="input-large form-control" placeholder="Description"></textarea>
 										<label for="edit-reproduce"><div class="i18ntext" data-text-id="textSteps"></div></label>
 										<textarea name="edit-reproduce" id="edit-reproduce" class="input-large form-control" placeholder="Steps"></textarea>
 									</div>
+									<!--Notes-->
 									<div class="tab-pane" id="tabs-3">
 										<div class="fill">
-											<div id="edit-story-notes-container" name="edit-story-notes-container" class="notesarea"></div>
 											<textarea class="edit-newnotetext input-large form-control" id="edit-newnotetext" name="edit-newnotetext" title="Enter new notes here."></textarea>
-											<div class="btn btn-success addNoteButton" id="edit-story-new-note-save-button" name=""><span class="glyphicon glyphicon-arrow-up"></span><span class="i18ntext" data-text-id="textAddNote"></span><span class="glyphicon glyphicon-arrow-up"></span></div><br>
+											<button class="btn btn-success btn-block" id="edit-story-new-note-save-button" name="">
+												<span class="glyphicon glyphicon-arrow-down"></span>
+												<span class="i18ntext" data-text-id="textAddNote"></span>
+												<span class="glyphicon glyphicon-arrow-down"></span>
+											</button>>
+											<div id="edit-story-notes-container" name="edit-story-notes-container" class="notesarea"></div>
 										</div>
 									</div>
+									<!--Attachemets-->
 									<div class="tab-pane" id="tabs-4">
 										<div class="fill">
 											<div id="edit-story-attachment-container" name="edit-story-attachment-container" class="attachmentsarea"></div>
 											<div class="btn-group">
-												<div class="btn btn-success" id="edit-story-new-attach-save-button" name="" onclick="SaveNewAttachments();"><span class="glyphicon glyphicon-arrow-up"></span><span class="i18ntext" data-text-id="textUploadAttachments"></span><span class="glyphicon glyphicon-arrow-up"></span></div>
+												<div class="btn btn-success" id="edit-story-new-attach-save-button" name="" onclick="SaveNewAttachments();">
+													<span class="glyphicon glyphicon-arrow-up"></span>
+													<span class="i18ntext" data-text-id="textUploadAttachments"></span>
+													<span class="glyphicon glyphicon-arrow-up"></span>
+												</div>
 												<div class="btn btn-warning" onclick="ClearUploadList();"><div class="i18ntext" data-text-id="textDeleteAttachemets"></div></div>
 											</div>
 											<br>
@@ -265,9 +277,10 @@
 											<div id="newAttachmentList" class="newattachmentcontainer"></div>
 										</div>
 									</div>
+									<!--Tasks-->
 									<div class="tab-pane" id="tabs-5">
 										<div class="fill">
-											<textarea class="edit-newtasktext input-large form-control" id="edit-newtasktext" name="edit-newtasktext" title="Enter New Tasks Here"></textarea><br>
+											<textarea class="edit-newtasktext input-large form-control" id="edit-newtasktext" name="edit-newtasktext" title="Enter New Tasks Here"></textarea>
 											<div class="btn btn-success addTaskButton" id="edit-story-new-task-save-button" name="">
 												<span class="glyphicon glyphicon-arrow-down"></span>
 												<span class="i18ntext" data-text-id="textAddTask"></span>
@@ -276,6 +289,7 @@
 											<div id="edit-story-tasks-container" name="edit-story-tasks-container" class="tasksarea"></div>
 										</div>
 									</div>
+									<!--History-->
 									<div class="tab-pane" id="tabs-6">
 										<div class="fill">
 											<div class="historyarea" id="edit-story-historys-container"></div>

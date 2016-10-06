@@ -1232,6 +1232,8 @@ function AddNotesToStoryEditForm(KanbanStory) {
 	var notesContainer = document.getElementById("edit-story-notes-container");
 	var noteSaveButton = document.getElementById("edit-story-new-note-save-button");
 	var noteTextArea = document.getElementById("edit-newnotetext");
+	var lastNoteId = '';
+
 	try {
 		while(notesContainer.childNodes.length > 0) {
 			notesContainer.removeChild(notesContainer.firstChild);
@@ -1249,14 +1251,20 @@ function AddNotesToStoryEditForm(KanbanStory) {
 	if(KanbanStory.Notes === undefined)
 		return;
 
-	for(var i = 0; i < KanbanStory.Notes.length; i++) {
+	for(var i = KanbanStory.Notes.length-1; i >= 0; i--) {
 		var thisNote = KanbanStory.Notes[i];
+		var thisNoteId = "Note-" + KanbanStory.ID + "-" + thisNote.id;
 
 		var noteDiv = document.createElement("div");
 		noteDiv.setAttribute("class", "notecontainer");
 		noteDiv.setAttribute("storyid", KanbanStory.ID);
+		noteDiv.setAttribute("id", thisNoteId);
 		if(thisNote.reporter.name === undefined)
 			thisNote.reporter.name = "User " + thisNote.reporter.id;
+		if(i == KanbanStory.Notes.length-1) {
+			lastNoteId = thisNoteId;
+			noteDiv.setAttribute("hidden", true);
+		}
 		noteDiv.setAttribute("style", GetStyleCodeFor3Digits(thisNote.reporter.name.substring(0, 3), .8));
 
 		var noteDate = new Date(Date.parse(thisNote.date_submitted));
@@ -1266,15 +1274,17 @@ function AddNotesToStoryEditForm(KanbanStory) {
 		divNoteHeader.innerHTML = "<b>" + thisNote.reporter.real_name + "<br> " + noteDate.toLocaleString() + "</b>";
 		divNoteHeader.style.backgroundImage = "url(" + get_gravatar_image_url(thisNote.reporter.email, 40) + ")";
 
+
 		noteDiv.appendChild(divNoteHeader);
 
 		var noteTextDiv = document.createElement("div");
 		noteTextDiv.setAttribute("class", "notetext");
 		noteTextDiv.innerHTML = "<hr class='noteHorizonalRule'>" + thisNote.text;
 		noteDiv.appendChild(noteTextDiv);
-
-		notesContainer.appendChild(noteDiv);
+		notesContainer.appendChild(noteDiv);//.slideToggle( "slow", animateIt );
 	}
+
+	$("#"+lastNoteId).show('slow');
 }
 
 
