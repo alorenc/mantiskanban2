@@ -201,6 +201,7 @@ function KanbanLogin() {
 	});
 
 	Mantis.Preload();
+	SelectProject(); //Refresh Browser
 	StopLoading();
 }
 
