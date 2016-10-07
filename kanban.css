@@ -166,8 +166,9 @@ div.notecontainer {
 	height: 200px;
 }
 
-#edit-newnotetext {
+#edit-newnotetext, #edit-newnotetext {
 	display: inline-block;
+	margin: 5px 0;
 }
 
 .realcontentcontainer {
