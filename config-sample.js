@@ -27,13 +27,13 @@ Mantis.CurrentProjectSelection = 0;
 // Set how often have to be refreshed
 Mantis.MantisConstantRefresh = 24; // hours
 
-// Set the name of a custom field with MantisBT (type textarea) to handle the task list
-Mantis.TaskListField = "TaskList";
-
 // The default name for the custom field containg split column  of Mantis (ScrumBucket)
 Kanban._listIDField = "ScrumBucket";
 
-// Default name category
+// Set the name of a custom field with MantisBT (type textarea) to handle the task list
+Mantis.TaskListField = "TaskList";
+
+// The default category name when adding a new Issue
 Kanban.DefaultCategory = "General";
 
 // Scrum Mode - default switch
