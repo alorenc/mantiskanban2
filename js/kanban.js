@@ -438,21 +438,24 @@ function Drop(event) {
 	}
 
 	try {
-
 		if(event.target.getAttribute("class") == "kanbanlist" && sourceElement.getAttribute("class").indexOf("storyinfobutton") < 0) {
 			listToDropIn = event.target;
+			if(listToDropIn == null) return;
 			UpdateListForCanbanStory(sourceElement.Story, listToDropIn.List, UpdateKanbanStoryComplete);
 			listToDropIn.Container.insertBefore(sourceElement, listToDropIn.Container.lastChild);
 		} else if(event.target.getAttribute("class") == "kanbanlistdroparea") {
 			listToDropIn = document.getElementById(event.target.getAttribute("listid"));
+			if(listToDropIn == null) return;
 			UpdateListForCanbanStory(sourceElement.Story, listToDropIn.List, UpdateKanbanStoryComplete);
 			listToDropIn.Container.appendChild(sourceElement);
 		} else if(event.target.getAttribute("class") == "kanbanlisttitle") {
 			listToDropIn = document.getElementById(event.target.getAttribute("listid"));
+			if(listToDropIn == null) return;
 			UpdateListForCanbanStory(sourceElement.Story, listToDropIn.List, UpdateKanbanStoryComplete);
 			listToDropIn.Container.insertBefore(sourceElement, listToDropIn.Container.firstChild);
 		} else {
 			listToDropIn = document.getElementById(event.target.getAttribute("listid"));
+			if(listToDropIn == null) return;
 			UpdateListForCanbanStory(sourceElement.Story, listToDropIn.List, UpdateKanbanStoryComplete);
 			sourceElementDropDiv.classList.remove("over");
 			if(targetStoryDiv !== undefined && targetStoryDiv != null) {
